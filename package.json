@@ -1,0 +1,28 @@
+{
+  "name": "electron-practice",
+  "version": "1.0.0",
+  "description": "Electron app with React frontend",
+  "homepage": "https://github.com/habbie321/deutsch-im-blick#readme",
+  "bugs": {
+    "url": "https://github.com/habbie321/deutsch-im-blick/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/habbie321/deutsch-im-blick.git"
+  },
+  "license": "MIT",
+  "author": "habbie321",
+  "type": "commonjs",
+  "scripts": {
+    "dev": "concurrently \"npm run react\" \"npm run electron\"",
+    "react": "cd electron-app/react-app && npm start",
+    "react-build": "cd electron-app/react-app && npm run build",
+    "electron": "cd electron-app && npm run electron-dev",
+    "build": "npm run react-build",
+    "build-run": "npm run build && cd electron-app && npm start",
+    "install-all": "npm install && cd electron-app && npm install && cd react-app && npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.0"
+  }
+}

@@ -1,0 +1,204 @@
+{
+  "activities": [
+    {
+      "chapter": 1,
+      "id": 1,
+      "type": "multiple_choice",
+      "icon": "videoclips",
+      "title": "Harald und Peter: Wer bin ich?",
+      "questionSets": [
+        {
+          "setId": 1,
+          "title": "",
+          "questions": [
+            {
+              "id": 1,
+              "question": "Herkunft? Er kommt aus",
+              "options": [
+                "Münster",
+                "München",
+                "Mainz"
+              ],
+              "correctAnswer": 1
+            },
+            {
+              "id": 2,
+              "question": "Alter? Er ist",
+              "options": [
+                "15 Jahre alt",
+                "25 Jahre alt",
+                "50 Jahre alt"
+              ],
+              "correctAnswer": 2
+            },
+            {
+              "id": 3,
+              "question": "Lieblingsfarbe? Seine Lieblingsfarbe ist",
+              "options": [
+                "Rot",
+                "Blau",
+                "Braun"
+              ],
+              "correctAnswer": 1
+            },
+            {
+              "id": 4,
+              "question": "Warum? Warum ist das seine Lieblingsfarbe?",
+              "options": [
+                "Sie ist wie Bayern und der Himmel (sky).",
+                "Er weiß es nicht.",
+                "Diese Farbe ist energisch."
+              ],
+              "correctAnswer": 0
+            }
+          ]
+        },
+        {
+          "setId": 2,
+          "title": "",
+          "questions": [
+            {
+              "id": 1,
+              "question": "Herkunft? Er kommt aus",
+              "options": [
+                "der Schweiz",
+                "Texas",
+                "Stuttgart"
+              ],
+              "correctAnswer": 0
+            },
+            {
+              "id": 2,
+              "question": "Nummer? Welche Nummer sagt er?",
+              "options": [
+                "seine Telefonnummer",
+                "seine Hausnummer"
+              ],
+              "correctAnswer": 0
+            },
+            {
+              "id": 3,
+              "question": "Lieblingsfarbe? Seine Lieblingsfarbe ist",
+              "options": [
+                "Rot",
+                "Blau",
+                "Braun"
+              ],
+              "correctAnswer": 0
+            },
+            {
+              "id": 4,
+              "question": "Warum? Warum ist das seine Lieblingsfarbe?",
+              "options": [
+                "Sie ist ruhig (peaceful).",
+                "Sie ist intensiv.",
+                "Sie ist die Farbe der Liebe (love)."
+              ],
+              "correctAnswer": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "chapter": 1,
+      "id": 2,
+      "type": "matching_activity",
+      "icon": "videoclips",
+      "title": "Wer bin ich?",
+      "matchingPairs": [
+        {
+          "id": 1,
+          "german": "Wie heißen Sie?",
+          "english": "What’s your name?"
+        },
+        {
+          "id": 2,
+          "german": "Woher kommen Sie?",
+          "english": "Where are you from?"
+        },
+        {
+          "id": 3,
+          "german": "Wie alt sind Sie?",
+          "english": "How old are you?"
+        },
+        {
+          "id": 4,
+          "german": "Wie lautet Ihre Telefonnummer?",
+          "english": "What’s your telephone number?"
+        },
+        {
+          "id": 5,
+          "german": "Was ist Ihre Lieblingsfarbe?",
+          "english": "What’s your favorite color?"
+        },
+        {
+          "id": 6,
+          "german": "Warum?",
+          "english": "Why?"
+        }
+      ]
+    },
+    {
+      "chapter": 1,
+      "id": 3,
+      "type": "",
+      "icon": "groupactivity",
+      "title": "Wie heißt du?"
+    },
+    {
+      "chapter": 1,
+      "id": 4,
+      "type": "",
+      "icon": "groupactivity",
+      "title": "Ich heiße..."
+    },
+    {
+      "chapter": 1,
+      "id": 5,
+      "type": "",
+      "icon": "groupactivity",
+      "title": "Wie lautet deine Telefonnummer?"
+    },
+    {
+      "chapter": 1,
+      "id": 6,
+      "type": "",
+      "icon": "readingtask",
+      "title": "Wichtige Adressen & Telefonnummern in Deutschland",
+      "questionSets": [
+        {
+          "setId": 1,
+          "title": "",
+          "questions": [
+            {
+              "id": 1,
+              "question": "What is the address of the American Embassy?",
+              "answer": "Neustädtische Kirchstr. 4-5"
+            },
+            {
+              "id": 2,
+              "question": "What is its telephone number?",
+              "answer": "(030) 2385 174"
+            },
+            {
+              "id": 3,
+              "question": "What hours are its citizenship services open?",
+              "answer" : "14-16 Uhr"
+            },
+            {
+              "id": 4,
+              "question": "What days?",
+              "answer": "Montag bis Freitag"
+            },
+            {
+              "id": 5,
+              "question": "What is their phone number?",
+              "answer": "(030) 832-9233"
+            }0
+          ]
+        }
+      ]
+    }
+  ]
+}

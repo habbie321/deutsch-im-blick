@@ -1,0 +1,29 @@
+.light {
+  background: #fafafa;
+  color: #1f2023;
+
+  --card-bg-color: #ffffff;
+  --card-text-color: #1f2023;
+}
+.dark {
+  background: #1f2023;
+  color: #efefef;
+
+  --card-bg-color: #303136;
+  --card-text-color: #efefef;
+}
+
+
+body {
+  margin: auto;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}

@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "firstName": "Bob",
+    "lastName": "Bobbing",
+    "birthday": "",
+    "role": "student"
+  },
+  {
+    "id": 2,
+    "firstName": "Cheese",
+    "lastName": "Chezzer",
+    "birthday": "",
+    "role": "student"
+  },
+  {
+    "id": 3,
+    "firstName": "Capy",
+    "lastName": "Bara",
+    "birthday": "",
+    "role": "student"
+  },
+  {
+    "id": 1754361337975,
+    "firstName": "Teacher",
+    "lastName": "",
+    "birthday": "",
+    "role": "teacher"
+  },
+  {
+    "id": 1754361688375,
+    "firstName": "Weee",
+    "lastName": "",
+    "birthday": "0123-12-03",
+    "role": "student"
+  }
+]
