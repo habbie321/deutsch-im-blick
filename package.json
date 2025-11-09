@@ -1,7 +1,7 @@
 {
-  "name": "electron-practice",
+  "name": "deutsch-im-blick",
   "version": "1.0.0",
-  "description": "Electron app with React frontend",
+  "description": "An unofficial Electron app version of the Deutsch im Blick open textbook!",
   "homepage": "https://github.com/habbie321/deutsch-im-blick#readme",
   "bugs": {
     "url": "https://github.com/habbie321/deutsch-im-blick/issues"
