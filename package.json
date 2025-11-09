@@ -19,7 +19,7 @@
     "react-build": "cd electron-app/react-app && npm run build",
     "electron": "cd electron-app && npm run electron-dev",
     "build": "npm run react-build",
-    "build-run": "npm run build && cd electron-app && npm start",
+    "build-run": "npm run react-build && cd electron-app && npm run electron",
     "install-all": "npm install && cd electron-app && npm install && cd react-app && npm install"
   },
   "devDependencies": {
