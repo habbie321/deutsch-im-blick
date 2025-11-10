@@ -2,6 +2,10 @@
 
 An unofficial Electron app version of the Deutsch im Blick open textbook!
 
+⚠️ **EARLY DEVELOPMENT PREVIEW** - Not ready for actual use yet
+
+This app is in **very early development** and is not functional for language learning. Currently for developers/contributors only.
+
 ## Description
 
 This is a German language-learning application based off [the Deutsch im Blick open textbook by the University of Texas at Austin](https://coerll.utexas.edu/dib/credits.php). This project is not affiliated with them; it is being made under accordance with their Open License (more info [here](https://coerll.utexas.edu/coerll/)).
@@ -32,27 +36,10 @@ npm run install-all
 
 For development:
 ```
-code blocks for commands
-```
-
-## Help
-
-Common issues:
-
-If you encounter module version errors:
-```
-cd electron-app
-npm rebuild
-```
-
-If the app fails to start:
-```
-npm run install-all
+npm run build-run
 ```
 
 ## Authors
-
-Contributors names and contact info
 
 [habbie321](https://github.com/habbie321)
 

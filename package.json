@@ -1,6 +1,6 @@
 {
   "name": "deutsch-im-blick",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "An unofficial Electron app version of the Deutsch im Blick open textbook!",
   "homepage": "https://github.com/habbie321/deutsch-im-blick#readme",
   "bugs": {
