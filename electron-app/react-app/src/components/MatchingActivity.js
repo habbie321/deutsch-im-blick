@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
-  Button,
   Avatar,
   useTheme,
   Paper,
@@ -21,20 +20,22 @@ const MatchingActivity = ({ activityData, onComplete }) => {
   const [selectedLeft, setSelectedLeft] = useState(null);
   const [selectedRight, setSelectedRight] = useState(null);
   const [matches, setMatches] = useState([]);
-  const [completed, setCompleted] = useState(false);
+
+  const pairLeft = (pair) => pair.german ?? pair.left ?? pair.question ?? '';
+  const pairRight = (pair) => pair.english ?? pair.right ?? pair.answer ?? '';
 
   // Initialize the matching pairs from activityData
   useEffect(() => {
     if (activityData && activityData.matchingPairs) {
       const germanItems = activityData.matchingPairs.map(pair => ({
         id: pair.id,
-        text: pair.german,
+        text: pairLeft(pair),
         matched: false
       }));
       
       const englishItems = activityData.matchingPairs.map(pair => ({
         id: pair.id,
-        text: pair.english,
+        text: pairRight(pair),
         matched: false
       }));
 
@@ -89,7 +90,6 @@ const MatchingActivity = ({ activityData, onComplete }) => {
 
         // Check if all items are matched
         if (matches.length + 1 === leftItems.length) {
-          setCompleted(true);
           onComplete({ correct: true, score: matches.length + 1, total: leftItems.length });
         }
       } else {
@@ -117,7 +117,7 @@ const MatchingActivity = ({ activityData, onComplete }) => {
           {activityData?.title || "Match the Pairs"}
         </Typography>
         <Typography variant="body1" color="text.secondary">
-          Match the German phrases with their English translations
+          {activityData?.matchInstruction || 'Match the items in the first column with the correct items in the second column.'}
         </Typography>
       </Box>
 
@@ -137,7 +137,7 @@ const MatchingActivity = ({ activityData, onComplete }) => {
               width: '100%'
             }}>
               <Typography variant="h6" gutterBottom color="primary">
-                German
+                {activityData?.leftColumnTitle || 'German'}
               </Typography>
               <Box sx={{ 
                 display: 'flex', 
@@ -200,7 +200,7 @@ const MatchingActivity = ({ activityData, onComplete }) => {
               width: '100%'
             }}>
               <Typography variant="h6" gutterBottom color="primary">
-                English
+                {activityData?.rightColumnTitle || 'English'}
               </Typography>
               <Box sx={{ 
                 display: 'flex', 
@@ -296,7 +296,7 @@ const MatchingActivity = ({ activityData, onComplete }) => {
         {/* Instructions */}
         {!allMatched && (
           <Typography variant="body2" color="text.secondary" sx={{ mt: 2, maxWidth: 600, mx: 'auto' }}>
-            Click on a German phrase and then its English translation to make a match.
+            Click one item in the left column, then its match in the right column.
           </Typography>
         )}
       </Box>

@@ -5,7 +5,6 @@ import BackButton from '../components/BackButton';
 import { Backdrop } from '@mui/material';
 import { Button } from '@mui/material';
 import ActivitiesStepper from '../components/ActivitiesStepper';
-import MultipleChoiceQuiz from '../components/MultipleChoiceQuiz';
 
 function ChapterPage() {
 
@@ -21,12 +20,14 @@ function ChapterPage() {
       setOpen(true);
       localStorage.setItem(`${userId}_intro_seen_${chapterNumber}`, 'true');
     }
-  }, [chapterNumber]);
+  }, [chapterNumber, userId]);
 
   const handleClose = () => {
     setOpen(false);
   };
-  console.log('chapter number',chapterNumber);
+
+  const chFolder = `chapter${String(chapterNumber).padStart(2, '0')}`;
+  const introSrc = `app://${chFolder}/intro.mp4`;
 
   return (
     <div className="relative">
@@ -37,7 +38,13 @@ function ChapterPage() {
           sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
           open={open}
         >
-          <VideoPlayer src="app://chapter01/intro.mp4" />
+          <VideoPlayer
+            src={introSrc}
+            relativePath={`${chFolder}/intro.mp4`}
+            title={`Kapitel ${chapterNumber} — Einführung`}
+            fallbackUrl={`https://coerll.utexas.edu/dib/toc.php?k=${chapterNumber}`}
+            autoPlay
+          />
           <Button onClick={handleClose}>Close</Button>
         </Backdrop>
         </div>
