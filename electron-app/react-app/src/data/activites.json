@@ -636,42 +636,50 @@
     {
       "chapter": 1,
       "id": 15,
-      "type": "qa_matching",
+      "type": "workbook",
       "icon": "videoclips",
       "title": "Aktivität 15. Was ist die Antwort?",
       "description": "Match Berna's questions to her answers (re-listen to QR 1.15).",
       "duration": "15 min",
       "prerequisites": [],
-      "leftColumnTitle": "Frage",
-      "rightColumnTitle": "Antwort",
-      "matchInstruction": "Listen again to Berna’s clip and match each question to the answer she gives.",
-      "matchingPairs": [
-        {
-          "id": 1,
-          "left": "Wie heißt du?",
-          "right": "Ich heiße Berna."
-        },
-        {
-          "id": 2,
-          "left": "Woher kommst du?",
-          "right": "Aus Kiel."
-        },
-        {
-          "id": 3,
-          "left": "Wie alt bist du?",
-          "right": "30."
-        },
-        {
-          "id": 4,
-          "left": "Was ist deine Telefonnummer?",
-          "right": "(512) 749-8940"
-        },
-        {
-          "id": 5,
-          "left": "Was ist deine Lieblingsfarbe?",
-          "right": "Rot, weil es temperamentvoll ist."
-        }
-      ]
+      "checks": {
+        "blocks": [
+          {
+            "type": "matching",
+            "id": "berna_qa_match",
+            "leftColumnTitle": "Frage",
+            "rightColumnTitle": "Antwort",
+            "matchInstruction": "Listen again to Berna’s clip and match each question to the answer she gives.",
+            "matchingPairs": [
+              {
+                "id": 1,
+                "german": "Wie heißt du?",
+                "english": "Ich heiße Berna."
+              },
+              {
+                "id": 2,
+                "german": "Woher kommst du?",
+                "english": "Aus Kiel."
+              },
+              {
+                "id": 3,
+                "german": "Wie alt bist du?",
+                "english": "30."
+              },
+              {
+                "id": 4,
+                "german": "Was ist deine Telefonnummer?",
+                "english": "(512) 749-8940."
+              },
+              {
+                "id": 5,
+                "german": "Was ist deine Lieblingsfarbe?",
+                "english": "Rot, weil es temperamentvoll ist."
+              }
+            ]
+          }
+        ]
+      }
     },
     {
       "chapter": 1,
@@ -712,13 +720,16 @@
     {
       "chapter": 1,
       "id": 18,
-      "type": "workbook",
+      "type": "writing",
       "icon": "readingtask",
       "title": "Aktivität 18. Kurze Beschreibungen",
       "description": "Short paragraph about one interviewee.",
       "duration": "20 min",
       "prerequisites": [],
       "intro": "Choose one person from the native or non-native group. Write a short introduction including Name, Herkunft, Alter, Telefonnummer, Lieblingsfarbe.",
+      "tasks": [
+        "Choose one person from the interviews and write a short introduction paragraph (Name, Herkunft, Alter, Telefonnummer, Lieblingsfarbe)."
+      ],
       "links": [
         {
           "label": "Workbook PDF",
@@ -729,13 +740,16 @@
     {
       "chapter": 1,
       "id": 19,
-      "type": "workbook",
+      "type": "writing",
       "icon": "readingtask",
       "title": "Aktivität 19. Meine Kommilitonen",
       "description": "Paragraph introducing a classmate.",
       "duration": "20 min",
       "prerequisites": [],
       "intro": "Use your notes from partner work to write a paragraph about a classmate (same information categories as before).",
+      "tasks": [
+        "Use your notes from the partner interview to write a paragraph about your classmate's background and interests."
+      ],
       "links": [
         {
           "label": "Workbook PDF",
@@ -1388,37 +1402,45 @@
     {
       "chapter": 2,
       "id": 4,
-      "type": "matching_activity",
+      "type": "workbook",
       "icon": "videoclips",
       "title": "Aktivität 4. Berna und Jan: Mein Studium",
       "description": "Watch Berna & Jan (QR 2.7, 2.9), take notes (Teil A), then match phrases (Teil B).",
       "duration": "30 min",
       "prerequisites": [],
-      "leftColumnTitle": "Deutsch",
-      "rightColumnTitle": "English",
-      "matchInstruction": "Listen first, then match each German sentence with its English meaning (workbook Teil B).",
-      "matchingPairs": [
-        {
-          "id": 1,
-          "german": "Es ist schon manchmal sehr viel Arbeit.",
-          "english": "Sometimes it's a lot of work."
-        },
-        {
-          "id": 2,
-          "german": "Ich mag mein Studium sehr.",
-          "english": "I really like my studies."
-        },
-        {
-          "id": 3,
-          "german": "Ich bin sehr zufrieden damit.",
-          "english": "I'm quite happy with it (my studies)."
-        },
-        {
-          "id": 4,
-          "german": "Ich studiere an der Universität von...",
-          "english": "I am studying at the University of..."
-        }
-      ],
+      "checks": {
+        "blocks": [
+          {
+            "type": "matching",
+            "id": "berna_jan_study_match",
+            "leftColumnTitle": "Deutsch",
+            "rightColumnTitle": "English",
+            "matchInstruction": "Listen first, then match each German sentence with its English meaning (workbook Teil B).",
+            "matchingPairs": [
+              {
+                "id": 1,
+                "german": "Es ist schon manchmal sehr viel Arbeit.",
+                "english": "Sometimes it's a lot of work."
+              },
+              {
+                "id": 2,
+                "german": "Ich mag mein Studium sehr.",
+                "english": "I really like my studies."
+              },
+              {
+                "id": 3,
+                "german": "Ich bin sehr zufrieden damit.",
+                "english": "I'm quite happy with it (my studies)."
+              },
+              {
+                "id": 4,
+                "german": "Ich studiere an der Universität von...",
+                "english": "I am studying at the University of..."
+              }
+            ]
+          }
+        ]
+      },
       "links": [
         {
           "label": "Kapitel 2",
@@ -2517,6 +2539,69 @@
           }
         ]
       }
+    },
+    {
+      "chapter": 3,
+      "id": 3,
+      "type": "workbook",
+      "icon": "videoclips",
+      "title": "Aktivität 3. Bernas typischer Tag",
+      "description": "Sequence Berna's daily routine in the correct order.",
+      "duration": "15 min",
+      "prerequisites": [],
+      "videos": [
+        {
+          "path": "chapter03/k03_a03.mp4",
+          "label": "Bernas typischer Tag"
+        }
+      ],
+      "intro": "What is a typical day like for Berna? View her video and number her daily routines in the order in which she describes them.",
+      "pdfNote": "COERLL Kapitel 3 workbook, page 110: QR 3.3",
+      "checks": {
+        "blocks": [
+          {
+            "type": "order",
+            "id": "berna_order",
+            "instruction": "Drag or use arrows to put Berna's routine in the correct chronological order.",
+            "items": [
+              { "id": 1, "text": "Dann muss ich erst mal essen, weil ich meistens sehr ausgehungert (starved) bin." },
+              { "id": 2, "text": "Wenn die Kurse fertig (finished) sind, komme ich dann nach Hause." },
+              { "id": 3, "text": "Dann trinke ich eine Tasse Kaffee, ich dusche mich, mache mich fertig." },
+              { "id": 4, "text": "Vormittags bin ich damit beschäftigt zu unterrichten, vorbereiten, Tests korrigieren..." },
+              { "id": 5, "text": "Dann lese ich wieder weiter für den nächsten Tag." },
+              { "id": 6, "text": "Ich stehe morgens relativ früh auf, so um sieben." },
+              { "id": 7, "text": "Dann gehe ich zur Universität." },
+              { "id": 8, "text": "Nachmittags muss ich dann in meine Kurse reingehen. Dann wird da viel diskutiert." }
+            ],
+            "correctOrder": [6, 3, 7, 4, 8, 2, 1, 5]
+          }
+        ]
+      }
+    },
+    {
+      "chapter": 3,
+      "id": 4,
+      "type": "writing",
+      "icon": "videoclips",
+      "title": "Aktivität 4. Und was macht Hassan an einem typischen Tag?",
+      "description": "Watch Hassan's video and answer questions about his daily routine.",
+      "duration": "20 min",
+      "prerequisites": [],
+      "videos": [
+        {
+          "path": "chapter03/k03_a04.mp4",
+          "label": "Hassans typischer Tag"
+        }
+      ],
+      "intro": "Finally, watch as Hassan describes a typical day in his life and answer the following questions based on his responses.",
+      "tasks": [
+        "Wann steht Hassan morgens auf?",
+        "Was macht er am Morgen?",
+        "Wie lange arbeitet er?",
+        "Was macht er am Nachmittag?",
+        "Warum ist Hassan momentan nicht an der Universität?"
+      ],
+      "pdfNote": "COERLL Kapitel 3 workbook: QR 3.5 (p. 152)"
     }
   ]
 }
