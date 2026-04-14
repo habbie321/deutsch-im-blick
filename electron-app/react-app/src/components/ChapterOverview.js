@@ -90,7 +90,8 @@ const ChapterOverview = ({ userId, chapters, initialProgress }) => {
       >
         {chapters.map(chapter => {
           const chapterProgress = progress.find(p => p.chapter_id === chapter.id) || {};
-          const isLocked = chapterProgress ? Boolean(chapterProgress.locked) : true;
+          // const isLocked = chapterProgress ? Boolean(chapterProgress.locked) : true;
+          const isLocked = false; // TODO: remove this when done testing
           const isCompleted = chapterProgress ? Boolean(chapterProgress.completed) : false;
 
           return (

@@ -19,13 +19,7 @@ const ChapterCard = ({ userId, chapter, chapter_number, chapter_name, completed 
     if (locked) return;
     
     const num = chapter_number.toString().padStart(2, '0');
-    const hasSeenIntro = localStorage.getItem(`intro_seen_${num}`);
-    if (!hasSeenIntro) {
-      localStorage.setItem(`intro_seen_${num}`, 'true');
-      navigate(`/account/${userId}/chapter/${num}/intro`);
-    } else {
-      navigate(`/account/${userId}/chapter/${num}`);
-    }
+    navigate(`/account/${userId}/chapter/${num}`);
   };
 
   return (

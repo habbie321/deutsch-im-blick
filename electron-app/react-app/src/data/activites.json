@@ -2380,6 +2380,30 @@
           "url": "https://coerll.utexas.edu/dib/voc.php?k=2"
         }
       ]
+    },
+    {
+      "chapter": 3,
+      "id": 1,
+      "type": "writing",
+      "icon": "groupactivity",
+      "title": "Aktivität 1. Der Alltag",
+      "description": "Brainstorming and discussion: learning how to describe your daily routine (der Alltag).",
+      "duration": "15 min",
+      "prerequisites": [],
+      "intro": "Now that you already know how to talk about das Studium, let’s expand and learn how to describe your everyday routine — der Alltag.",
+      "tasks": [
+        "Was machst du? (What do you do?)",
+        "Wo bist du? (Where are you?)",
+        "Mit wem machst du was? (With whom do you do what?)",
+        "Wann hast du Uni und wann hast du Freizeit? (When do you have uni and when do you have free time?)"
+      ],
+      "links": [
+        {
+          "label": "Kapitel 3 · Übersicht (videos & PDF)",
+          "url": "https://coerll.utexas.edu/dib/toc.php?k=3"
+        }
+      ],
+      "pdfNote": "COERLL Kapitel 3 workbook, page 110: https://coerll.utexas.edu/dib/pdfs/k_03.pdf"
     }
   ]
 }

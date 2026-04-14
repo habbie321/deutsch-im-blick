@@ -33,6 +33,7 @@ import MultipleChoiceQuiz from './MultipleChoiceQuiz';
 import MatchingActivity from './MatchingActivity';
 import WorkbookActivity from './WorkbookActivity';
 import SelfCheckReadingActivity from './SelfCheckReadingActivity';
+import WritingActivity from './WritingActivity';
 import ActivityVideoSection from './ActivityVideoSection';
 import activityData from '../data/activites.json';
 
@@ -49,6 +50,8 @@ function ActivityContent({ activity, onComplete }) {
       return <SelfCheckReadingActivity activityData={activity} onComplete={onComplete} />;
     case 'workbook':
       return <WorkbookActivity activityData={activity} onComplete={onComplete} />;
+    case 'writing':
+      return <WritingActivity activityData={activity} onComplete={onComplete} />;
     default:
       return (
         <Box sx={{ p: 2, textAlign: 'center' }}>

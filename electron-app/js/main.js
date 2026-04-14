@@ -28,14 +28,11 @@ const createWindow = () => { // loads webpage into new BrowserWindow
     // win.loadFile ('./pages/index.html')
     const indexPath = path.join(buildPath, 'index.html');
 
-    win.loadURL(
-        process.env.NODE_ENV === 'development'
-            ? 'http://localhost:3000' // Dev server
-            : `file://${indexPath}` // Production build
-    );
+    const startUrl = process.env.NODE_ENV === 'development' 
+        ? 'http://localhost:3000' 
+        : `http://localhost:${port}`;
 
-    win.loadURL(`http://localhost:${port}`)
-    // win.loadFile(path.join('.', 'react-app', 'build', 'index.html'));
+    win.loadURL(startUrl);
     win.webContents.openDevTools();
 
     // handlers
@@ -46,6 +43,7 @@ const createWindow = () => { // loads webpage into new BrowserWindow
     });
 
     ipcMain.handle('get-account', async (event, userId) => {
+        if (!userId) return null;
         return getAccount(userId);
     })
 
@@ -67,10 +65,16 @@ const createWindow = () => { // loads webpage into new BrowserWindow
     });
 
     ipcMain.handle('get-chapters', async () => {
-        return getChapters();
+        const chapters = await getChapters();
+        console.log('Available chapters in DB:', chapters.map(c => c.id));
+        return chapters;
     })
 
     ipcMain.handle('get-chapter-progress', async (event, userId) => {
+        if (!userId) {
+            console.warn('get-chapter-progress: No userId provided.');
+            return []; // Return empty progress instead of hanging/erroring
+        }
         return getChapterProgress(userId);
     })
 }
