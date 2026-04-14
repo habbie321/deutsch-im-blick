@@ -2404,6 +2404,119 @@
         }
       ],
       "pdfNote": "COERLL Kapitel 3 workbook, page 110: https://coerll.utexas.edu/dib/pdfs/k_03.pdf"
+    },
+    {
+      "chapter": 3,
+      "id": 2,
+      "type": "workbook",
+      "icon": "videoclips",
+      "title": "Aktivität 2. Erins typischer Tag",
+      "description": "True / false while viewing.",
+      "duration": "25 min",
+      "prerequisites": [],
+      "videos": [
+        {
+          "path": "chapter03/k03_a02.mp4",
+          "label": "Erins typischer Tag"
+        }
+      ],
+      "intro": "Watch Erin's video clip and determine which statements are richtig and which are falsch. Then, match the German expressions with their English equivalents.",
+      "links": [
+        {
+          "label": "Kapitel 3 · Videos & Übersicht",
+          "url": "https://coerll.utexas.edu/dib/toc.php?k=3"
+        }
+      ],
+      "pdfNote": "COERLL Kapitel 3 workbook, page 110: https://coerll.utexas.edu/dib/pdfs/k_03.pdf",
+      "checks": {
+        "blocks": [
+          {
+            "type": "sectionTitle",
+            "text": "Teil A: Richtig oder falsch? (Watch QR 3.2)"
+          },
+          {
+            "type": "tf",
+            "id": "e2a",
+            "statement": "Ich stehe gegen 7 Uhr auf.",
+            "correct": false
+          },
+          {
+            "type": "tf",
+            "id": "e2b",
+            "statement": "Dann mache ich meinen Kaffee und ich spiel’ mit der Katze (cat) 'rum. ",
+            "correct": false
+          },
+          {
+            "type": "tf",
+            "id": "e2c",
+            "statement": "Ich schrei’ meinen Freund an: „Steh auf, du fauler Sack!“",
+            "correct": true
+          },
+          {
+            "type": "tf",
+            "id": "e2d",
+            "statement": "Wir essen normalerweise kein Frühstück.",
+            "correct": true
+          },
+          {
+            "type": "tf",
+            "id": "e2e",
+            "statement": "Nachmittags kommt meine Freundin Louisa vorbei und manchmal spielen wir ein bisschen Racquetball oder so was oder wir backen auch.",
+            "correct": true
+          },
+          {
+            "type": "tf",
+            "id": "e2f",
+            "statement": "Abends entspanne ich mich und schaue “The Simpsons” oder “Family Guy” an oder ich guck’ (to watch) einen Film.",
+            "correct": true
+          },
+          {
+            "type": "tf",
+            "id": "e2g",
+            "statement": "Dann gehe ich ins Bett.",
+            "correct": true
+          },
+          {
+            "type": "matching",
+            "id": "e2_matching",
+            "title": "Teil B: Match the expressions",
+            "leftColumnTitle": "Deutsch",
+            "rightColumnTitle": "English",
+            "matchingPairs": [
+              {
+                "id": 1,
+                "german": "Ich stehe gegen 8 Uhr auf.",
+                "english": "I get up around 8 o’clock."
+              },
+              {
+                "id": 2,
+                "german": "Ich spiel’ mit der Katze ‘rum.",
+                "english": "I play around with my cat."
+              },
+              {
+                "id": 3,
+                "german": "Ich schrei’ meinen Freund an: „Steh auf, du fauler Sack!“",
+                "english": "I shout at my boyfriend: “Get up, you lazy bum!”"
+              },
+              {
+                "id": 4,
+                "german": "Nachmittags kommt Louise vorbei.",
+                "english": "In the afternoons Louise comes by."
+              },
+              {
+                "id": 5,
+                "german": "Dann abends arbeite ich weiter.",
+                "english": "Then in the evenings I continue to work."
+              },
+              {
+                "id": 6,
+                "german": "Ich schaue “The Simpsons” oder “Family Guy” an.",
+                "english": "I watch “The Simpsons” or “Family Guy”."
+              }
+            ]
+          }
+        ]
+      }
     }
   ]
 }

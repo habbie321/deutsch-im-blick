@@ -7,7 +7,6 @@ import {
   Paper,
   Grid,
   Chip,
-  Container
 } from '@mui/material';
 import {
   Check
@@ -109,27 +108,29 @@ const MatchingActivity = ({ activityData, onComplete }) => {
       flexGrow: 1,
       display: 'flex',
       flexDirection: 'column',
-      p: 3
+      p: activityData?.type === 'matching' ? 0 : 3
     }}>
       {/* Header */}
-      <Box sx={{ textAlign: 'center', mb: 4 }}>
-        <Typography variant="h4" component="h2" gutterBottom color="primary">
-          {activityData?.title || "Match the Pairs"}
-        </Typography>
-        <Typography variant="body1" color="text.secondary">
-          {activityData?.matchInstruction || 'Match the items in the first column with the correct items in the second column.'}
-        </Typography>
-      </Box>
+      {activityData?.type !== 'matching' && (
+        <Box sx={{ textAlign: 'center', mb: 4 }}>
+          <Typography variant="h4" component="h2" gutterBottom color="primary">
+            {activityData?.title || "Match the Pairs"}
+          </Typography>
+          <Typography variant="body1" color="text.secondary">
+            {activityData?.matchInstruction || 'Match the items in the first column with the correct items in the second column.'}
+          </Typography>
+        </Box>
+      )}
 
       {/* Matching Area - Centered Container */}
-      <Container maxWidth="lg" sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-        <Grid container spacing={4} sx={{ 
+      <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', width: '100%' }}>
+        <Grid container spacing={2} sx={{ 
           flexGrow: 1,
           justifyContent: 'center',
           alignItems: 'flex-start'
         }}>
           {/* German Column - Centered */}
-          <Grid item xs={12} md={5}>
+          <Grid item xs={6}>
             <Box sx={{ 
               display: 'flex', 
               flexDirection: 'column', 
@@ -143,15 +144,14 @@ const MatchingActivity = ({ activityData, onComplete }) => {
                 display: 'flex', 
                 flexDirection: 'column', 
                 gap: 2,
-                width: '100%',
-                maxWidth: 400
+                width: '100%'
               }}>
                 {leftItems.map((item) => (
                   <Paper
                     key={item.id}
                     onClick={() => handleLeftItemClick(item)}
                     sx={{
-                      p: 3,
+                      p: 2,
                       cursor: item.matched ? 'default' : 'pointer',
                       border: selectedLeft?.id === item.id 
                         ? `3px solid ${theme.palette.primary.main}`
@@ -192,7 +192,7 @@ const MatchingActivity = ({ activityData, onComplete }) => {
           </Grid>
 
           {/* English Column - Centered */}
-          <Grid item xs={12} md={5}>
+          <Grid item xs={6}>
             <Box sx={{ 
               display: 'flex', 
               flexDirection: 'column', 
@@ -206,15 +206,14 @@ const MatchingActivity = ({ activityData, onComplete }) => {
                 display: 'flex', 
                 flexDirection: 'column', 
                 gap: 2,
-                width: '100%',
-                maxWidth: 400
+                width: '100%'
               }}>
                 {rightItems.map((item) => (
                   <Paper
                     key={item.id}
                     onClick={() => handleRightItemClick(item)}
                     sx={{
-                      p: 3,
+                      p: 2,
                       cursor: item.matched ? 'default' : 'pointer',
                       border: selectedRight?.id === item.id 
                         ? `3px solid ${theme.palette.primary.main}`
@@ -254,7 +253,7 @@ const MatchingActivity = ({ activityData, onComplete }) => {
             </Box>
           </Grid>
         </Grid>
-      </Container>
+      </Box>
 
       {/* Progress and Completion - Centered */}
       <Box sx={{ 

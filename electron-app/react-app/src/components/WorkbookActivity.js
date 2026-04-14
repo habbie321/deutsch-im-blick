@@ -1,131 +1,157 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Typography,
-  Button,
   Paper,
-  Link,
-  List,
-  ListItem,
-  ListItemText,
-  Divider
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+  FormControl,
+  Divider,
+  Button,
+  Alert,
+  Stepper,
+  Step,
+  StepLabel
 } from '@mui/material';
-import { OpenInNew } from '@mui/icons-material';
-import InlineActivityChecks from './InlineActivityChecks';
+import MatchingActivity from './MatchingActivity';
 
 const WorkbookActivity = ({ activityData, onComplete }) => {
-  const [done, setDone] = useState(false);
-  const [checksSatisfied, setChecksSatisfied] = useState(!(activityData.checks?.blocks?.length > 0));
+  const { title, intro, checks, pdfNote } = activityData;
+  const [currentStep, setCurrentStep] = useState(0);
+  const [tfAnswers, setTfAnswers] = useState({});
+  const [matchingComplete, setMatchingComplete] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
-  const { title, intro, sections = [], tasks = [], links = [], pdfNote, checks } = activityData;
+  const tfBlocks = checks?.blocks.filter(b => b.type === 'tf') || [];
+  const matchingBlock = checks?.blocks.find(b => b.type === 'matching');
 
-  useEffect(() => {
-    setChecksSatisfied(!(checks?.blocks?.length > 0));
-  }, [checks]);
+  // Determine if we should split this into steps
+  const hasTf = tfBlocks.length > 0;
+  const hasMatching = !!matchingBlock;
+  const isMultiStep = hasTf && hasMatching;
 
-  const handleComplete = () => {
-    if (checks?.blocks?.length > 0 && !checksSatisfied) return;
-    setDone(true);
+  const handleTfChange = (id, value) => {
+    setTfAnswers(prev => ({ ...prev, [id]: value === 'true' }));
+  };
+
+  const allTfAnswered = tfBlocks.every(block => tfAnswers[block.id] !== undefined);
+  
+  const canProceedToMatching = allTfAnswered;
+  const canFinalize = hasMatching ? matchingComplete : allTfAnswered;
+
+  const handleNext = () => {
+    setCurrentStep(1);
+    // Scroll to top of activity content when switching steps
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleSubmit = () => {
+    setSubmitted(true);
     if (onComplete) {
-      onComplete({ correct: true });
+      onComplete({ correct: true }); // Defaulting to true as requested for now
     }
   };
 
   return (
-    <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', maxWidth: 720, mx: 'auto', width: '100%' }}>
-      <Typography variant="h4" component="h2" gutterBottom color="primary" sx={{ textAlign: 'center' }}>
+    <Box sx={{ p: 2, maxWidth: 900, mx: 'auto' }}>
+      <Typography variant="h4" color="primary" align="center" gutterBottom>
         {title}
       </Typography>
+      <Typography variant="body1" color="text.secondary" align="center" sx={{ mb: 4 }}>
+        {intro}
+      </Typography>
 
-      {intro && (
-        <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
-          {intro}
-        </Typography>
+      {isMultiStep && (
+        <Stepper activeStep={currentStep} sx={{ mb: 4 }}>
+          <Step><StepLabel>Richtig oder Falsch?</StepLabel></Step>
+          <Step><StepLabel>Matching</StepLabel></Step>
+        </Stepper>
       )}
 
-      {sections.map((sec, i) => (
-        <Paper key={i} elevation={0} sx={{ p: 2, mb: 2, bgcolor: 'background.paper', border: 1, borderColor: 'divider' }}>
-          {sec.heading && (
-            <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-              {sec.heading}
+      {checks?.blocks.filter(block => {
+        if (!isMultiStep) return true;
+        if (currentStep === 0) return block.type === 'tf' || block.type === 'sectionTitle';
+        if (currentStep === 1) return block.type === 'matching';
+        return true;
+      }).map((block, index) => {
+        if (block.type === 'sectionTitle') {
+          return (
+            <Typography key={index} variant="h6" sx={{ mt: 4, mb: 2, color: 'text.primary', fontWeight: 'bold' }}>
+              {block.text}
             </Typography>
-          )}
-          {(sec.paragraphs || []).map((p, j) => (
-            <Typography key={j} variant="body2" color="text.secondary" sx={{ mb: 1.5, whiteSpace: 'pre-wrap' }}>
-              {p}
-            </Typography>
-          ))}
-          {sec.list && sec.list.length > 0 && (
-            <List dense disablePadding sx={{ pl: 1 }}>
-              {sec.list.map((item, k) => (
-                <ListItem key={k} disableGutters sx={{ display: 'list-item', listStyleType: 'disc', ml: 2 }}>
-                  <ListItemText primaryTypographyProps={{ variant: 'body2', color: 'text.secondary' }} primary={item} />
-                </ListItem>
-              ))}
-            </List>
-          )}
-        </Paper>
-      ))}
+          );
+        }
 
-      {tasks.length > 0 && (
-        <Box sx={{ mb: 2 }}>
-          <Typography variant="subtitle2" gutterBottom>
-            Tasks
-          </Typography>
-          <List dense>
-            {tasks.map((t, i) => (
-              <ListItem key={i} sx={{ alignItems: 'flex-start', py: 0.5 }}>
-                <ListItemText primaryTypographyProps={{ variant: 'body2', color: 'text.secondary', whiteSpace: 'pre-wrap' }} primary={t} />
-              </ListItem>
-            ))}
-          </List>
-        </Box>
-      )}
+        if (block.type === 'tf') {
+          return (
+            <Paper key={block.id} elevation={0} sx={{ p: 2, mb: 1, borderBottom: '1px solid', borderColor: 'divider' }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Typography variant="body1" sx={{ flexGrow: 1 }}>
+                  {block.statement}
+                </Typography>
+                <FormControl component="fieldset">
+                  <RadioGroup
+                    row
+                    value={tfAnswers[block.id] === undefined ? '' : tfAnswers[block.id].toString()}
+                    onChange={(e) => handleTfChange(block.id, e.target.value)}
+                  >
+                    <FormControlLabel value="true" control={<Radio size="small" />} label="R" />
+                    <FormControlLabel value="false" control={<Radio size="small" />} label="F" />
+                  </RadioGroup>
+                </FormControl>
+              </Box>
+            </Paper>
+          );
+        }
 
-      {links.length > 0 && (
-        <>
-          <Divider sx={{ my: 2 }} />
-          <Typography variant="subtitle2" gutterBottom>
-            Links
-          </Typography>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mb: 2 }}>
-            {links.map((l, i) => (
-              <Link key={i} href={l.url} target="_blank" rel="noopener noreferrer" sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.5 }}>
-                {l.label}
-                <OpenInNew sx={{ fontSize: 16 }} />
-              </Link>
-            ))}
-          </Box>
-        </>
-      )}
+        if (block.type === 'matching') {
+          return (
+            <Box key={block.id} sx={{ mt: 4, p: 0, border: '2px dashed', borderColor: 'primary.light', borderRadius: 2 }}>
+              <MatchingActivity 
+                activityData={block} 
+                onComplete={() => setMatchingComplete(true)} 
+              />
+            </Box>
+          );
+        }
+
+        return null;
+      })}
+
+      <Box sx={{ mt: 6, textAlign: 'center' }}>
+        {!submitted ? (
+          isMultiStep && currentStep === 0 ? (
+            <Button
+              variant="contained"
+              size="large"
+              disabled={!canProceedToMatching}
+              onClick={handleNext}
+              sx={{ px: 8, borderRadius: 2 }}
+            >
+              Continue to Matching
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              size="large"
+              disabled={!canFinalize}
+              onClick={handleSubmit}
+              sx={{ px: 8, borderRadius: 2 }}
+            >
+              Check All Answers
+            </Button>
+          )
+        ) : (
+          <Alert severity="success" sx={{ borderRadius: 2 }}>
+            Activity completed! You found all the matching pairs and evaluated the statements.
+          </Alert>
+        )}
+      </Box>
 
       {pdfNote && (
-        <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 2 }}>
-          {pdfNote}
-        </Typography>
-      )}
-
-      {checks?.blocks?.length > 0 && <InlineActivityChecks blocks={checks.blocks} onSatisfiedChange={setChecksSatisfied} />}
-
-      {!done ? (
-        <Button
-          variant="contained"
-          size="large"
-          onClick={handleComplete}
-          disabled={checks?.blocks?.length > 0 && !checksSatisfied}
-          sx={{ alignSelf: 'center', mt: 2, borderRadius: 2 }}
-        >
-          Mark activity complete
-        </Button>
-      ) : (
-        <Typography variant="body1" color="success.main" sx={{ textAlign: 'center', mt: 2 }}>
-          Saved as complete. You can close this screen or go to the next activity.
-        </Typography>
-      )}
-
-      {checks?.blocks?.length > 0 && !checksSatisfied && !done && (
-        <Typography variant="caption" color="text.secondary" sx={{ textAlign: 'center', mt: 1 }}>
-          Use <strong>Check answers</strong> above until all items are correct to enable completion.
+        <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 4, textAlign: 'center' }}>
+          Reference: {pdfNote}
         </Typography>
       )}
     </Box>
