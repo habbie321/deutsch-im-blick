@@ -99,8 +99,7 @@ const WorkbookActivity = ({ activityData, onComplete }) => {
       case 'who': return mcAnswers[block.id] !== undefined;
       case 'multi': return (multiAnswers[block.id] || []).length > 0;
       case 'text': 
-        const answers = textAnswers[block.id] || {};
-        return block.prompts.every((_, i) => answers[i]?.trim().length > 0);
+        return true; // Text prompts in workbooks are usually optional/supplemental
       case 'matching': return matchingComplete;
       case 'order': return true; // Order blocks are always in a valid state
       default: return true; // sectionTitle or unknown types don't block
@@ -163,8 +162,8 @@ const WorkbookActivity = ({ activityData, onComplete }) => {
                     value={tfAnswers[block.id] === undefined ? '' : tfAnswers[block.id].toString()}
                     onChange={(e) => handleTfChange(block.id, e.target.value)}
                   >
-                    <FormControlLabel value="true" control={<Radio size="small" />} label="R" />
-                    <FormControlLabel value="false" control={<Radio size="small" />} label="F" />
+                    <FormControlLabel value="true" control={<Radio size="small" />} label={block.trueLabel || "R"} />
+                    <FormControlLabel value="false" control={<Radio size="small" />} label={block.falseLabel || "F"} />
                   </RadioGroup>
                 </FormControl>
               </Box>

@@ -2555,25 +2555,39 @@
           "label": "Bernas typischer Tag"
         }
       ],
-      "intro": "What is a typical day like for Berna? View her video and number her daily routines in the order in which she describes them.",
+      "intro": "What is a typical day like for Berna? View her video and determine if the following statements about her routine are true (Richtig) or false (Falsch).",
       "pdfNote": "COERLL Kapitel 3 workbook, page 110: QR 3.3",
       "checks": {
         "blocks": [
           {
-            "type": "order",
-            "id": "berna_order",
-            "instruction": "Drag or use arrows to put Berna's routine in the correct chronological order.",
-            "items": [
-              { "id": 1, "text": "Dann muss ich erst mal essen, weil ich meistens sehr ausgehungert (starved) bin." },
-              { "id": 2, "text": "Wenn die Kurse fertig (finished) sind, komme ich dann nach Hause." },
-              { "id": 3, "text": "Dann trinke ich eine Tasse Kaffee, ich dusche mich, mache mich fertig." },
-              { "id": 4, "text": "Vormittags bin ich damit beschäftigt zu unterrichten, vorbereiten, Tests korrigieren..." },
-              { "id": 5, "text": "Dann lese ich wieder weiter für den nächsten Tag." },
-              { "id": 6, "text": "Ich stehe morgens relativ früh auf, so um sieben." },
-              { "id": 7, "text": "Dann gehe ich zur Universität." },
-              { "id": 8, "text": "Nachmittags muss ich dann in meine Kurse reingehen. Dann wird da viel diskutiert." }
-            ],
-            "correctOrder": [6, 3, 7, 4, 8, 2, 1, 5]
+            "type": "tf",
+            "id": "b3_1",
+            "statement": "Berna steht morgens um sieben Uhr auf.",
+            "correct": true
+          },
+          {
+            "type": "tf",
+            "id": "b3_2",
+            "statement": "Sie geht sofort zur Universität, ohne zu frühstücken.",
+            "correct": false
+          },
+          {
+            "type": "tf",
+            "id": "b3_3",
+            "statement": "Vormittags korrigiert sie Tests und bereitet den Unterricht vor.",
+            "correct": true
+          },
+          {
+            "type": "tf",
+            "id": "b3_4",
+            "statement": "Nachmittags hat sie ihre eigenen Kurse.",
+            "correct": true
+          },
+          {
+            "type": "tf",
+            "id": "b3_5",
+            "statement": "Abends geht sie meistens direkt ins Bett und schläft.",
+            "correct": false
           }
         ]
       }
@@ -2694,6 +2708,209 @@
               "Other evening activity 1:",
               "Other evening activity 2:"
             ]
+          }
+        ]
+      }
+    },
+    {
+      "chapter": 3,
+      "id": 6,
+      "type": "workbook",
+      "icon": "groupactivity",
+      "title": "Aktivität 6. Und was machst du denn den ganzen Tag?",
+      "description": "Compare your typical day with a classmate's daily routine.",
+      "duration": "20 min",
+      "prerequisites": [],
+      "intro": "What is a typischer Tag in your life and the life of one of your classmates? In the first section, check the activities that apply to you and add your own. Then, interview a partner and record their routine.",
+      "pdfNote": "COERLL Kapitel 3 workbook, page 111.",
+      "checks": {
+        "blocks": [
+          {
+            "type": "sectionTitle",
+            "text": "Mein typischer Tag (Du)"
+          },
+          {
+            "type": "multi",
+            "id": "me_routine_select",
+            "question": "Was machst du an einem typischen Tag? (Check all that apply)",
+            "options": [
+              "Ich wache früh auf.",
+              "Ich schlafe lange.",
+              "Ich dusche (jeden Tag/manchmal).",
+              "Ich schminke mich (nicht).",
+              "Ich trinke zwei Tassen Kaffee.",
+              "Ich gehe pünktlich zu meinen Kursen.",
+              "Ich komme oft zu spät zu meinen Kursen.",
+              "Ich esse zu Mittag.",
+              "Ich telefoniere mit Freunden.",
+              "Ich sehe (vier Stunden) fern.",
+              "Ich mache Sport.",
+              "Ich mache (zu viele) Hausaufgaben.",
+              "Ich esse zu Abend.",
+              "Ich gehe ziemlich früh ins Bett.",
+              "Ich schlafe sehr spät ein!",
+              "Ich entspanne mich."
+            ],
+            "correctIndices": []
+          },
+          {
+            "type": "text",
+            "id": "me_routine_write",
+            "prompts": [
+              "Andere Aktivität 1:",
+              "Andere Aktivität 2:",
+              "Andere Aktivität 3:"
+            ]
+          },
+          {
+            "type": "sectionTitle",
+            "text": "Mein Partner"
+          },
+          {
+            "type": "multi",
+            "id": "partner_routine_select",
+            "question": "Was macht dein Partner an einem typischen Tag?",
+            "options": [
+              "Ich wache früh auf.",
+              "Ich schlafe lange.",
+              "Ich dusche (jeden Tag/manchmal).",
+              "Ich schminke mich (nicht).",
+              "Ich trinke zwei Tassen Kaffee.",
+              "Ich gehe pünktlich zu meinen Kursen.",
+              "Ich komme oft zu spät zu meinen Kursen.",
+              "Ich esse zu Mittag.",
+              "Ich telefoniere mit Freunden.",
+              "Ich sehe (vier Stunden) fern.",
+              "Ich mache Sport.",
+              "Ich mache (zu viele) Hausaufgaben.",
+              "Ich esse zu Abend.",
+              "Ich gehe ziemlich früh ins Bett.",
+              "Ich schlafe sehr spät ein!",
+              "Ich entspanne mich."
+            ],
+            "correctIndices": []
+          },
+          {
+            "type": "text",
+            "id": "partner_routine_write",
+            "prompts": [
+              "Partner - Andere Aktivität 1:",
+              "Partner - Andere Aktivität 2:",
+              "Partner - Andere Aktivität 3:"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "chapter": 3,
+      "id": 7,
+      "type": "writing",
+      "icon": "groupactivity",
+      "title": "Aktivität 7. Ein typischer Tag im Leben von meinem Lieblingsstar",
+      "description": "Create a fictional interview about your favorite star's daily routine.",
+      "duration": "20 min",
+      "prerequisites": [],
+      "intro": "You may not be able to conduct an interview with your favorite star, but who needs facts nowadays! Brainstorm what you think a typischer Tag for your favorite star looks like.\n\nSie: Hallo! Schön, Sie kennenzulernen. Ich bin ein großer Fan!\nIhr Lieblingsstar: Danke schön.\nSie: Ok, meine erste Frage ... wie sieht Ihr typischer Tag aus?",
+      "tasks": [
+        "Write the fictional interview response for your favorite star. Describe their typical day in detail."
+      ],
+      "pdfNote": "COERLL Kapitel 3 workbook, page 142 (electronic p. 111)."
+    },
+    {
+      "chapter": 3,
+      "id": 8,
+      "type": "workbook",
+      "icon": "readingtask",
+      "title": "Aktivität 8. Lieder & Musik",
+      "description": "Jürgen von der Lippe – Guten Morgen, liebe Sorgen.",
+      "duration": "20 min",
+      "prerequisites": [],
+      "intro": "Listen to this song by Jürgen von der Lippe, who – in a parody of a popular children’s song – describes a less than desirable day in his imaginary life, and complete the activities in the pdf on the Deutsch im Blick website in Kapitel 3 under „Lieder & Musik”.",
+      "links": [
+        {
+          "label": "Kapitel 3 · Lieder & Musik (Website)",
+          "url": "https://coerll.utexas.edu/dib/toc.php?k=3"
+        }
+      ],
+      "pdfNote": "Refer to the supplemental PDF for Jürgen von der Lippe's song on the COERLL site."
+    },
+    {
+      "chapter": 3,
+      "id": 9,
+      "type": "writing",
+      "icon": "groupactivity",
+      "title": "Aktivität 9. Alexander und der mistige Tag (von Judith Viorst)",
+      "description": "Describe a terrible, horrible, no-good, very bad day in the present tense.",
+      "duration": "20 min",
+      "prerequisites": [],
+      "intro": "Do you know the story of Alexander, who at one point had a terrible, horrible, no-good, very bad day? Well, he did. Have you ever had one of those? If yes, describe what happened (if not, make something up). For now, describe this event as if you were watching it in a movie, using the present tense.",
+      "tasks": [
+        "Beschreiben Sie einen schrecklichen Tag im Präsens (present tense)."
+      ],
+      "pdfNote": "COERLL Kapitel 3 workbook, page 142 (electronic p. 111)."
+    },
+    {
+      "chapter": 3,
+      "id": 10,
+      "type": "workbook",
+      "icon": "groupactivity",
+      "title": "Aktivität 10. Ich gehe schlafen.",
+      "description": "Read the statements about sleeping habits and decide if they apply to you.",
+      "duration": "10 min",
+      "prerequisites": [],
+      "intro": "Hopefully, at the end of any day comes some well-deserved sleep! Read the statements below about sleeping habits and decide if they apply to you or not.",
+      "pdfNote": "COERLL Kapitel 3 workbook, page 142 (electronic p. 111).",
+      "checks": {
+        "blocks": [
+          {
+            "type": "tf",
+            "id": "sleep_1",
+            "statement": "1. Ich brauche acht Stunden Schlaf, um zu funktionieren.",
+            "trueLabel": "Ja",
+            "falseLabel": "Nein"
+          },
+          {
+            "type": "tf",
+            "id": "sleep_2",
+            "statement": "2. Ich bekomme jede Nacht acht Stunden Schlaf.",
+            "trueLabel": "Ja",
+            "falseLabel": "Nein"
+          },
+          {
+            "type": "tf",
+            "id": "sleep_3",
+            "statement": "3. Ich schlafe immer vor (before) Mitternacht ein.",
+            "trueLabel": "Ja",
+            "falseLabel": "Nein"
+          },
+          {
+            "type": "tf",
+            "id": "sleep_4",
+            "statement": "4. Ich verschlafe oft, obwohl (although) ich meinen Wecker stelle.",
+            "trueLabel": "Ja",
+            "falseLabel": "Nein"
+          },
+          {
+            "type": "tf",
+            "id": "sleep_5",
+            "statement": "5. Ich habe meistens schöne Träume (sweet dreams).",
+            "trueLabel": "Ja",
+            "falseLabel": "Nein"
+          },
+          {
+            "type": "tf",
+            "id": "sleep_6",
+            "statement": "6. Ich schnarche (snore) sehr laut.",
+            "trueLabel": "Ja",
+            "falseLabel": "Nein"
+          },
+          {
+            "type": "tf",
+            "id": "sleep_7",
+            "statement": "7. Ich bin ein großer Fan von Schläfchen (naps).",
+            "trueLabel": "Ja",
+            "falseLabel": "Nein"
           }
         ]
       }
