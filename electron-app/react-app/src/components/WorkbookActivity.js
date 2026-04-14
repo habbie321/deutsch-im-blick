@@ -10,6 +10,7 @@ import {
   Divider,
   Button,
   Alert,
+  TextField,
   Checkbox,
   FormGroup,
   Stepper,
@@ -31,6 +32,7 @@ const WorkbookActivity = ({ activityData, onComplete }) => {
   const [matchingComplete, setMatchingComplete] = useState(false);
   const [multiAnswers, setMultiAnswers] = useState({});
   const [mcAnswers, setMcAnswers] = useState({});
+  const [textAnswers, setTextAnswers] = useState({});
   const [orderStates, setOrderStates] = useState(
     checks?.blocks
       .filter(b => b.type === 'order')
@@ -74,10 +76,41 @@ const WorkbookActivity = ({ activityData, onComplete }) => {
     setOrderStates(prev => ({ ...prev, [blockId]: newItems }));
   };
 
-  const allTfAnswered = tfBlocks.every(block => tfAnswers[block.id] !== undefined);
-  
-  const canProceedToMatching = allTfAnswered;
-  const canFinalize = hasMatching ? matchingComplete : allTfAnswered;
+  const handleTextChange = (blockId, promptIndex, value) => {
+    setTextAnswers(prev => ({
+      ...prev,
+      [blockId]: { ...(prev[blockId] || {}), [promptIndex]: value }
+    }));
+  };
+
+  // Determine blocks for the current view
+  const visibleBlocks = checks?.blocks.filter(block => {
+    if (!isMultiStep) return true;
+    if (currentStep === 0) return ['tf', 'sectionTitle', 'mc', 'who', 'multi', 'text'].includes(block.type);
+    if (currentStep === 1) return block.type === 'matching' || block.type === 'order';
+    return true;
+  }) || [];
+
+  // Helper to check if a specific block is "answered"
+  const isBlockComplete = (block) => {
+    switch (block.type) {
+      case 'tf': return tfAnswers[block.id] !== undefined;
+      case 'mc':
+      case 'who': return mcAnswers[block.id] !== undefined;
+      case 'multi': return (multiAnswers[block.id] || []).length > 0;
+      case 'text': 
+        const answers = textAnswers[block.id] || {};
+        return block.prompts.every((_, i) => answers[i]?.trim().length > 0);
+      case 'matching': return matchingComplete;
+      case 'order': return true; // Order blocks are always in a valid state
+      default: return true; // sectionTitle or unknown types don't block
+    }
+  };
+
+  const stepSatisfied = visibleBlocks.every(isBlockComplete);
+
+  const canProceedToMatching = isMultiStep && currentStep === 0 && stepSatisfied;
+  const canFinalize = (!isMultiStep || currentStep === 1) && stepSatisfied;
 
   const handleNext = () => {
     setCurrentStep(1);
@@ -108,12 +141,7 @@ const WorkbookActivity = ({ activityData, onComplete }) => {
         </Stepper>
       )}
 
-      {checks?.blocks.filter(block => {
-        if (!isMultiStep) return true;
-        if (currentStep === 0) return block.type === 'tf' || block.type === 'sectionTitle';
-        if (currentStep === 1) return block.type === 'matching';
-        return true;
-      }).map((block, index) => {
+      {visibleBlocks.map((block, index) => {
         if (block.type === 'sectionTitle') {
           return (
             <Typography key={index} variant="h6" sx={{ mt: 4, mb: 2, color: 'text.primary', fontWeight: 'bold' }}>
@@ -189,6 +217,28 @@ const WorkbookActivity = ({ activityData, onComplete }) => {
                 ))}
               </FormGroup>
             </Paper>
+          );
+        }
+
+        if (block.type === 'text') {
+          return (
+            <Box key={block.id} sx={{ mb: 3 }}>
+              {block.prompts.map((prompt, i) => (
+                <TextField
+                  key={i}
+                  fullWidth
+                  label={prompt}
+                  variant="standard"
+                  value={textAnswers[block.id]?.[i] || ''}
+                  onChange={(e) => handleTextChange(block.id, i, e.target.value)}
+                  disabled={submitted}
+                  sx={{ mb: 2 }}
+                  InputProps={{
+                    sx: { fontStyle: 'italic' }
+                  }}
+                />
+              ))}
+            </Box>
           );
         }
 

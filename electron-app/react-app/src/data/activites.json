@@ -2602,6 +2602,101 @@
         "Warum ist Hassan momentan nicht an der Universität?"
       ],
       "pdfNote": "COERLL Kapitel 3 workbook: QR 3.5 (p. 152)"
+    },
+    {
+      "chapter": 3,
+      "id": 5,
+      "type": "workbook",
+      "icon": "readingtask",
+      "title": "Aktivität 5. Der Tagesablauf",
+      "description": "Identify common daily activities and add your own.",
+      "duration": "20 min",
+      "prerequisites": [],
+      "intro": "Below are some common activities for each part of the day. Circle the ones that describe your daily routine and add other activities you can think of.",
+      "pdfNote": "COERLL Kapitel 3 workbook, page 111.",
+      "checks": {
+        "blocks": [
+          {
+            "type": "sectionTitle",
+            "text": "Morgens / Vormittags"
+          },
+          {
+            "type": "multi",
+            "id": "morgens_select",
+            "question": "Which of these describe your morning routine?",
+            "options": [
+              "aufwachen (to wake up)",
+              "aufstehen (to get up)",
+              "duschen",
+              "anziehen (get dressed)",
+              "die Zähne putzen",
+              "die Haare bürsten/kämmen",
+              "rasieren (to shave)",
+              "frühstücken"
+            ],
+            "correctIndices": []
+          },
+          {
+            "type": "text",
+            "id": "morgens_write",
+            "prompts": [
+              "Other morning activity 1:",
+              "Other morning activity 2:"
+            ]
+          },
+          {
+            "type": "sectionTitle",
+            "text": "Mittags / Nachmittags"
+          },
+          {
+            "type": "multi",
+            "id": "mittags_select",
+            "question": "Which of these describe your afternoon?",
+            "options": [
+              "zur Universität gehen",
+              "in die Kurse / zum Unterricht gehen",
+              "zu Mittag essen",
+              "Besorgungen machen",
+              "mit Freunden Kaffee trinken gehen",
+              "nach Hause gehen"
+            ],
+            "correctIndices": []
+          },
+          {
+            "type": "text",
+            "id": "mittags_write",
+            "prompts": [
+              "Other afternoon activity 1:",
+              "Other afternoon activity 2:"
+            ]
+          },
+          {
+            "type": "sectionTitle",
+            "text": "Abends / Nachts"
+          },
+          {
+            "type": "multi",
+            "id": "abends_select",
+            "question": "Which of these describe your evening?",
+            "options": [
+              "Hausaufgaben machen",
+              "sich entspannen (relax)",
+              "zu Abend essen",
+              "ausziehen (get undressed)",
+              "ins Bett gehen"
+            ],
+            "correctIndices": []
+          },
+          {
+            "type": "text",
+            "id": "abends_write",
+            "prompts": [
+              "Other evening activity 1:",
+              "Other evening activity 2:"
+            ]
+          }
+        ]
+      }
     }
   ]
 }
