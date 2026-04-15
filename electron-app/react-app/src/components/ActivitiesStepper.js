@@ -34,6 +34,7 @@ import MatchingActivity from './MatchingActivity';
 import WorkbookActivity from './WorkbookActivity';
 import SelfCheckReadingActivity from './SelfCheckReadingActivity';
 import WritingActivity from './WritingActivity';
+import ClassificationGridActivity from './ClassificationGridActivity';
 import ActivityVideoSection from './ActivityVideoSection';
 import activityData from '../data/activites.json';
 
@@ -52,6 +53,8 @@ function ActivityContent({ activity, onComplete }) {
       return <WorkbookActivity activityData={activity} onComplete={onComplete} />;
     case 'writing':
       return <WritingActivity activityData={activity} onComplete={onComplete} />;
+    case 'classification_grid':
+      return <ClassificationGridActivity activityData={activity} onComplete={onComplete} />;
     default:
       return (
         <Box sx={{ p: 2, textAlign: 'center' }}>
@@ -305,7 +308,7 @@ const ActivitiesStepper = ({ chapterNumber }) => {
         >
           {selectedActivity && (
             <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-              <ActivityVideoSection activity={selectedActivity.raw} />
+              {selectedActivity.type !== 'classification_grid' && <ActivityVideoSection activity={selectedActivity.raw} />}
               <ActivityContent
                 activity={selectedActivity.raw}
                 onComplete={(result) => handleActivityComplete(selectedActivity.id, result)}

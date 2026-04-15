@@ -2914,6 +2914,41 @@
           }
         ]
       }
+    },
+    {
+      "chapter": 3,
+      "id": 11,
+      "type": "classification_grid",
+      "icon": "videoclips",
+      "title": "Aktivität 11. Morgenmenschen vs. Nachtmenschen",
+      "description": "Do these speakers like to get up early or sleep in?",
+      "duration": "25 min",
+      "prerequisites": [],
+      "intro": "Watch the „Sind Sie ein Morgenmensch” videos as these people discuss whether they consider themselves to be “morning people,” “night people,” neither of the two, or both. After watching, classify each speaker.",
+      "videos": [
+        { "path": "chapter03/k03_a11_berna.mp4", "label": "Berna" },
+        { "path": "chapter03/k03_a11_eva.mp4", "label": "Eva" },
+        { "path": "chapter03/k03_a11_harald.mp4", "label": "Harald" },
+        { "path": "chapter03/k03_a11_jan.mp4", "label": "Jan" },
+        { "path": "chapter03/k03_a11_adan.mp4", "label": "Adan" },
+        { "path": "chapter03/k03_a11_hassan.mp4", "label": "Hassan" },
+        { "path": "chapter03/k03_a11_erin.mp4", "label": "Erin" },
+        { "path": "chapter03/k03_a11_sara.mp4", "label": "Sara" }
+      ],
+      "grid": {
+        "categories": ["Morgenmenschen", "Weder ... noch", "Beides", "Nachtmenschen"],
+        "items": [
+          { "id": "berna", "label": "Berna (QR 3.16)", "correctIndex": 0 },
+          { "id": "eva", "label": "Eva (QR 3.17)", "correctIndex": 3 },
+          { "id": "harald", "label": "Harald (QR 3.18)", "correctIndex": 0 },
+          { "id": "jan", "label": "Jan (QR 3.20)", "correctIndex": 3 },
+          { "id": "adan", "label": "Adan (QR 3.21)", "correctIndex": 2 },
+          { "id": "hassan", "label": "Hassan (QR 3.12)", "correctIndex": 2 },
+          { "id": "erin", "label": "Erin (QR 3.23)", "correctIndex": 3 },
+          { "id": "sara", "label": "Sara (QR 3.25)", "correctIndex": 3 }
+        ]
+      },
+      "pdfNote": "COERLL Kapitel 3 workbook, page 116."
     }
   ]
 }

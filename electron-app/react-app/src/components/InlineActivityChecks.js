@@ -11,7 +11,13 @@ import {
   Checkbox,
   TextField,
   IconButton,
-  Divider
+  Divider,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow
 } from '@mui/material';
 import { KeyboardArrowUp, KeyboardArrowDown } from '@mui/icons-material';
 import { matchesAnyVariant, containsAllKeywords } from '../utils/answerMatch';
@@ -34,6 +40,7 @@ const InlineActivityChecks = ({ blocks = [], onSatisfiedChange }) => {
   const [tf, setTf] = useState({});
   const [short, setShort] = useState({});
   const [who, setWho] = useState({});
+  const [classification, setClassification] = useState({});
   const [orderState, setOrderState] = useState({});
 
   const orderInit = useMemo(() => {
@@ -95,6 +102,12 @@ const InlineActivityChecks = ({ blocks = [], onSatisfiedChange }) => {
         const letters = ['H', 'E', 'S'].filter((L) => picked[L]).sort().join('');
         const want = [...(b.correctLetters || [])].sort().join('');
         const ok = letters === want;
+        next[b.id] = ok;
+        if (!ok) allOk = false;
+      }
+      if (b.type === 'classification') {
+        const state = classification[b.id] || {};
+        const ok = (b.items || []).every((item) => state[item.id] === item.correctIndex);
         next[b.id] = ok;
         if (!ok) allOk = false;
       }
@@ -270,6 +283,54 @@ const InlineActivityChecks = ({ blocks = [], onSatisfiedChange }) => {
               />
             ))}
           </FormGroup>
+        </Paper>
+      );
+    }
+
+    if (b.type === 'classification') {
+      const state = classification[b.id] || {};
+      return (
+        <Paper key={b.id} elevation={0} sx={{ p: 2, mb: 2, border: 1, borderColor: err ? 'error.main' : ok ? 'success.main' : 'divider' }}>
+          <Typography variant="body2" fontWeight="medium" gutterBottom>
+            {b.instruction}
+          </Typography>
+          <TableContainer component={Box} sx={{ mt: 1, overflowX: 'auto' }}>
+            <Table size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell sx={{ fontWeight: 'bold' }}>Name</TableCell>
+                  {(b.categories || []).map((cat, idx) => (
+                    <TableCell key={idx} align="center" sx={{ fontWeight: 'bold', fontSize: '0.75rem', lineHeight: 1.2, minWidth: 80 }}>
+                      {cat}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {(b.items || []).map((item) => (
+                  <TableRow key={item.id}>
+                    <TableCell sx={{ fontSize: '0.85rem', whiteSpace: 'nowrap' }}>{item.label}</TableCell>
+                    {(b.categories || []).map((_, catIdx) => (
+                      <TableCell key={catIdx} align="center">
+                        <Radio
+                          size="small"
+                          checked={state[item.id] === catIdx}
+                          onChange={() => {
+                            setClassification((prev) => ({
+                              ...prev,
+                              [b.id]: { ...(prev[b.id] || {}), [item.id]: catIdx }
+                            }));
+                            setResults(null);
+                            onSatisfiedChange(false);
+                          }}
+                        />
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </Paper>
       );
     }
