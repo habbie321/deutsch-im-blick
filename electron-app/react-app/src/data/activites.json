@@ -2976,6 +2976,56 @@
         "Nachts kann ich nicht so gut ..."
       ],
       "pdfNote": "COERLL Kapitel 3 workbook, page 116."
+    },
+    {
+      "chapter": 3,
+      "id": 12.5,
+      "type": "blurb",
+      "title": "MANN, JETZT HAB’ ICH ABER HUNGER!",
+      "text": "The daily routine includes a variety of meals, the first of which is Frühstück, followed by\nein Mittagessen, and finally concluded by either ein Abendessen or a small Abendbrot. In\nthe next sections, you will learn lots of new information about the types of foods from your\nnative- and non-native-speaking guides.",
+      "prerequisites": []
+    },
+    {
+      "chapter": 3,
+      "id": 13,
+      "type": "multi_speaker_writing",
+      "icon": "videoclips",
+      "title": "Aktivität 13. Frühstücken sie?",
+      "description": "Watch as they discuss eating breakfast and take notes.",
+      "duration": "20 min",
+      "prerequisites": [],
+      "intro": "Breakfast is the first meal of the day. Do these speakers agree? Essen sie Frühstück? Wenn ja (if so), wo und was essen sie?",
+      "wordBank": [
+        "hungrig", "Eier", "Schinken", "zu Hause", "Müsli", 
+        "Nussschnecke mit Zimt und Nüssen", "Hunger haben", "Haferflocken", "Brot"
+      ],
+      "speakers": [
+        {
+          "id": "berna",
+          "name": "Berna (QR 3.33)",
+          "videoPath": "chapter03/k03_a13_berna.mp4",
+          "questions": ["Frühstückt er/sie?", "Wo isst er/sie Frühstück?", "Was isst er/sie zum Frühstück?"]
+        },
+        {
+          "id": "jan",
+          "name": "Jan (QR 3.4)",
+          "videoPath": "chapter03/k03_a13_jan.mp4",
+          "questions": ["Frühstückt er/sie?", "Wo isst er/sie Frühstück?", "Was isst er/sie zum Frühstück?"]
+        },
+        {
+          "id": "adan",
+          "name": "Adan (QR 3.7)",
+          "videoPath": "chapter03/k03_a13_adan.mp4",
+          "questions": ["Frühstückt er/sie?", "Wo isst er/sie Frühstück?", "Was isst er/sie zum Frühstück?"]
+        },
+        {
+          "id": "erin",
+          "name": "Erin (QR 3.6)",
+          "videoPath": "chapter03/k03_a13_erin.mp4",
+          "questions": ["Frühstückt er/sie?", "Wo isst er/sie Frühstück?", "Was isst er/sie zum Frühstück?"]
+        }
+      ],
+      "pdfNote": "COERLL Kapitel 3 workbook, page 116."
     }
   ]
 }

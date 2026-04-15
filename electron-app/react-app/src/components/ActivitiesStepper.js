@@ -35,6 +35,7 @@ import WorkbookActivity from './WorkbookActivity';
 import SelfCheckReadingActivity from './SelfCheckReadingActivity';
 import WritingActivity from './WritingActivity';
 import ClassificationGridActivity from './ClassificationGridActivity';
+import ActivityBlurb from './ActivityBlurb';
 import ActivityVideoSection from './ActivityVideoSection';
 import activityData from '../data/activites.json';
 
@@ -52,6 +53,7 @@ function ActivityContent({ activity, onComplete }) {
     case 'workbook':
       return <WorkbookActivity activityData={activity} onComplete={onComplete} />;
     case 'writing':
+    case 'multi_speaker_writing':
       return <WritingActivity activityData={activity} onComplete={onComplete} />;
     case 'classification_grid':
       return <ClassificationGridActivity activityData={activity} onComplete={onComplete} />;
@@ -191,6 +193,7 @@ const ActivitiesStepper = ({ chapterNumber }) => {
         {currentActivities.map((activity) => {
           const locked = isLocked(activity);
           const done = isCompleted(activity.id);
+          if (activity.type === 'blurb') return null;
           return (
             <Step key={activity.id} completed={done}>
               <StepButton
@@ -221,6 +224,11 @@ const ActivitiesStepper = ({ chapterNumber }) => {
         {currentActivities.map((activity) => {
           const locked = isLocked(activity);
           const done = isCompleted(activity.id);
+
+          if (activity.type === 'blurb') {
+            return <ActivityBlurb key={activity.id} title={activity.title} text={activity.raw.text} />;
+          }
+
           return (
             <Card
               key={activity.id}
@@ -308,7 +316,10 @@ const ActivitiesStepper = ({ chapterNumber }) => {
         >
           {selectedActivity && (
             <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-              {selectedActivity.type !== 'classification_grid' && <ActivityVideoSection activity={selectedActivity.raw} />}
+              {selectedActivity.type !== 'classification_grid' && 
+               selectedActivity.type !== 'multi_speaker_writing' && (
+                <ActivityVideoSection activity={selectedActivity.raw} />
+              )}
               <ActivityContent
                 activity={selectedActivity.raw}
                 onComplete={(result) => handleActivityComplete(selectedActivity.id, result)}

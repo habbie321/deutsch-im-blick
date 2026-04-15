@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   Box,
   Typography,
@@ -6,9 +6,14 @@ import {
   Button,
   Paper,
   Divider,
-  Collapse
+  Collapse,
+  Stepper,
+  Step,
+  StepLabel,
+  MobileStepper
 } from '@mui/material';
-import { ExpandMore, ExpandLess, EditNote } from '@mui/icons-material';
+import { ExpandMore, ExpandLess, EditNote, KeyboardArrowLeft, KeyboardArrowRight, CheckCircle } from '@mui/icons-material';
+import VideoPlayer from './VideoPlayer';
 
 /**
  * WritingActivity
@@ -23,26 +28,53 @@ const WritingActivity = ({ activityData, onComplete }) => {
     tasks = [], 
     example, 
     helpfulExpressions = [], 
-    pdfNote
+    pdfNote,
+    speakers = [],
+    wordBank = [],
+    chapter
   } = activityData;
 
-  // Initialize responses as an object: { 0: '', 1: '', ... }
-  const [responses, setResponses] = useState(() => 
-    tasks.reduce((acc, _, idx) => ({ ...acc, [idx]: '' }), {})
-  );
+  const isMultiSpeaker = speakers.length > 0;
+  const isParagraphMode = !isMultiSpeaker && tasks.length <= 1;
+
+  // State
   const [showExample, setShowExample] = useState(false);
   const [done, setDone] = useState(false);
+  const [activeStep, setActiveStep] = useState(0);
+  const [responses, setResponses] = useState(() => {
+    if (isMultiSpeaker) {
+      const init = {};
+      speakers.forEach(s => s.questions.forEach((_, qIdx) => {
+        init[`${s.id}_${qIdx}`] = '';
+      }));
+      return init;
+    }
+    return tasks.reduce((acc, _, idx) => ({ ...acc, [idx]: '' }), {});
+  });
 
-  const isParagraphMode = tasks.length <= 1;
+  // Computed helpers for Multi-Speaker mode
+  const currentSpeaker = isMultiSpeaker ? speakers[activeStep] : null;
+  const totalSteps = speakers.length;
+
+  const isStepComplete = (stepIdx) => {
+    const s = speakers[stepIdx];
+    return s.questions.every((_, qIdx) => (responses[`${s.id}_${qIdx}`] || '').trim().length > 0);
+  };
+
+  const allSpeakersDone = isMultiSpeaker ? speakers.every((_, idx) => isStepComplete(idx)) : true;
 
   const handleComplete = () => {
     const values = Object.values(responses);
     const totalLength = values.join('').trim().length;
     
-    // Paragraph mode needs 20 chars; Multi-input needs every box to have something.
-    const isValid = isParagraphMode 
-      ? totalLength >= 20 
-      : (values.every(v => v.trim().length > 0));
+    let isValid = false;
+    if (isMultiSpeaker) {
+      isValid = allSpeakersDone;
+    } else if (isParagraphMode) {
+      isValid = totalLength >= 20;
+    } else {
+      isValid = values.every(v => v.trim().length > 0);
+    }
 
     if (!isValid) return;
     
@@ -50,11 +82,15 @@ const WritingActivity = ({ activityData, onComplete }) => {
     if (onComplete) {
       onComplete({ 
         correct: true, 
-        response: isParagraphMode ? responses[0] : values.join('\n'),
+        response: isParagraphMode ? responses[0] : JSON.stringify(responses),
         responses: responses 
       });
     }
   };
+
+  // Shared logic for vocabulary/word banks
+  const vocabList = wordBank.length > 0 ? wordBank : helpfulExpressions;
+  const vocabLabel = wordBank.length > 0 ? "Word Bank" : "Helpful Expressions";
 
   return (
     <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', maxWidth: 800, mx: 'auto', width: '100%', p: 1 }}>
@@ -68,8 +104,18 @@ const WritingActivity = ({ activityData, onComplete }) => {
         </Typography>
       )}
 
+      {isMultiSpeaker && (
+        <Stepper activeStep={activeStep} alternativeLabel sx={{ mb: 4 }}>
+          {speakers.map((s, idx) => (
+            <Step key={s.id} completed={isStepComplete(idx)}>
+              <StepLabel sx={{ '& .MuiStepLabel-label': { fontSize: '0.75rem' } }}>{s.name}</StepLabel>
+            </Step>
+          ))}
+        </Stepper>
+      )}
+
       {/* Task Instructions */}
-      {isParagraphMode && tasks.length > 0 && (
+      {!isMultiSpeaker && isParagraphMode && tasks.length > 0 && (
         <Box sx={{ mb: 3 }}>
           {tasks.map((task, idx) => (
             <Typography key={idx} variant="body1" sx={{ fontWeight: 'medium', mb: 1 }}>
@@ -101,14 +147,14 @@ const WritingActivity = ({ activityData, onComplete }) => {
         </Box>
       )}
 
-      {/* Helpful Expressions Word Bank */}
-      {helpfulExpressions.length > 0 && (
-        <Paper elevation={0} sx={{ p: 2, mb: 3, bgcolor: '#f8f9fa', borderLeft: 5, borderColor: 'primary.main' }}>
-          <Typography variant="subtitle2" color="primary" sx={{ mb: 1, fontWeight: 'bold', fontSize: '0.75rem', textTransform: 'uppercase' }}>
-            Helpful Expressions:
+      {/* Vocabulary / Word Bank */}
+      {vocabList.length > 0 && (
+        <Paper elevation={0} sx={{ p: 2, mb: 3, bgcolor: isMultiSpeaker ? '#fdf6e3' : '#f8f9fa', borderLeft: 5, borderColor: isMultiSpeaker ? '#856404' : 'primary.main' }}>
+          <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 'bold', fontSize: '0.75rem', textTransform: 'uppercase', color: isMultiSpeaker ? '#856404' : 'primary.main' }}>
+            {vocabLabel}:
           </Typography>
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-            {helpfulExpressions.map((expr, idx) => (
+            {vocabList.map((expr, idx) => (
               <Typography key={idx} variant="caption" sx={{ bgcolor: 'white', px: 1, py: 0.5, borderRadius: 1, border: 1, borderColor: 'divider' }}>
                 {expr}
               </Typography>
@@ -117,10 +163,37 @@ const WritingActivity = ({ activityData, onComplete }) => {
         </Paper>
       )}
 
-      <Divider sx={{ mb: 3 }} />
+      {!isMultiSpeaker && <Divider sx={{ mb: 3 }} />}
 
       {/* Main Writing Input(s) */}
-      {!isParagraphMode ? (
+      {isMultiSpeaker ? (
+        <Paper elevation={2} sx={{ p: 3, borderRadius: 2, bgcolor: 'background.paper' }}>
+          <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+            {currentSpeaker.name} {isStepComplete(activeStep) && <CheckCircle color="success" fontSize="small" />}
+          </Typography>
+          <VideoPlayer
+            src={`app://${currentSpeaker.videoPath}`}
+            title={currentSpeaker.name}
+            relativePath={currentSpeaker.videoPath}
+            fallbackUrl={`https://coerll.utexas.edu/dib/toc.php?k=${chapter}`}
+            sx={{ mb: 3 }}
+          />
+          {currentSpeaker.questions.map((q, idx) => (
+            <Box key={idx} sx={{ mb: 3 }}>
+              <Typography variant="body2" sx={{ fontWeight: 'bold', mb: 1 }}>{q}</Typography>
+              <TextField
+                fullWidth
+                size="small"
+                variant="standard"
+                placeholder="Antworten Sie hier..."
+                value={responses[`${currentSpeaker.id}_${idx}`] || ''}
+                onChange={(e) => setResponses(prev => ({ ...prev, [`${currentSpeaker.id}_${idx}`]: e.target.value }))}
+                disabled={done}
+              />
+            </Box>
+          ))}
+        </Paper>
+      ) : !isParagraphMode ? (
         <Box sx={{ mb: 2 }}>
           {tasks.map((task, idx) => (
             <Box key={idx} sx={{ mb: 3 }}>
@@ -154,15 +227,35 @@ const WritingActivity = ({ activityData, onComplete }) => {
         />
       )}
 
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 4 }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 4, mt: isMultiSpeaker ? 2 : 0 }}>
+        {isMultiSpeaker && (
+          <MobileStepper
+            variant="progress"
+            steps={totalSteps}
+            position="static"
+            activeStep={activeStep}
+            sx={{ width: '100%', bgcolor: 'transparent', mb: 2 }}
+            nextButton={
+              <Button size="small" onClick={() => setActiveStep(s => s + 1)} disabled={activeStep === totalSteps - 1}>
+                Next Speaker <KeyboardArrowRight />
+              </Button>
+            }
+            backButton={
+              <Button size="small" onClick={() => setActiveStep(s => s - 1)} disabled={activeStep === 0}>
+                <KeyboardArrowLeft /> Back
+              </Button>
+            }
+          />
+        )}
+
         {!done ? (
           <Button
             variant="contained"
-            color="primary"
+            color={isMultiSpeaker ? "success" : "primary"}
             size="large"
             startIcon={<EditNote />}
             onClick={handleComplete}
-            disabled={isParagraphMode ? (responses[0] || '').trim().length < 20 : !Object.values(responses).every(v => v.trim().length > 0)}
+            disabled={isMultiSpeaker ? !allSpeakersDone : (isParagraphMode ? (responses[0] || '').trim().length < 20 : !Object.values(responses).every(v => v.trim().length > 0))}
             sx={{ px: 4, borderRadius: 2 }}
           >
             Mark activity complete
