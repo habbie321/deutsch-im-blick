@@ -2949,6 +2949,33 @@
         ]
       },
       "pdfNote": "COERLL Kapitel 3 workbook, page 116."
+    },
+    {
+      "chapter": 3,
+      "id": 12,
+      "type": "writing",
+      "icon": "groupactivity",
+      "title": "Aktivität 12. Sind Sie selber ein Morgenmensch oder ein Nachtmensch?",
+      "description": "How about you? Do you like to get up early or sleep in? Why?",
+      "duration": "20 min",
+      "prerequisites": [],
+      "intro": "How about you? Do you like to get up early or sleep in? Why? What can you or can’t you do in the mornings or at night that make you a Morgenmensch or Nachtmensch?",
+      "tasks": [
+        "Write a paragraph of 6-7 sentences explaining your reasons."
+      ],
+      "example": {
+        "label": "Look at the example from Anke",
+        "text": "Ich bin beides. Am Wochenende bin ich ein Nachtmensch. Nachts kann ich mich sehr gut konzentrieren. Am Wochenende schreibe ich nachts immer meine Essays. Im Rheinland sagen wir daher auch „Ich bin eine Nachteule”. Am Samstag und Sonntag schlafe ich auch gerne lange. Das geht in der Woche nicht. Montag bis Freitag stehe ich früh auf. Ich gehe zum Unterricht und arbeite viel. Ich brauche dazu morgens sehr viel Koffein. Also hole ich unterwegs mindestens einen großen Kaffee. Nachts kann ich gut schlafen, wenn ich viel gearbeitet und gelernt habe, aber ich freue mich trotzdem immer auf das Wochenende ..."
+      },
+      "helpfulExpressions": [
+        "Ich bin ein Morgenmensch",
+        "Ich bin ein Nachtmensch.",
+        "Morgens kann ich gut ...",
+        "Morgens kann ich nicht so gut ...",
+        "Nachts kann ich ...",
+        "Nachts kann ich nicht so gut ..."
+      ],
+      "pdfNote": "COERLL Kapitel 3 workbook, page 116."
     }
   ]
 }

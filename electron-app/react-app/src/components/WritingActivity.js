@@ -6,107 +6,175 @@ import {
   Button,
   Paper,
   Divider,
-  Alert
+  Collapse
 } from '@mui/material';
-import { Create } from '@mui/icons-material';
+import { ExpandMore, ExpandLess, EditNote } from '@mui/icons-material';
 
+/**
+ * WritingActivity
+ * A component for free-form text writing exercises.
+ * Features a single multiline input for paragraphs, a collapsible example, 
+ * and a vocabulary hint section.
+ */
 const WritingActivity = ({ activityData, onComplete }) => {
-  const { title, intro, tasks = [], pdfNote } = activityData;
-  
-  // State to track responses for each task/prompt
-  const [responses, setResponses] = useState(
-    tasks.reduce((acc, _, index) => ({ ...acc, [index]: '' }), {})
+  const { 
+    title, 
+    intro, 
+    tasks = [], 
+    example, 
+    helpfulExpressions = [], 
+    pdfNote
+  } = activityData;
+
+  // Initialize responses as an object: { 0: '', 1: '', ... }
+  const [responses, setResponses] = useState(() => 
+    tasks.reduce((acc, _, idx) => ({ ...acc, [idx]: '' }), {})
   );
-  const [submitted, setSubmitted] = useState(false);
+  const [showExample, setShowExample] = useState(false);
+  const [done, setDone] = useState(false);
 
-  const handleTextChange = (index, value) => {
-    setResponses(prev => ({
-      ...prev,
-      [index]: value
-    }));
-  };
+  const isParagraphMode = tasks.length <= 1;
 
-  const isComplete = tasks.every((_, index) => responses[index].trim().length > 0);
-
-  const handleSubmit = () => {
-    if (!isComplete) return;
+  const handleComplete = () => {
+    const values = Object.values(responses);
+    const totalLength = values.join('').trim().length;
     
-    setSubmitted(true);
-    // Defaulting to correct as requested
+    // Paragraph mode needs 20 chars; Multi-input needs every box to have something.
+    const isValid = isParagraphMode 
+      ? totalLength >= 20 
+      : (values.every(v => v.trim().length > 0));
+
+    if (!isValid) return;
+    
+    setDone(true);
     if (onComplete) {
-      onComplete({ correct: true });
+      onComplete({ 
+        correct: true, 
+        response: isParagraphMode ? responses[0] : values.join('\n'),
+        responses: responses 
+      });
     }
   };
 
   return (
-    <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', maxWidth: 800, mx: 'auto', width: '100%', p: 2 }}>
-      <Box sx={{ textAlign: 'center', mb: 4 }}>
-        <Typography variant="h4" component="h2" gutterBottom color="primary">
-          {title}
+    <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', maxWidth: 800, mx: 'auto', width: '100%', p: 1 }}>
+      <Typography variant="h4" component="h2" align="center" gutterBottom color="primary">
+        {title}
+      </Typography>
+      
+      {intro && (
+        <Typography variant="body1" color="text.secondary" sx={{ mb: 3, textAlign: 'center' }}>
+          {intro}
         </Typography>
-        {intro && (
-          <Typography variant="body1" color="text.secondary">
-            {intro}
+      )}
+
+      {/* Task Instructions */}
+      {isParagraphMode && tasks.length > 0 && (
+        <Box sx={{ mb: 3 }}>
+          {tasks.map((task, idx) => (
+            <Typography key={idx} variant="body1" sx={{ fontWeight: 'medium', mb: 1 }}>
+              &bull; {task}
+            </Typography>
+          ))}
+        </Box>
+      )}
+
+      {/* Toggleable Example Block */}
+      {example && (
+        <Box sx={{ mb: 3 }}>
+          <Button
+            size="small"
+            variant="outlined"
+            onClick={() => setShowExample(!showExample)}
+            endIcon={showExample ? <ExpandLess /> : <ExpandMore />}
+            sx={{ textTransform: 'none' }}
+          >
+            {example.label || "Beispiel ansehen"}
+          </Button>
+          <Collapse in={showExample}>
+            <Paper variant="outlined" sx={{ p: 2, mt: 1, bgcolor: 'action.hover', borderStyle: 'dashed', borderRadius: 2 }}>
+              <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap', fontStyle: 'italic' }}>
+                {example.text}
+              </Typography>
+            </Paper>
+          </Collapse>
+        </Box>
+      )}
+
+      {/* Helpful Expressions Word Bank */}
+      {helpfulExpressions.length > 0 && (
+        <Paper elevation={0} sx={{ p: 2, mb: 3, bgcolor: '#f8f9fa', borderLeft: 5, borderColor: 'primary.main' }}>
+          <Typography variant="subtitle2" color="primary" sx={{ mb: 1, fontWeight: 'bold', fontSize: '0.75rem', textTransform: 'uppercase' }}>
+            Helpful Expressions:
+          </Typography>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+            {helpfulExpressions.map((expr, idx) => (
+              <Typography key={idx} variant="caption" sx={{ bgcolor: 'white', px: 1, py: 0.5, borderRadius: 1, border: 1, borderColor: 'divider' }}>
+                {expr}
+              </Typography>
+            ))}
+          </Box>
+        </Paper>
+      )}
+
+      <Divider sx={{ mb: 3 }} />
+
+      {/* Main Writing Input(s) */}
+      {!isParagraphMode ? (
+        <Box sx={{ mb: 2 }}>
+          {tasks.map((task, idx) => (
+            <Box key={idx} sx={{ mb: 3 }}>
+              <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 1 }}>
+                {idx + 1}. {task}
+              </Typography>
+              <TextField
+                fullWidth
+                variant="outlined"
+                size="small"
+                placeholder="Ihre Antwort..."
+                value={responses[idx] || ''}
+                onChange={(e) => setResponses(prev => ({ ...prev, [idx]: e.target.value }))}
+                disabled={done}
+                sx={{ bgcolor: 'background.paper' }}
+              />
+            </Box>
+          ))}
+        </Box>
+      ) : (
+        <TextField
+          multiline
+          rows={10}
+          fullWidth
+          variant="outlined"
+          placeholder="Schreiben Sie hier..."
+          value={responses[0] || ''}
+          onChange={(e) => setResponses(prev => ({ ...prev, 0: e.target.value }))}
+          disabled={done}
+          sx={{ mb: 4, bgcolor: 'background.paper', borderRadius: 1 }}
+        />
+      )}
+
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mb: 4 }}>
+        {!done ? (
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            startIcon={<EditNote />}
+            onClick={handleComplete}
+            disabled={isParagraphMode ? (responses[0] || '').trim().length < 20 : !Object.values(responses).every(v => v.trim().length > 0)}
+            sx={{ px: 4, borderRadius: 2 }}
+          >
+            Mark activity complete
+          </Button>
+        ) : (
+          <Typography variant="h6" color="success.main" sx={{ fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: 1 }}>
+            ✓ Activity Complete!
           </Typography>
         )}
       </Box>
 
-      <Paper elevation={0} sx={{ p: 3, border: 1, borderColor: 'divider', borderRadius: 2, bgcolor: 'background.paper' }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 3 }}>
-          <Create color="primary" />
-          <Typography variant="h6">Writing Exercise</Typography>
-        </Box>
-
-        {tasks.map((task, index) => (
-          <Box key={index} sx={{ mb: 4 }}>
-            <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-              {index + 1}. {task}
-            </Typography>
-            <TextField
-              fullWidth
-              multiline
-              rows={3}
-              variant="outlined"
-              placeholder="Type your response here..."
-              value={responses[index]}
-              onChange={(e) => handleTextChange(index, e.target.value)}
-              disabled={submitted}
-              sx={{ bgcolor: 'grey.50' }}
-            />
-          </Box>
-        ))}
-
-        {pdfNote && (
-          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 2, fontStyle: 'italic' }}>
-            Note: {pdfNote}
-          </Typography>
-        )}
-
-        <Divider sx={{ my: 3 }} />
-
-        {!submitted ? (
-          <Box sx={{ textAlign: 'center' }}>
-            <Button
-              variant="contained"
-              size="large"
-              onClick={handleSubmit}
-              disabled={!isComplete}
-              sx={{ borderRadius: 2, px: 6 }}
-            >
-              Submit Responses
-            </Button>
-            {!isComplete && (
-              <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1 }}>
-                Please provide a response for all prompts to continue.
-              </Typography>
-            )}
-          </Box>
-        ) : (
-          <Alert severity="success" sx={{ borderRadius: 2 }}>
-            Responses saved! In a future version, these could be reviewed by an instructor or AI assistant.
-          </Alert>
-        )}
-      </Paper>
+      {pdfNote && <Typography variant="caption" color="text.secondary" sx={{ textAlign: 'center' }}>{pdfNote}</Typography>}
     </Box>
   );
 };
