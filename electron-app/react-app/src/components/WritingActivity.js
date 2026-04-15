@@ -10,7 +10,8 @@ import {
   Stepper,
   Step,
   StepLabel,
-  MobileStepper
+  MobileStepper,
+  Tooltip
 } from '@mui/material';
 import { ExpandMore, ExpandLess, EditNote, KeyboardArrowLeft, KeyboardArrowRight, CheckCircle } from '@mui/icons-material';
 import VideoPlayer from './VideoPlayer';
@@ -168,11 +169,28 @@ const WritingActivity = ({ activityData, onComplete }) => {
             {vocabLabel}:
           </Typography>
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-            {vocabList.map((expr, idx) => (
-              <Typography key={idx} variant="caption" sx={{ bgcolor: 'white', px: 1, py: 0.5, borderRadius: 1, border: 1, borderColor: 'divider' }}>
-                {expr}
-              </Typography>
-            ))}
+            {vocabList.map((expr, idx) => {
+              const isComplex = typeof expr === 'object' && expr !== null;
+              const display = isComplex ? expr.german : expr;
+              const hint = isComplex ? expr.english : null;
+
+              const token = (
+                <Typography
+                  variant="caption"
+                  sx={{ bgcolor: 'white', px: 1, py: 0.5, borderRadius: 1, border: 1, borderColor: 'divider', cursor: hint ? 'help' : 'default' }}
+                >
+                  {display}
+                </Typography>
+              );
+
+              return hint ? (
+                <Tooltip key={idx} title={hint} arrow placement="top">
+                  <span>{token}</span>
+                </Tooltip>
+              ) : (
+                <React.Fragment key={idx}>{token}</React.Fragment>
+              );
+            })}
           </Box>
         </Paper>
       )}

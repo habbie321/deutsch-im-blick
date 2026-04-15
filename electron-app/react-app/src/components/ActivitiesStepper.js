@@ -35,6 +35,7 @@ import WorkbookActivity from './WorkbookActivity';
 import SelfCheckReadingActivity from './SelfCheckReadingActivity';
 import WritingActivity from './WritingActivity';
 import ClassificationGridActivity from './ClassificationGridActivity';
+import ClozeActivity from './ClozeActivity';
 import ActivityBlurb from './ActivityBlurb';
 import ActivityVideoSection from './ActivityVideoSection';
 import activityData from '../data/activites.json';
@@ -57,6 +58,8 @@ function ActivityContent({ activity, onComplete }) {
       return <WritingActivity activityData={activity} onComplete={onComplete} />;
     case 'classification_grid':
       return <ClassificationGridActivity activityData={activity} onComplete={onComplete} />;
+    case 'cloze':
+      return <ClozeActivity activityData={activity} onComplete={onComplete} />;
     default:
       return (
         <Box sx={{ p: 2, textAlign: 'center' }}>

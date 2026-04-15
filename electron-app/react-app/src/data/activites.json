@@ -3261,12 +3261,52 @@
           "url": "http://gutenberg.spiegel.de/buch/3070/17"
         }
       ],
+      "wordBank": [
+        { "german": "war", "english": "was" },
+        { "german": "kerngesund", "english": "as fit as a fiddle" },
+        { "german": "ein dicker Bub", "english": "a plump boy" },
+        { "german": "kugelrund", "english": "round as a ball" },
+        { "german": "hatte", "english": "had" },
+        { "german": "Backen", "english": "cheeks" },
+        { "german": "aß", "english": "ate" },
+        { "german": "fing er an zu schrei’n", "english": "he began to shout" },
+        { "german": "eß’", "english": "esse" },
+        { "german": "sieh nur her!", "english": "just see here!" },
+        { "german": "schon", "english": "already" },
+        { "german": "magerer", "english": "thinner" },
+        { "german": "wieder", "english": "again" },
+        { "german": "o weh und ach!", "english": "oh, pain and sorrow!" },
+        { "german": "dünn und schwach", "english": "thin and weak" },
+        { "german": "kam herein", "english": "came in" },
+        { "german": "endlich", "english": "finally" },
+        { "german": "ein Fädchen", "english": "a little thread" },
+        { "german": "wog", "english": "weighed" },
+        { "german": "ein halbes Lot", "english": "equivalent to 7.5 grams" },
+        { "german": "tot", "english": "dead" }
+      ],
       "tasks": [
         "A. Vor dem Lesen: Look at the illustrations accompanying the story. What do they tell you about the main character and what happens to him?\n",
         "B. Nach dem Lesen (1): Summarize the story in your own words: who does what when, and what happens to him?\n",
         "B. Nach dem Lesen (2): This is clearly a story with a moral. What is it?\n",
         "B. Nach dem Lesen (3): What do you think the target age-group is? What do you base your response on?\n",
         "B. Nach dem Lesen (4): How could you tweak the story for a contemporary child audience?\n"
+      ],
+      "pdfNote": "COERLL Kapitel 3 workbook, page 122."
+    },
+    {
+      "chapter": 3,
+      "id": 22,
+      "type": "cloze",
+      "icon": "writing",
+      "title": "Aktivität 22. Was essen Sie nicht?",
+      "description": "Personalize the refrain from 'Suppen-Kaspar' with a food you dislike.",
+      "duration": "10 min",
+      "prerequisites": [],
+      "intro": "In „Die Geschichte vom Suppen-Kaspar”, Kaspar’s stubborn refusal to eat soup is highlighted in the story’s refrain. Is there something you would refuse to eat if it were served to you? Personalize the refrain by adding your own despised food item. (Don’t forget to use the Akkusativ case!)",
+      "lines": [
+        { "prefix": "„Ich esse kein", "suffix": "! Nein!" },
+        { "prefix": "Ich esse mein", "suffix": " nicht!" },
+        { "prefix": "Nein, mein", "suffix": " eß’ ich nicht!“" }
       ],
       "pdfNote": "COERLL Kapitel 3 workbook, page 122."
     }
