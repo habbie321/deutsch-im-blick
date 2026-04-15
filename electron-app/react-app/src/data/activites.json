@@ -3026,6 +3026,197 @@
         }
       ],
       "pdfNote": "COERLL Kapitel 3 workbook, page 116."
+    },
+    {
+      "chapter": 3,
+      "id": 14,
+      "type": "writing",
+      "icon": "readingtask",
+      "title": "Aktivität 14. Ein typisch deutsches Frühstück",
+      "description": "Identify items in a typical German breakfast image.",
+      "duration": "10 min",
+      "prerequisites": [],
+      "intro": "A. Take a good look at the image below. How many of the items can you identify and spell correctly in German? Write down as many items (with the correct article) as you can in 2 minutes – then compare your results with the rest of the class.",
+      "image": "chapter03/k03_a14_breakfast.jpg",
+      "notaBene": "There may be regional differences in breakfast preferences, as well as personal ones. Mamorkuchen mit Coca-Cola, anyone?\n\nSome of the terms also differ: Semmel (rolls) in Bavaria and Austria, Brötchen in the northern parts of Germany.",
+      "tasks": [
+        "Frühstücksitem 1",
+        "Frühstücksitem 2",
+        "Frühstücksitem 3",
+        "Frühstücksitem 4",
+        "Frühstücksitem 5",
+        "Frühstücksitem 6",
+        "Frühstücksitem 7",
+        "Frühstücksitem 8",
+        "Frühstücksitem 9",
+        "B. Frage zur Diskussion: How does the “typical” German breakfast differ from the “typical” American breakfast?\nDiscuss with your classmates what everyone eats and explore whether there is such a thing as “typical” American breakfast food."
+      ],
+      "pdfNote": "COERLL Kapitel 3 workbook, page 117."
+    },
+    {
+      "chapter": 3,
+      "id": 15,
+      "type": "multi_speaker_writing",
+      "icon": "groupactivity",
+      "title": "Aktivität 15. Ein kleines Interview",
+      "description": "Interview two classmates about their breakfast habits.",
+      "duration": "20 min",
+      "prerequisites": [],
+      "intro": "Ask two of your classmates whether they eat breakfast, and if so, when, where and what they eat. Be ready to share their answers with the rest of the class! If you usually don’t eat breakfast pretend you do - because you get the best breakfast in the world ☺.",
+      "wordBank": [
+        "Cafeteria/Mensa", "zu Hause", "im Restaurant", "Eier", "Müsli", "Obst", "Pfannkuchen", "Speck", "Toast"
+      ],
+      "speakers": [
+        {
+          "id": "p1",
+          "name": "Klassenkamerad(in) 1",
+          "questions": [
+            "Wie heißt du?",
+            "Frühstückst du?",
+            "Wann frühstückst du?",
+            "Wo frühstückst du? (zu Hause, Mensa, etc.)",
+            "Was isst du zum Frühstück? (mindestens 5 Sachen)",
+            "Was trinkst du zum Frühstück? (mindestens 2 Sachen)"
+          ]
+        },
+        {
+          "id": "p2",
+          "name": "Klassenkamerad(in) 2",
+          "questions": [
+            "Wie heißt du?",
+            "Frühstückst du?",
+            "Wann frühstückst du?",
+            "Wo frühstückst du? (zu Hause, Mensa, etc.)",
+            "Was isst du zum Frühstück? (mindestens 5 Sachen)",
+            "Was trinkst du zum Frühstück? (mindestens 2 Sachen)"
+          ]
+        }
+      ],
+      "pdfNote": "COERLL Kapitel 3 workbook, page 117."
+    },
+    {
+      "chapter": 3,
+      "id": 16,
+      "type": "writing",
+      "icon": "readingtask",
+      "title": "Aktivität 16. Landbäckerei Köhler",
+      "description": "Choose three breakfast menus from Landbäckerei Köhler and note their details.",
+      "duration": "15 min",
+      "prerequisites": [],
+      "intro": "Many bakeries in Germany offer a variety of tasty breakfast menus. Below you can read such a menu from the Landbäckerei Köhler and decide what three items you might want to try out – note also how much your breakfast would cost and what is included in the price. After you are done, check with your class: what was the most popular breakfast choice?",
+      "image": "chapter03/k03_a16_menu.jpg",
+      "tasks": [
+        "Erste Wahl: Welches Menü möchtest du probieren? Was ist inklusive und wie viel kostet es?",
+        "Zweite Wahl: Welches Menü möchtest du probieren? Was ist inklusive und wie viel kostet es?",
+        "Dritte Wahl: Welches Menü möchtest du probieren? Was ist inklusive und wie viel kostet es?"
+      ],
+      "pdfNote": "Source: http://www.baeckerei-koehler.de/downloads/Fruehstueckskarte_2010.pdf"
+    },
+    {
+      "chapter": 3,
+      "id": 17,
+      "type": "writing",
+      "icon": "videoclips",
+      "title": "Aktivität 17. Was essen Berna und Jan zu Mittag?",
+      "description": "Watch the „Zu Mittag essen” clips from Berna and Jan and answer the questions.",
+      "duration": "20 min",
+      "prerequisites": [],
+      "intro": "After a good Frühstück and searching Das schwarze Brett for hours you worked up an appetite. Watch the „Zu Mittag essen” clips from Berna and Jan and answer the following questions (in complete sentences) about their lunch-time preferences.",
+      "videos": [
+        {
+          "path": "chapter03/k03_a17_berna.mp4",
+          "label": "Berna (QR 3.8)"
+        },
+        {
+          "path": "chapter03/k03_a17_jan.mp4",
+          "label": "Jan (QR 3.9)"
+        }
+      ],
+      "tasks": [
+        "Wo isst Berna gern?",
+        "Was isst Jan, wenn (when) er in ein Schnellrestaurant geht?",
+        "Isst Jan manchmal in der Cafeteria auf dem Campus?",
+        "Wo isst Jan, wenn er sein Essen mitbringt?"
+      ],
+      "pdfNote": "COERLL Kapitel 3 workbook, page 121."
+    },
+    {
+      "chapter": 3,
+      "id": 18,
+      "type": "writing",
+      "icon": "readingtask",
+      "title": "Aktivität 18. Ein Speiseplan",
+      "description": "Select meals from the Uni-Mensa menu and explain your choices.",
+      "duration": "20 min",
+      "prerequisites": [],
+      "intro": "Below, you’ll find a Speiseplan (menu) for an Uni-Mensa. As you can see, there are two main meals that you can choose from (Hauptgericht 1 & 2) and sides (Beilagen). Select for each day (Monday through Thursday) which menu you’d like to order, what sides you want with your meal and how much your lunch will cost. Then work with a partner and tell him or her why you chose those meals.",
+      "image": "chapter03/k03_a18_mensa.jpg",
+      "example": {
+        "label": "Beispiel",
+        "text": "S1: Was isst du am Montag?\nS2: Am Montag esse ich Schnitzel mit Salat.\nS1: Warum isst du Schnitzel?\nS2: Weil es gut schmeckt./Weil es billig ist."
+      },
+      "tasks": [
+        "Deine Bestellung und Begründung: Notiere für jeden Tag (Montag bis Donnerstag) dein Hauptgericht, die Beilagen und den Preis. Erkläre auch kurz, warum du dich für diese Gerichte entschieden hast.",
+        "Weitere Fragen: Notiere hier zusätzliche Fragen für das Gespräch mit deinem Partner / deiner Partnerin."
+      ],
+      "pdfNote": "COERLL Kapitel 3 workbook, page 121."
+    },
+    {
+      "chapter": 3,
+      "id": 19,
+      "type": "multi_speaker_writing",
+      "icon": "videoclips",
+      "title": "Aktivität 19. Sprache im Kontext: Döner",
+      "description": "Watch the video about Döner and learn about the preparation and toppings.",
+      "duration": "25 min",
+      "prerequisites": [],
+      "intro": "If going to the Mensa is not your thing, you can head out for a quick lunch at a Schnellimbiss (fast-food place). One of the most beloved is the Dönerbude, where you can feast on a Turkish specialty called Döner.\n\nTeil A: Watch the clip and note what is described.\nTeil B: Watch again and translate the toppings mentioned.\nTeil C: Answer specific questions about the speaker.",
+      "notaBene": "There are lots of different kinds of Döner at Dönerbuden: beef (Rindfleisch), chicken (Hähnchen) and lamb (Lammfleisch), for example.",
+      "speakers": [
+        {
+          "id": "partA",
+          "name": "Teil A: Beobachtung",
+          "videoPath": "chapter03/k03_a19_doener.mp4",
+          "questions": [
+            "A. Watch the video “Döner” and write down what you think the man talks about. What does he describe?",
+            "What things does he mention/explain?"
+          ]
+        },
+        {
+          "id": "partB",
+          "name": "Teil B: Garnierungen",
+          "videoPath": "chapter03/k03_a19_doener.mp4",
+          "questions": [
+            "B. Was für Garnierungen (toppings) gibt es? Translate each item heard into English:",
+            "Krautsalat",
+            "Aubergine",
+            "Pilze",
+            "Gurken",
+            "Eis[berg]salat",
+            "Oliven",
+            "Zwiebeln",
+            "Mais",
+            "Bohnen",
+            "Käse",
+            "Tomaten",
+            "Soße mit Knoblauch",
+            "Soße ohne Knoblauch",
+            "Rettiche"
+          ]
+        },
+        {
+          "id": "partC",
+          "name": "Teil C: Details",
+          "videoPath": "chapter03/k03_a19_doener.mp4",
+          "questions": [
+            "1. Wie heißt der Mann?",
+            "2. Woher kommt er?",
+            "3. Welches Fleisch brät (roasts) er für die Döner?",
+            "4. Welche Garnierungen essen Sie gern und welche essen Sie gar nicht gern?"
+          ]
+        }
+      ],
+      "pdfNote": "COERLL Kapitel 3 workbook, page 121 (QR 3.30)."
     }
   ]
 }

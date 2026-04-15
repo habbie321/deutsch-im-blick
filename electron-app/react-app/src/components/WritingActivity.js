@@ -31,7 +31,9 @@ const WritingActivity = ({ activityData, onComplete }) => {
     pdfNote,
     speakers = [],
     wordBank = [],
-    chapter
+    chapter,
+    image,
+    notaBene
   } = activityData;
 
   const isMultiSpeaker = speakers.length > 0;
@@ -104,16 +106,16 @@ const WritingActivity = ({ activityData, onComplete }) => {
         </Typography>
       )}
 
-      {isMultiSpeaker && (
-        <Stepper activeStep={activeStep} alternativeLabel sx={{ mb: 4 }}>
-          {speakers.map((s, idx) => (
-            <Step key={s.id} completed={isStepComplete(idx)}>
-              <StepLabel sx={{ '& .MuiStepLabel-label': { fontSize: '0.75rem' } }}>{s.name}</StepLabel>
-            </Step>
-          ))}
-        </Stepper>
+      {/* Image Display */}
+      {image && (
+        <Box sx={{ mb: 3, textAlign: 'center' }}>
+          <img 
+            src={`app://${image}`} 
+            alt="Activity content" 
+            style={{ maxWidth: '100%', maxHeight: '400px', borderRadius: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} 
+          />
+        </Box>
       )}
-
       {/* Task Instructions */}
       {!isMultiSpeaker && isParagraphMode && tasks.length > 0 && (
         <Box sx={{ mb: 3 }}>
@@ -147,6 +149,18 @@ const WritingActivity = ({ activityData, onComplete }) => {
         </Box>
       )}
 
+      {/* Nota Bene Block */}
+      {notaBene && (
+        <Paper elevation={0} sx={{ p: 2, mb: 3, bgcolor: '#fff9c4', borderLeft: 5, borderColor: '#fbc02d', borderRadius: '0 8px 8px 0' }}>
+          <Typography variant="subtitle2" sx={{ mb: 0.5, fontWeight: 'bold', fontSize: '0.72rem', textTransform: 'uppercase', color: '#f57f17' }}>
+            Nota Bene:
+          </Typography>
+          <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap', fontStyle: 'italic', color: 'text.primary', lineHeight: 1.4 }}>
+            {notaBene}
+          </Typography>
+        </Paper>
+      )}
+
       {/* Vocabulary / Word Bank */}
       {vocabList.length > 0 && (
         <Paper elevation={0} sx={{ p: 2, mb: 3, bgcolor: isMultiSpeaker ? '#fdf6e3' : '#f8f9fa', borderLeft: 5, borderColor: isMultiSpeaker ? '#856404' : 'primary.main' }}>
@@ -171,47 +185,60 @@ const WritingActivity = ({ activityData, onComplete }) => {
           <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
             {currentSpeaker.name} {isStepComplete(activeStep) && <CheckCircle color="success" fontSize="small" />}
           </Typography>
-          <VideoPlayer
-            src={`app://${currentSpeaker.videoPath}`}
-            title={currentSpeaker.name}
-            relativePath={currentSpeaker.videoPath}
-            fallbackUrl={`https://coerll.utexas.edu/dib/toc.php?k=${chapter}`}
-            sx={{ mb: 3 }}
-          />
-          {currentSpeaker.questions.map((q, idx) => (
-            <Box key={idx} sx={{ mb: 3 }}>
-              <Typography variant="body2" sx={{ fontWeight: 'bold', mb: 1 }}>{q}</Typography>
-              <TextField
-                fullWidth
-                size="small"
-                variant="standard"
-                placeholder="Antworten Sie hier..."
-                value={responses[`${currentSpeaker.id}_${idx}`] || ''}
-                onChange={(e) => setResponses(prev => ({ ...prev, [`${currentSpeaker.id}_${idx}`]: e.target.value }))}
-                disabled={done}
-              />
-            </Box>
-          ))}
+          {currentSpeaker.videoPath && (
+            <VideoPlayer
+              src={`app://${currentSpeaker.videoPath}`}
+              title={currentSpeaker.name}
+              relativePath={currentSpeaker.videoPath}
+              fallbackUrl={`https://coerll.utexas.edu/dib/toc.php?k=${chapter}`}
+              sx={{ mb: 3 }}
+            />
+          )}
+          {currentSpeaker.questions.map((q, idx) => {
+            const isLongTask = q.length > 60 || q.includes('\n');
+            return (
+              <Box key={idx} sx={{ mb: 3 }}>
+                <Typography variant="body2" sx={{ fontWeight: 'bold', mb: 1, whiteSpace: 'pre-wrap' }}>{q}</Typography>
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  size={isLongTask ? "medium" : "small"}
+                  multiline={isLongTask}
+                  rows={isLongTask ? 4 : 1}
+                  placeholder="Antworten Sie hier..."
+                  value={responses[`${currentSpeaker.id}_${idx}`] || ''}
+                  onChange={(e) => setResponses(prev => ({ ...prev, [`${currentSpeaker.id}_${idx}`]: e.target.value }))}
+                  disabled={done}
+                  sx={{ bgcolor: 'background.paper' }}
+                />
+              </Box>
+            );
+          })}
         </Paper>
       ) : !isParagraphMode ? (
         <Box sx={{ mb: 2 }}>
-          {tasks.map((task, idx) => (
-            <Box key={idx} sx={{ mb: 3 }}>
-              <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 1 }}>
-                {idx + 1}. {task}
-              </Typography>
-              <TextField
-                fullWidth
-                variant="outlined"
-                size="small"
-                placeholder="Ihre Antwort..."
-                value={responses[idx] || ''}
-                onChange={(e) => setResponses(prev => ({ ...prev, [idx]: e.target.value }))}
-                disabled={done}
-                sx={{ bgcolor: 'background.paper' }}
-              />
-            </Box>
-          ))}
+          {tasks.map((task, idx) => {
+            const isLongTask = task.length > 60 || task.includes('\n');
+            return (
+              <Box key={idx} sx={{ mb: 3 }}>
+                <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 1, whiteSpace: 'pre-wrap' }}>
+                  {idx + 1}. {task}
+                </Typography>
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  size={isLongTask ? "medium" : "small"}
+                  multiline={isLongTask}
+                  rows={isLongTask ? 6 : 1}
+                  placeholder="Ihre Antwort..."
+                  value={responses[idx] || ''}
+                  onChange={(e) => setResponses(prev => ({ ...prev, [idx]: e.target.value }))}
+                  disabled={done}
+                  sx={{ bgcolor: 'background.paper' }}
+                />
+              </Box>
+            );
+          })}
         </Box>
       ) : (
         <TextField
