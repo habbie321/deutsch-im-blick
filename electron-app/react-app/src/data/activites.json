@@ -3217,6 +3217,58 @@
         }
       ],
       "pdfNote": "COERLL Kapitel 3 workbook, page 121 (QR 3.30)."
+    },
+    {
+      "chapter": 3,
+      "id": 20,
+      "type": "writing",
+      "icon": "videoclips",
+      "title": "Aktivität 20. Sprache im Kontext: Andrew und Austin: Döner kaufen",
+      "description": "Watch Andrew and Austin buy a Döner and answer questions about their order.",
+      "duration": "15 min",
+      "prerequisites": [],
+      "intro": "Watch the video „Andrew/Austin: Döner kaufen” several times and answer as many of these questions as you can.",
+      "videos": [
+        {
+          "path": "chapter03/k03_a20_doener_kaufen.mp4",
+          "label": "Andrew/Austin: Döner kaufen (QR 3.35)"
+        }
+      ],
+      "tasks": [
+        "Welche Garnierungen bestellt Andrew? (Andrew bestellt einen Döner mit...)",
+        "Welche Garnierungen bestellt Austin? (Austin bestellt einen Döner mit...)",
+        "Bezahlen sie zusammen (together) oder getrennt (separate)?",
+        "Wie oft isst Andrew Döner? (Andrew sagt...)",
+        "Wie oft isst Austin Döner? (Austin sagt...)",
+        "Is there a Döner stand in your town? (Check out Kebabalicious if you're in Austin!)"
+      ],
+      "notaBene": "Another Döner topping frequently served at Dönerbuden is a spicy red pepper sauce. When ordering at a Dönerbude which serves this sauce, you’ll be asked if you’d like yours „mit scharf” (with heat) or „ohne scharf” (without heat).\n\nYou can try Döner with a variety of toppings right here in Austin at a Döner stand called ”Kebabalicious”. Check out their website: http://www.austinkebab.com",
+      "pdfNote": "COERLL Kapitel 3 workbook, page 121 (QR 3.35)."
+    },
+    {
+      "chapter": 3,
+      "id": 21,
+      "type": "writing",
+      "icon": "readingtask",
+      "title": "Aktivität 21. Das Mittagessen nicht verpassen!",
+      "description": "Read 'Die Geschichte vom Suppen-Kaspar' and reflect on the story.",
+      "duration": "25 min",
+      "prerequisites": [],
+      "intro": "The story below – „Die Geschichte vom Suppen-Kaspar” – is a cautionary tale from Heinrich Hoffmann’s famous Struwwelpeter (1845), which chronicles the horrifying consequences of children’s mischief.",
+      "links": [
+        {
+          "label": "Die Geschichte vom Suppen-Kaspar (Text & Illustrationen)",
+          "url": "http://gutenberg.spiegel.de/buch/3070/17"
+        }
+      ],
+      "tasks": [
+        "A. Vor dem Lesen: Look at the illustrations accompanying the story. What do they tell you about the main character and what happens to him?\n",
+        "B. Nach dem Lesen (1): Summarize the story in your own words: who does what when, and what happens to him?\n",
+        "B. Nach dem Lesen (2): This is clearly a story with a moral. What is it?\n",
+        "B. Nach dem Lesen (3): What do you think the target age-group is? What do you base your response on?\n",
+        "B. Nach dem Lesen (4): How could you tweak the story for a contemporary child audience?\n"
+      ],
+      "pdfNote": "COERLL Kapitel 3 workbook, page 122."
     }
   ]
 }

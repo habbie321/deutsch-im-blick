@@ -195,10 +195,10 @@ const WritingActivity = ({ activityData, onComplete }) => {
             />
           )}
           {currentSpeaker.questions.map((q, idx) => {
-            const isLongTask = q.length > 60 || q.includes('\n');
+            const isLongTask = q.includes('\n');
             return (
               <Box key={idx} sx={{ mb: 3 }}>
-                <Typography variant="body2" sx={{ fontWeight: 'bold', mb: 1, whiteSpace: 'pre-wrap' }}>{q}</Typography>
+                <Typography variant="body2" sx={{ fontWeight: 'bold', mb: 1, whiteSpace: 'pre-wrap' }}>{q.trim()}</Typography>
                 <TextField
                   fullWidth
                   variant="outlined"
@@ -218,11 +218,11 @@ const WritingActivity = ({ activityData, onComplete }) => {
       ) : !isParagraphMode ? (
         <Box sx={{ mb: 2 }}>
           {tasks.map((task, idx) => {
-            const isLongTask = task.length > 60 || task.includes('\n');
+            const isLongTask = task.includes('\n');
             return (
               <Box key={idx} sx={{ mb: 3 }}>
                 <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 1, whiteSpace: 'pre-wrap' }}>
-                  {idx + 1}. {task}
+                  {idx + 1}. {task.trim()}
                 </Typography>
                 <TextField
                   fullWidth
