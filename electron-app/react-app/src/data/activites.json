@@ -2926,26 +2926,87 @@
       "prerequisites": [],
       "intro": "Watch the „Sind Sie ein Morgenmensch” videos as these people discuss whether they consider themselves to be “morning people,” “night people,” neither of the two, or both. After watching, classify each speaker.",
       "videos": [
-        { "path": "chapter03/k03_a11_berna.mp4", "label": "Berna" },
-        { "path": "chapter03/k03_a11_eva.mp4", "label": "Eva" },
-        { "path": "chapter03/k03_a11_harald.mp4", "label": "Harald" },
-        { "path": "chapter03/k03_a11_jan.mp4", "label": "Jan" },
-        { "path": "chapter03/k03_a11_adan.mp4", "label": "Adan" },
-        { "path": "chapter03/k03_a11_hassan.mp4", "label": "Hassan" },
-        { "path": "chapter03/k03_a11_erin.mp4", "label": "Erin" },
-        { "path": "chapter03/k03_a11_sara.mp4", "label": "Sara" }
+        {
+          "path": "chapter03/k03_a11_berna.mp4",
+          "label": "Berna"
+        },
+        {
+          "path": "chapter03/k03_a11_eva.mp4",
+          "label": "Eva"
+        },
+        {
+          "path": "chapter03/k03_a11_harald.mp4",
+          "label": "Harald"
+        },
+        {
+          "path": "chapter03/k03_a11_jan.mp4",
+          "label": "Jan"
+        },
+        {
+          "path": "chapter03/k03_a11_adan.mp4",
+          "label": "Adan"
+        },
+        {
+          "path": "chapter03/k03_a11_hassan.mp4",
+          "label": "Hassan"
+        },
+        {
+          "path": "chapter03/k03_a11_erin.mp4",
+          "label": "Erin"
+        },
+        {
+          "path": "chapter03/k03_a11_sara.mp4",
+          "label": "Sara"
+        }
       ],
       "grid": {
-        "categories": ["Morgenmenschen", "Weder ... noch", "Beides", "Nachtmenschen"],
+        "categories": [
+          "Morgenmenschen",
+          "Weder ... noch",
+          "Beides",
+          "Nachtmenschen"
+        ],
         "items": [
-          { "id": "berna", "label": "Berna (QR 3.16)", "correctIndex": 0 },
-          { "id": "eva", "label": "Eva (QR 3.17)", "correctIndex": 3 },
-          { "id": "harald", "label": "Harald (QR 3.18)", "correctIndex": 0 },
-          { "id": "jan", "label": "Jan (QR 3.20)", "correctIndex": 3 },
-          { "id": "adan", "label": "Adan (QR 3.21)", "correctIndex": 2 },
-          { "id": "hassan", "label": "Hassan (QR 3.12)", "correctIndex": 2 },
-          { "id": "erin", "label": "Erin (QR 3.23)", "correctIndex": 3 },
-          { "id": "sara", "label": "Sara (QR 3.25)", "correctIndex": 3 }
+          {
+            "id": "berna",
+            "label": "Berna (QR 3.16)",
+            "correctIndex": 0
+          },
+          {
+            "id": "eva",
+            "label": "Eva (QR 3.17)",
+            "correctIndex": 3
+          },
+          {
+            "id": "harald",
+            "label": "Harald (QR 3.18)",
+            "correctIndex": 0
+          },
+          {
+            "id": "jan",
+            "label": "Jan (QR 3.20)",
+            "correctIndex": 3
+          },
+          {
+            "id": "adan",
+            "label": "Adan (QR 3.21)",
+            "correctIndex": 2
+          },
+          {
+            "id": "hassan",
+            "label": "Hassan (QR 3.12)",
+            "correctIndex": 2
+          },
+          {
+            "id": "erin",
+            "label": "Erin (QR 3.23)",
+            "correctIndex": 3
+          },
+          {
+            "id": "sara",
+            "label": "Sara (QR 3.25)",
+            "correctIndex": 3
+          }
         ]
       },
       "pdfNote": "COERLL Kapitel 3 workbook, page 116."
@@ -2996,33 +3057,56 @@
       "prerequisites": [],
       "intro": "Breakfast is the first meal of the day. Do these speakers agree? Essen sie Frühstück? Wenn ja (if so), wo und was essen sie?",
       "wordBank": [
-        "hungrig", "Eier", "Schinken", "zu Hause", "Müsli", 
-        "Nussschnecke mit Zimt und Nüssen", "Hunger haben", "Haferflocken", "Brot"
+        "hungrig",
+        "Eier",
+        "Schinken",
+        "zu Hause",
+        "Müsli",
+        "Nussschnecke mit Zimt und Nüssen",
+        "Hunger haben",
+        "Haferflocken",
+        "Brot"
       ],
       "speakers": [
         {
           "id": "berna",
           "name": "Berna (QR 3.33)",
           "videoPath": "chapter03/k03_a13_berna.mp4",
-          "questions": ["Frühstückt er/sie?", "Wo isst er/sie Frühstück?", "Was isst er/sie zum Frühstück?"]
+          "questions": [
+            "Frühstückt er/sie?",
+            "Wo isst er/sie Frühstück?",
+            "Was isst er/sie zum Frühstück?"
+          ]
         },
         {
           "id": "jan",
           "name": "Jan (QR 3.4)",
           "videoPath": "chapter03/k03_a13_jan.mp4",
-          "questions": ["Frühstückt er/sie?", "Wo isst er/sie Frühstück?", "Was isst er/sie zum Frühstück?"]
+          "questions": [
+            "Frühstückt er/sie?",
+            "Wo isst er/sie Frühstück?",
+            "Was isst er/sie zum Frühstück?"
+          ]
         },
         {
           "id": "adan",
           "name": "Adan (QR 3.7)",
           "videoPath": "chapter03/k03_a13_adan.mp4",
-          "questions": ["Frühstückt er/sie?", "Wo isst er/sie Frühstück?", "Was isst er/sie zum Frühstück?"]
+          "questions": [
+            "Frühstückt er/sie?",
+            "Wo isst er/sie Frühstück?",
+            "Was isst er/sie zum Frühstück?"
+          ]
         },
         {
           "id": "erin",
           "name": "Erin (QR 3.6)",
           "videoPath": "chapter03/k03_a13_erin.mp4",
-          "questions": ["Frühstückt er/sie?", "Wo isst er/sie Frühstück?", "Was isst er/sie zum Frühstück?"]
+          "questions": [
+            "Frühstückt er/sie?",
+            "Wo isst er/sie Frühstück?",
+            "Was isst er/sie zum Frühstück?"
+          ]
         }
       ],
       "pdfNote": "COERLL Kapitel 3 workbook, page 116."
@@ -3064,7 +3148,15 @@
       "prerequisites": [],
       "intro": "Ask two of your classmates whether they eat breakfast, and if so, when, where and what they eat. Be ready to share their answers with the rest of the class! If you usually don’t eat breakfast pretend you do - because you get the best breakfast in the world ☺.",
       "wordBank": [
-        "Cafeteria/Mensa", "zu Hause", "im Restaurant", "Eier", "Müsli", "Obst", "Pfannkuchen", "Speck", "Toast"
+        "Cafeteria/Mensa",
+        "zu Hause",
+        "im Restaurant",
+        "Eier",
+        "Müsli",
+        "Obst",
+        "Pfannkuchen",
+        "Speck",
+        "Toast"
       ],
       "speakers": [
         {
@@ -3262,27 +3354,90 @@
         }
       ],
       "wordBank": [
-        { "german": "war", "english": "was" },
-        { "german": "kerngesund", "english": "as fit as a fiddle" },
-        { "german": "ein dicker Bub", "english": "a plump boy" },
-        { "german": "kugelrund", "english": "round as a ball" },
-        { "german": "hatte", "english": "had" },
-        { "german": "Backen", "english": "cheeks" },
-        { "german": "aß", "english": "ate" },
-        { "german": "fing er an zu schrei’n", "english": "he began to shout" },
-        { "german": "eß’", "english": "esse" },
-        { "german": "sieh nur her!", "english": "just see here!" },
-        { "german": "schon", "english": "already" },
-        { "german": "magerer", "english": "thinner" },
-        { "german": "wieder", "english": "again" },
-        { "german": "o weh und ach!", "english": "oh, pain and sorrow!" },
-        { "german": "dünn und schwach", "english": "thin and weak" },
-        { "german": "kam herein", "english": "came in" },
-        { "german": "endlich", "english": "finally" },
-        { "german": "ein Fädchen", "english": "a little thread" },
-        { "german": "wog", "english": "weighed" },
-        { "german": "ein halbes Lot", "english": "equivalent to 7.5 grams" },
-        { "german": "tot", "english": "dead" }
+        {
+          "german": "war",
+          "english": "was"
+        },
+        {
+          "german": "kerngesund",
+          "english": "as fit as a fiddle"
+        },
+        {
+          "german": "ein dicker Bub",
+          "english": "a plump boy"
+        },
+        {
+          "german": "kugelrund",
+          "english": "round as a ball"
+        },
+        {
+          "german": "hatte",
+          "english": "had"
+        },
+        {
+          "german": "Backen",
+          "english": "cheeks"
+        },
+        {
+          "german": "aß",
+          "english": "ate"
+        },
+        {
+          "german": "fing er an zu schrei’n",
+          "english": "he began to shout"
+        },
+        {
+          "german": "eß’",
+          "english": "esse"
+        },
+        {
+          "german": "sieh nur her!",
+          "english": "just see here!"
+        },
+        {
+          "german": "schon",
+          "english": "already"
+        },
+        {
+          "german": "magerer",
+          "english": "thinner"
+        },
+        {
+          "german": "wieder",
+          "english": "again"
+        },
+        {
+          "german": "o weh und ach!",
+          "english": "oh, pain and sorrow!"
+        },
+        {
+          "german": "dünn und schwach",
+          "english": "thin and weak"
+        },
+        {
+          "german": "kam herein",
+          "english": "came in"
+        },
+        {
+          "german": "endlich",
+          "english": "finally"
+        },
+        {
+          "german": "ein Fädchen",
+          "english": "a little thread"
+        },
+        {
+          "german": "wog",
+          "english": "weighed"
+        },
+        {
+          "german": "ein halbes Lot",
+          "english": "equivalent to 7.5 grams"
+        },
+        {
+          "german": "tot",
+          "english": "dead"
+        }
       ],
       "tasks": [
         "A. Vor dem Lesen: Look at the illustrations accompanying the story. What do they tell you about the main character and what happens to him?\n",
@@ -3304,9 +3459,18 @@
       "prerequisites": [],
       "intro": "In „Die Geschichte vom Suppen-Kaspar”, Kaspar’s stubborn refusal to eat soup is highlighted in the story’s refrain. Is there something you would refuse to eat if it were served to you? Personalize the refrain by adding your own despised food item. (Don’t forget to use the Akkusativ case!)",
       "lines": [
-        { "prefix": "„Ich esse kein", "suffix": "! Nein!" },
-        { "prefix": "Ich esse mein", "suffix": " nicht!" },
-        { "prefix": "Nein, mein", "suffix": " eß’ ich nicht!“" }
+        {
+          "prefix": "„Ich esse kein",
+          "suffix": "! Nein!"
+        },
+        {
+          "prefix": "Ich esse mein",
+          "suffix": " nicht!"
+        },
+        {
+          "prefix": "Nein, mein",
+          "suffix": " eß’ ich nicht!“"
+        }
       ],
       "pdfNote": "COERLL Kapitel 3 workbook, page 122."
     },
@@ -3563,7 +3727,7 @@
     {
       "chapter": 3,
       "id": 31,
-      "type": "workbook",
+      "type": "writing",
       "icon": "videoclips",
       "title": "Aktivität 31. Sprache im Kontext: Obst und Gemüse",
       "description": "Identify origin and price of fruits and vegetables in Würzburg.",
@@ -3585,7 +3749,15 @@
         "Determine the origin and price of the 8 vegetables mentioned."
       ],
       "wordBank": [
-        "teilweise", "kilogrammweise", "schälchenweise", "pro Stück", "Klima", "aus dem Ausland", "einheimisch", "unbehandelt", "Saison"
+        "teilweise",
+        "kilogrammweise",
+        "schälchenweise",
+        "pro Stück",
+        "Klima",
+        "aus dem Ausland",
+        "einheimisch",
+        "unbehandelt",
+        "Saison"
       ],
       "pdfNote": "COERLL Kapitel 3 workbook, page 134."
     },
@@ -3661,8 +3833,8 @@
       "prerequisites": [],
       "intro": "Go online to Marions Kochbuch and select a recipe you want to try, then write a shopping list estimating prices from discount store websites.",
       "tasks": [
-        "A. Search for a recipe that you like to try on marions-kochbuch.de. Write down the name and all the ingredients.",
-        "B. Search aldi-sued.de, lidl.de or kaisers.de for the products and write down how much each ingredient would cost."
+        "A. Search for a recipe that you like to try on marions-kochbuch.de. Write down the name and all the ingredients.\n",
+        "B. Search aldi-sued.de, lidl.de or kaisers.de for the products and write down how much each ingredient would cost.\n"
       ],
       "links": [
         {
@@ -3700,18 +3872,66 @@
             "leftColumnTitle": "German",
             "rightColumnTitle": "English",
             "matchingPairs": [
-              { "id": 1, "german": "Shampoo", "english": "shampoo" },
-              { "id": 2, "german": "Duschgel", "english": "shower gel" },
-              { "id": 3, "german": "Seife", "english": "soap" },
-              { "id": 4, "german": "Vitamintabletten", "english": "vitamins" },
-              { "id": 5, "german": "Schminke", "english": "makeup" },
-              { "id": 6, "german": "Cremesorten", "english": "types of creams" },
-              { "id": 7, "german": "Nagellack", "english": "nail polish" },
-              { "id": 8, "german": "Kondome", "english": "condoms" },
-              { "id": 9, "german": "Zahnbürste", "english": "toothbrushes" },
-              { "id": 10, "german": "Zahnpasta", "english": "toothpaste" },
-              { "id": 11, "german": "Taschentücher", "english": "tissues" },
-              { "id": 12, "german": "Klopapier", "english": "toilet paper" }
+              {
+                "id": 1,
+                "german": "Shampoo",
+                "english": "shampoo"
+              },
+              {
+                "id": 2,
+                "german": "Duschgel",
+                "english": "shower gel"
+              },
+              {
+                "id": 3,
+                "german": "Seife",
+                "english": "soap"
+              },
+              {
+                "id": 4,
+                "german": "Vitamintabletten",
+                "english": "vitamins"
+              },
+              {
+                "id": 5,
+                "german": "Schminke",
+                "english": "makeup"
+              },
+              {
+                "id": 6,
+                "german": "Cremesorten",
+                "english": "types of creams"
+              },
+              {
+                "id": 7,
+                "german": "Nagellack",
+                "english": "nail polish"
+              },
+              {
+                "id": 8,
+                "german": "Kondome",
+                "english": "condoms"
+              },
+              {
+                "id": 9,
+                "german": "Zahnbürste",
+                "english": "toothbrushes"
+              },
+              {
+                "id": 10,
+                "german": "Zahnpasta",
+                "english": "toothpaste"
+              },
+              {
+                "id": 11,
+                "german": "Taschentücher",
+                "english": "tissues"
+              },
+              {
+                "id": 12,
+                "german": "Klopapier",
+                "english": "toilet paper"
+              }
             ]
           }
         ]
@@ -3729,8 +3949,8 @@
       "prerequisites": [],
       "intro": "In Germany, elementary school children receive a Schultüte on the first day of school. Your German friend is starting their first day at your university. What do you put in a university-level version of the classic Schultüte – eine Unitüte?",
       "tasks": [
-        "List at least 6-8 items for the Unitüte.",
-        "Draw a picture of this Unitüte with all the goodies inside."
+        "List at least 6-8 items for the Unitüte.\n",
+        "Draw a picture of this Unitüte with all the goodies inside.\n"
       ],
       "pdfNote": "COERLL Kapitel 3 workbook, page 140."
     },
@@ -3753,7 +3973,7 @@
     {
       "chapter": 3,
       "id": 39,
-      "type": "workbook",
+      "type": "writing",
       "icon": "writing",
       "title": "Aktivität 39. Neue Studenten in Austin!",
       "description": "Design an informational pamphlet for international students.",
@@ -3761,8 +3981,8 @@
       "prerequisites": [],
       "intro": "Generate material to help German-speaking students in your city. Work in a group and design an informational pamphlet to be included with other welcome material for these new students.",
       "tasks": [
-        "A. Brainstorming: Write down information included for new students (Frühstück, Mittagessen, Abendessen, Einkauf, Tagesablauf).",
-        "B. A Handout: Design the pamphlet."
+        "A. Brainstorming: Write down information included for new students (Frühstück, Mittagessen, Abendessen, Einkauf, Tagesablauf).\n",
+        "B. A Handout: Design the pamphlet.\n"
       ],
       "pdfNote": "COERLL Kapitel 3 workbook, page 142."
     }
