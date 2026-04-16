@@ -3309,6 +3309,462 @@
         { "prefix": "Nein, mein", "suffix": " eß’ ich nicht!“" }
       ],
       "pdfNote": "COERLL Kapitel 3 workbook, page 122."
+    },
+    {
+      "chapter": 3,
+      "id": 23,
+      "type": "workbook",
+      "icon": "groupactivity",
+      "title": "Aktivität 23. Essgewohnheiten",
+      "description": "Survey classmates about eating habits.",
+      "duration": "15 min",
+      "prerequisites": [],
+      "intro": "What kinds of eating habits do your classmates have? Ask your classmates questions about what they like to eat, what not, who is a vegetarian, and so forth.",
+      "tasks": [
+        "Finden Sie jemanden, der Pizza nicht gern isst.",
+        "Finden Sie jemanden, der Vegetarier/Vegetarierin ist.",
+        "Finden Sie jemanden, der nie Frühstück isst.",
+        "Finden Sie jemanden, der keine Milch trinken kann.",
+        "Finden Sie jemanden, der zu viel Schokolade isst.",
+        "Finden Sie jemanden, der mehr als fünf Tassen Kaffee am Tag trinkt.",
+        "Finden Sie jemanden, der gerne Fisch isst.",
+        "Finden Sie jemanden, der schon Döner probiert hat.",
+        "Finden Sie jemanden, der sehr gut kocht.",
+        "Finden Sie jemanden, der jede Woche zum Essen ausgeht."
+      ],
+      "pdfNote": "COERLL Kapitel 3 workbook, page 126."
+    },
+    {
+      "chapter": 3,
+      "id": 24,
+      "type": "writing",
+      "icon": "readingtask",
+      "title": "Aktivität 24. Ein kurzer Bericht",
+      "description": "On a separate sheet of paper, describe your own eating habits based on the survey.",
+      "duration": "15 min",
+      "prerequisites": [],
+      "intro": "On a separate sheet of paper, describe your own eating habits based on the above survey (i.e., Ich esse Pizza nicht gern. Ich bin Vegetarier/Vegetarierin). IMPORTANT: Do not put your name down!",
+      "tasks": [
+        "Describe your own eating habits without putting your name on the paper."
+      ],
+      "pdfNote": "COERLL Kapitel 3 workbook, page 126."
+    },
+    {
+      "chapter": 3,
+      "id": 25,
+      "type": "workbook",
+      "icon": "videoclips",
+      "title": "Aktivität 25. Kaffee trinken",
+      "description": "Do these speakers need coffee to function?",
+      "duration": "20 min",
+      "prerequisites": [],
+      "intro": "Some type of caffeine is essential for many people, especially students! Watch each speaker’s video clip and decide whether the statements are true or false.",
+      "videos": [
+        {
+          "path": "chapter03/k03_a25_adan.mp4",
+          "label": "Adan (QR 3.11)"
+        },
+        {
+          "path": "chapter03/k03_a25_eva.mp4",
+          "label": "Eva (QR 3.13)"
+        },
+        {
+          "path": "chapter03/k03_a25_harald.mp4",
+          "label": "Harald (QR 3.14)"
+        }
+      ],
+      "checks": {
+        "blocks": [
+          {
+            "type": "tf",
+            "id": "k25_adan",
+            "statement": "Adan: Fast gar nicht. Vielleicht trinke ich eine Cola oder etwas, aber nichts anderes.",
+            "correct": true
+          },
+          {
+            "type": "tf",
+            "id": "k25_eva",
+            "statement": "Eva: Ich trinke ganz gern Kaffee. Es ist lebensnotwendig (vital).",
+            "correct": true
+          },
+          {
+            "type": "tf",
+            "id": "k25_harald",
+            "statement": "Harald: Ich trinke zwei große Tassen Espresso jeden Morgen.",
+            "correct": true
+          }
+        ]
+      },
+      "pdfNote": "COERLL Kapitel 3 workbook, page 127."
+    },
+    {
+      "chapter": 3,
+      "id": 26,
+      "type": "workbook",
+      "icon": "videoclips",
+      "title": "Aktivität 26. Sprache im Kontext: Eis!",
+      "description": "Reading about an ice cream parlor and learning how to order Eis.",
+      "duration": "30 min",
+      "prerequisites": [],
+      "intro": "A very popular dessert, especially in the summer heat, is Eis (ice cream), which comes in lots of creamy flavors and can be served in a Waffel (cone) or a Becher (cup).",
+      "videos": [
+        {
+          "path": "chapter03/k03_a26_eis.mp4",
+          "label": "Sprache im Kontext: Eis (QR 3.24)"
+        }
+      ],
+      "tasks": [
+        "A. Die Eisdiele: Read about Eiscafe il Gelato da Vincenzo and answer the questions.",
+        "B. Ice Cream Flavors: Watch the video. What ice cream flavors are mentioned?",
+        "C. Bei Da Vincenzo: Watch the video to put the statements in the correct order.",
+        "D. Milch oder Frucht? List three Milcheis and two Fruchteis flavors.",
+        "E. Jetzt sind Sie dran! Act out an ice-cream buying event with a partner."
+      ],
+      "pdfNote": "COERLL Kapitel 3 workbook, page 128-130."
+    },
+    {
+      "chapter": 3,
+      "id": 27,
+      "type": "workbook",
+      "icon": "groupactivity",
+      "title": "Aktivität 27. Zu Abend essen",
+      "description": "Brainstorm the difference between Abendbrot and Abendessen.",
+      "duration": "10 min",
+      "prerequisites": [],
+      "intro": "In groups of three, brainstorm some ideas about why there are two words (das Abendbrot and das Abendessen) and what the difference between them might be.",
+      "tasks": [
+        "Brainstorm the meaning of das Abendbrot.",
+        "Brainstorm the meaning of das Abendessen."
+      ],
+      "pdfNote": "COERLL Kapitel 3 workbook, page 130."
+    },
+    {
+      "chapter": 3,
+      "id": 28,
+      "type": "workbook",
+      "icon": "readingtask",
+      "title": "Aktivität 28. Das Abendbrot – Die wichtigste Familienmahlzeit Deutschlands",
+      "description": "Read an article about family eating habits in Germany.",
+      "duration": "20 min",
+      "prerequisites": [],
+      "intro": "Read the article 'Allein am Frühstückstisch' (Berliner Zeitung, March 26, 2008) and compare family eating practices in Germany and the US.",
+      "tasks": [
+        "A. Vor dem Lesen: What do you think the focus of the passage is based on the title and subheading?",
+        "B. Fragen zur Diskussion: Compare das Essverhalten in Deutschland with das Essverhalten in den USA."
+      ],
+      "pdfNote": "COERLL Kapitel 3 workbook, page 131."
+    },
+    {
+      "chapter": 3,
+      "id": 29,
+      "type": "matching_activity",
+      "icon": "readingtask",
+      "title": "Aktivität 29. Einkaufen gehen",
+      "description": "Match the stores with the descriptions of what you can buy there.",
+      "duration": "15 min",
+      "prerequisites": [],
+      "intro": "For each location in the left column below, write the letter of the description, that most closely fits it.",
+      "leftColumnTitle": "Geschäft/Laden",
+      "rightColumnTitle": "Beschreibung",
+      "matchingPairs": [
+        {
+          "id": 1,
+          "german": "die Apotheke",
+          "english": "Wo man verschreibungspflichtige Arzneimittel kauft."
+        },
+        {
+          "id": 2,
+          "german": "die Bäckerei",
+          "english": "Wo man frisches Brot und Gebäck kauft."
+        },
+        {
+          "id": 3,
+          "german": "die Bank",
+          "english": "Wo man Geld holt."
+        },
+        {
+          "id": 4,
+          "german": "die Buchhandlung",
+          "english": "Wo man Bücher kauft."
+        },
+        {
+          "id": 5,
+          "german": "die Post",
+          "english": "Wo man Briefmarken kauft."
+        },
+        {
+          "id": 6,
+          "german": "die Drogerie",
+          "english": "Wo man allerlei Waren kauft, zum Beispiel Kosmetik, Zahnpasta und Schulsachen."
+        },
+        {
+          "id": 7,
+          "german": "der Friseur",
+          "english": "Wo man einen Haarschnitt bekommt."
+        },
+        {
+          "id": 8,
+          "german": "der Gemüseladen",
+          "english": "Wo man frisches Obst und Gemüse kauft."
+        },
+        {
+          "id": 9,
+          "german": "das Lebensmittelgeschäft",
+          "english": "Wo man alles kauft, was man isst."
+        },
+        {
+          "id": 10,
+          "german": "der Schreibwarenladen",
+          "english": "Wo man Papier und Schreibwaren kauft."
+        },
+        {
+          "id": 11,
+          "german": "das Schuhgeschäft",
+          "english": "Wo man Sandalen, Stiefel und Tennisschuhe kauft."
+        }
+      ],
+      "pdfNote": "COERLL Kapitel 3 workbook, page 132."
+    },
+    {
+      "chapter": 3,
+      "id": 30,
+      "type": "workbook",
+      "icon": "videoclips",
+      "title": "Aktivität 30. Sprache im Kontext: Sophia im Supermarkt",
+      "description": "Watch Sophia's shopping video and complete her grocery list.",
+      "duration": "15 min",
+      "prerequisites": [],
+      "videos": [
+        {
+          "path": "chapter03/k03_a30_sophia.mp4",
+          "label": "Sophia im Supermarkt (QR 3.19)"
+        }
+      ],
+      "intro": "Watch the video clip „Sophia im Supermarkt“. Fill in the items she mentions that are missing from her wöchentlichen Einkaufszettel.",
+      "tasks": [
+        "A. Write down what you notice in the clip. What is Sophia talking about?",
+        "B. Fill in her grocery list with the missing items from the clip."
+      ],
+      "checks": {
+        "blocks": [
+          {
+            "type": "text",
+            "id": "einkaufszettel_missing",
+            "prompts": [
+              "Missing Item 1:",
+              "Missing Item 2:",
+              "Missing Item 3:"
+            ]
+          }
+        ]
+      },
+      "pdfNote": "COERLL Kapitel 3 workbook, page 133."
+    },
+    {
+      "chapter": 3,
+      "id": 31,
+      "type": "workbook",
+      "icon": "videoclips",
+      "title": "Aktivität 31. Sprache im Kontext: Obst und Gemüse",
+      "description": "Identify origin and price of fruits and vegetables in Würzburg.",
+      "duration": "20 min",
+      "prerequisites": [],
+      "videos": [
+        {
+          "path": "chapter03/k03_a31_obst.mp4",
+          "label": "Obst (QR 3.31)"
+        },
+        {
+          "path": "chapter03/k03_a31_gemuese.mp4",
+          "label": "Gemüse (QR 3.32)"
+        }
+      ],
+      "intro": "Watch the two videos of a Würzburg green grocer and her prized Obst (fruits) and Gemüse (vegetables). Write down what each item costs and its origin.",
+      "tasks": [
+        "Determine the origin and price of the 10 fruits mentioned.",
+        "Determine the origin and price of the 8 vegetables mentioned."
+      ],
+      "wordBank": [
+        "teilweise", "kilogrammweise", "schälchenweise", "pro Stück", "Klima", "aus dem Ausland", "einheimisch", "unbehandelt", "Saison"
+      ],
+      "pdfNote": "COERLL Kapitel 3 workbook, page 134."
+    },
+    {
+      "chapter": 3,
+      "id": 32,
+      "type": "workbook",
+      "icon": "groupactivity",
+      "title": "Aktivität 32. Obst und Gemüse essen",
+      "description": "Ask a partner what fruits and vegetables they like to eat.",
+      "duration": "10 min",
+      "prerequisites": [],
+      "intro": "How many of these fruits and vegetables do you actually eat? Which ones do you not like? Ask a partner and jot down his/her response.",
+      "tasks": [
+        "Was für Obst isst du?",
+        "Was für Obst isst du nicht (gern)?",
+        "Was für Gemüse isst du?",
+        "Was für Gemüse isst du nicht (gern)?"
+      ],
+      "pdfNote": "COERLL Kapitel 3 workbook, page 135."
+    },
+    {
+      "chapter": 3,
+      "id": 33,
+      "type": "workbook",
+      "icon": "videoclips",
+      "title": "Aktivität 33. Sprache im Kontext: Austin kauft ein",
+      "description": "Watch Austin and Andrew go grocery shopping.",
+      "duration": "20 min",
+      "prerequisites": [],
+      "videos": [
+        {
+          "path": "chapter03/k03_a33_austin.mp4",
+          "label": "Austin kauft ein (QR 3.28)"
+        }
+      ],
+      "intro": "Watch the Video entitled „Austin beim Einkaufen“ and see what you can understand after each viewing of the clip.",
+      "tasks": [
+        "A. Write down what you see. Who is in it? Where does it take place?",
+        "B. Write down all the groceries you hear in the clip.",
+        "C. Answer: Was brauchen Austin und Andrew nicht? Was für Cereals kaufen Sie?",
+        "D. Write down all the adjectives you hear in the video."
+      ],
+      "pdfNote": "COERLL Kapitel 3 workbook, page 135."
+    },
+    {
+      "chapter": 3,
+      "id": 34,
+      "type": "workbook",
+      "icon": "groupactivity",
+      "title": "Aktivität 34. Milka-Schokolade – Werbung und Recherche im Internet",
+      "description": "Research the Milka brand and design a commercial.",
+      "duration": "30 min",
+      "prerequisites": [],
+      "intro": "In a previous Sprache im Kontext video you saw Andrew and Austin expressing their love of Milka-Schokolade. You will do a Recherche (research) on the brand and its Werbung (advertisement).",
+      "tasks": [
+        "A. Vor der Inernetrecherche: Discuss previous experiences with German chocolate.",
+        "B. Die Internetrecherche: Go to milka.de and learn about the brand.",
+        "C. Die Werbung: Read the transcript for the Milka commercial.",
+        "D. Nach dem Schauen/Lesen: Analyze the characters, setting, and product.",
+        "E. Jetzt sind Sie dran! Design your own commercial, app or website content for Milka."
+      ],
+      "pdfNote": "COERLL Kapitel 3 workbook, pages 136-137."
+    },
+    {
+      "chapter": 3,
+      "id": 35,
+      "type": "writing",
+      "icon": "readingtask",
+      "title": "Aktivität 35. Mein Lieblingsrezept",
+      "description": "Find a recipe online and create a shopping list with prices.",
+      "duration": "30 min",
+      "prerequisites": [],
+      "intro": "Go online to Marions Kochbuch and select a recipe you want to try, then write a shopping list estimating prices from discount store websites.",
+      "tasks": [
+        "A. Search for a recipe that you like to try on marions-kochbuch.de. Write down the name and all the ingredients.",
+        "B. Search aldi-sued.de, lidl.de or kaisers.de for the products and write down how much each ingredient would cost."
+      ],
+      "links": [
+        {
+          "label": "Marions Kochbuch",
+          "url": "http://www.marions-kochbuch.de/"
+        }
+      ],
+      "pdfNote": "COERLL Kapitel 3 workbook, page 138."
+    },
+    {
+      "chapter": 3,
+      "id": 36,
+      "type": "workbook",
+      "icon": "videoclips",
+      "title": "Aktivität 36. Sprache im Kontext: In der Drogerie",
+      "description": "Match drugstore items and identify stationery terms.",
+      "duration": "25 min",
+      "prerequisites": [],
+      "videos": [
+        {
+          "path": "chapter03/k03_a36_drogerie.mp4",
+          "label": "In der Drogerie (QR 3.26)"
+        }
+      ],
+      "intro": "Listen as Florian explains what kinds of things one can buy at a Drogerie and match the German terms with their English equivalents. Then learn about a Schreibwarengeschäft.",
+      "tasks": [
+        "A. Match the German Drogerie terms with their English equivalents.",
+        "B. Fill in the German stationery terms based on their initial letters."
+      ],
+      "checks": {
+        "blocks": [
+          {
+            "type": "matching",
+            "id": "drogerie_matching",
+            "leftColumnTitle": "German",
+            "rightColumnTitle": "English",
+            "matchingPairs": [
+              { "id": 1, "german": "Shampoo", "english": "shampoo" },
+              { "id": 2, "german": "Duschgel", "english": "shower gel" },
+              { "id": 3, "german": "Seife", "english": "soap" },
+              { "id": 4, "german": "Vitamintabletten", "english": "vitamins" },
+              { "id": 5, "german": "Schminke", "english": "makeup" },
+              { "id": 6, "german": "Cremesorten", "english": "types of creams" },
+              { "id": 7, "german": "Nagellack", "english": "nail polish" },
+              { "id": 8, "german": "Kondome", "english": "condoms" },
+              { "id": 9, "german": "Zahnbürste", "english": "toothbrushes" },
+              { "id": 10, "german": "Zahnpasta", "english": "toothpaste" },
+              { "id": 11, "german": "Taschentücher", "english": "tissues" },
+              { "id": 12, "german": "Klopapier", "english": "toilet paper" }
+            ]
+          }
+        ]
+      },
+      "pdfNote": "COERLL Kapitel 3 workbook, page 139."
+    },
+    {
+      "chapter": 3,
+      "id": 37,
+      "type": "writing",
+      "icon": "readingtask",
+      "title": "Aktivität 37. Der erste Schultag",
+      "description": "Create a 'Unitüte' for a new university student.",
+      "duration": "15 min",
+      "prerequisites": [],
+      "intro": "In Germany, elementary school children receive a Schultüte on the first day of school. Your German friend is starting their first day at your university. What do you put in a university-level version of the classic Schultüte – eine Unitüte?",
+      "tasks": [
+        "List at least 6-8 items for the Unitüte.",
+        "Draw a picture of this Unitüte with all the goodies inside."
+      ],
+      "pdfNote": "COERLL Kapitel 3 workbook, page 140."
+    },
+    {
+      "chapter": 3,
+      "id": 38,
+      "type": "workbook",
+      "icon": "groupactivity",
+      "title": "Aktivität 38. Zur Uni fahren",
+      "description": "List modes of transportation and survey the class.",
+      "duration": "20 min",
+      "prerequisites": [],
+      "intro": "How can you get to your shopping and then home? Do you ride your bike or take the bus?",
+      "tasks": [
+        "A. Match the modes of transportation.",
+        "B. Wie wir an die Uni gehen: Which modes of transportation do you and your classmates use? Take a tally."
+      ],
+      "pdfNote": "COERLL Kapitel 3 workbook, page 141-142."
+    },
+    {
+      "chapter": 3,
+      "id": 39,
+      "type": "workbook",
+      "icon": "writing",
+      "title": "Aktivität 39. Neue Studenten in Austin!",
+      "description": "Design an informational pamphlet for international students.",
+      "duration": "30 min",
+      "prerequisites": [],
+      "intro": "Generate material to help German-speaking students in your city. Work in a group and design an informational pamphlet to be included with other welcome material for these new students.",
+      "tasks": [
+        "A. Brainstorming: Write down information included for new students (Frühstück, Mittagessen, Abendessen, Einkauf, Tagesablauf).",
+        "B. A Handout: Design the pamphlet."
+      ],
+      "pdfNote": "COERLL Kapitel 3 workbook, page 142."
     }
   ]
 }
