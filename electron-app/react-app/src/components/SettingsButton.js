@@ -1,22 +1,23 @@
 import { useNavigate, useLocation } from 'react-router-dom';
-import styled, { css } from 'styled-components';
+import Button from '@mui/material/Button';
+import SettingsIcon from '@mui/icons-material/Settings';
 
-const Button = styled.button`
-  background: transparent;
-  border-radius: 3px;
-  border: 2px solid #BF4F74;
-  color: #BF4F74;
-  margin: 0 1em;
-  padding: 0.25em 1em;
-  font-size: 1.2rem;
-`;
-
-const SettingsButton = ({ children = "Settings", to, ...props }) => {
+const SettingsButton = ({ children = "Settings", to, compact = false, ...props }) => {
   const navigate = useNavigate();
   const location = useLocation();
   
   return (
     <Button 
+      variant="text"
+      color="inherit"
+      startIcon={<SettingsIcon />}
+      size={compact ? 'small' : 'medium'}
+      sx={{
+        justifyContent: 'flex-start',
+        color: 'text.secondary',
+        px: compact ? 1 : 1.5,
+        minWidth: compact ? 0 : undefined
+      }}
       onClick={() => to ? navigate(to) : navigate(`${location.pathname}/settings`)} 
       {...props}
     >

@@ -18,6 +18,7 @@ import TeacherDashboard from './pages/TeacherDashboard';
 import CreateNewAccount from './pages/CreateNewAccount';
 import VideoPlayer from './components/VideoPlayer';
 import ChapterPage from './pages/ChapterPage';
+import SettingsPage from './pages/SettingsPage';
 
 function Layout() {
   return (
@@ -96,7 +97,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/account/:id/settings',
-        element: <div><p>Settings</p></div>
+        element: <SettingsPage />
       },
       {
         path: '/account/:id/chapter/:num',

@@ -1,21 +1,22 @@
 import { useNavigate } from 'react-router-dom';
-import styled, { css } from 'styled-components';
+import Button from '@mui/material/Button';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-const Button = styled.button`
-  background: transparent;
-  border-radius: 3px;
-  border: 2px solid #BF4F74;
-  color: #BF4F74;
-  margin: 0 1em;
-  padding: 0.25em 1em;
-  font-size: 1.2rem;
-`;
-
-const BackButton = ({ children = "Back", to, ...props }) => {
+const BackButton = ({ children = "Back", to, compact = false, ...props }) => {
   const navigate = useNavigate();
   
   return (
     <Button 
+      variant="text"
+      color="inherit"
+      startIcon={<ArrowBackIcon />}
+      size={compact ? 'small' : 'medium'}
+      sx={{
+        justifyContent: 'flex-start',
+        color: 'text.secondary',
+        px: compact ? 1 : 1.5,
+        minWidth: compact ? 0 : undefined
+      }}
       onClick={() => to ? navigate(to) : navigate(-1)} 
       {...props}
     >
