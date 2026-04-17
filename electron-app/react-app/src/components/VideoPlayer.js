@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Box, Typography, Button, Alert } from '@mui/material';
 import { OpenInNew, FolderOpen } from '@mui/icons-material';
 
@@ -15,6 +15,24 @@ const VideoPlayer = ({
   sx = {}
 }) => {
   const [failed, setFailed] = useState(false);
+  /** Once metadata has loaded, ignore further error events (common during seek/buffer with app:// or range requests). */
+  const loadOkRef = useRef(false);
+
+  useEffect(() => {
+    setFailed(false);
+    loadOkRef.current = false;
+  }, [src]);
+
+  const handleLoadedMetadata = () => {
+    loadOkRef.current = true;
+  };
+
+  const handleVideoError = (e) => {
+    const code = e?.target?.error?.code;
+    if (typeof MediaError !== 'undefined' && code === MediaError.MEDIA_ERR_ABORTED) return;
+    if (loadOkRef.current) return;
+    setFailed(true);
+  };
 
   if (failed) {
     return (
@@ -56,7 +74,8 @@ const VideoPlayer = ({
         autoPlay={autoPlay}
         preload="metadata"
         style={{ width: '100%', maxHeight: 'min(50vh, 420px)', borderRadius: 8, background: '#000' }}
-        onError={() => setFailed(true)}
+        onLoadedMetadata={handleLoadedMetadata}
+        onError={handleVideoError}
       >
         <source src={src} type="video/mp4" />
         Your browser does not support HTML5 video.

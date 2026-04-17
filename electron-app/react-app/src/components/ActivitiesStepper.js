@@ -319,10 +319,10 @@ const ActivitiesStepper = ({ chapterNumber }) => {
         >
           {selectedActivity && (
             <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-              {selectedActivity.type !== 'classification_grid' && 
-               selectedActivity.type !== 'multi_speaker_writing' && (
-                <ActivityVideoSection activity={selectedActivity.raw} />
-              )}
+              {selectedActivity.type !== 'classification_grid' &&
+                selectedActivity.type !== 'multi_speaker_writing' && (
+                  <ActivityVideoSection activity={selectedActivity.raw} />
+                )}
               <ActivityContent
                 activity={selectedActivity.raw}
                 onComplete={(result) => handleActivityComplete(selectedActivity.id, result)}

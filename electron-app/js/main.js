@@ -86,8 +86,6 @@ app.whenReady().then(async () => { // calls function after ready event is fired
             const fullPath = path.join(__dirname, '../resources/videos', filePath);
 
             try {
-                // Get file stats and handle range requests
-                // const stats = await fs.stat(fullPath);
                 const stats = await new Promise((resolve, reject) => {
                     fs.stat(fullPath, (err, stats) => {
                         if (err) reject(err);
@@ -97,7 +95,6 @@ app.whenReady().then(async () => { // calls function after ready event is fired
                 const range = request.headers.get('range');
 
                 if (range) {
-                    // Handle partial content requests (video buffering)
                     const parts = range.replace(/bytes=/, '').split('-');
                     const start = parseInt(parts[0], 10);
                     const end = parts[1] ? parseInt(parts[1], 10) : stats.size - 1;
@@ -116,14 +113,12 @@ app.whenReady().then(async () => { // calls function after ready event is fired
                     });
                 }
 
-                // Full file response
                 return new Response(fs.createReadStream(fullPath), {
                     headers: {
                         'Content-Length': stats.size.toString(),
                         'Content-Type': 'video/mp4'
                     }
                 });
-
             } catch (err) {
                 console.error('File access error:', err);
                 return new Response('Not Found', { status: 404 });

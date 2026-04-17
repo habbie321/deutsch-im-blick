@@ -244,9 +244,19 @@ const WorkbookActivity = ({ activityData, onComplete }) => {
         if (block.type === 'matching') {
           return (
             <Box key={block.id} sx={{ mt: 4, p: 0, border: '2px dashed', borderColor: 'primary.light', borderRadius: 2 }}>
-              <MatchingActivity 
-                activityData={block} 
-                onComplete={() => setMatchingComplete(true)} 
+              {block.title && (
+                <Typography variant="h6" sx={{ px: 2, pt: 2, pb: 1, fontWeight: 'bold' }}>
+                  {block.title}
+                </Typography>
+              )}
+              {block.matchInstruction && (
+                <Typography variant="body2" color="text.secondary" sx={{ px: 2, pb: 2 }}>
+                  {block.matchInstruction}
+                </Typography>
+              )}
+              <MatchingActivity
+                activityData={block}
+                onComplete={() => setMatchingComplete(true)}
               />
             </Box>
           );
