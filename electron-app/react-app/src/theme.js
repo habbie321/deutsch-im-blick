@@ -36,6 +36,12 @@ const theme = createTheme({
         }
       }
     },
+    MuiButtonBase: {
+      defaultProps: {
+        disableRipple: true,
+        disableTouchRipple: true
+      }
+    },
     MuiPaper: {
       styleOverrides: {
         root: {
@@ -53,7 +59,9 @@ const theme = createTheme({
     },
     MuiButton: {
       defaultProps: {
-        disableElevation: true
+        disableElevation: true,
+        disableRipple: true,
+        disableTouchRipple: true
       },
       styleOverrides: {
         root: {
@@ -61,6 +69,12 @@ const theme = createTheme({
           borderRadius: 10,
           fontWeight: 600
         }
+      }
+    },
+    MuiCardActionArea: {
+      defaultProps: {
+        disableRipple: true,
+        disableTouchRipple: true
       }
     },
     MuiChip: {

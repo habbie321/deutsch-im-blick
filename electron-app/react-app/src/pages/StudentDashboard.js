@@ -25,7 +25,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import LockIcon from '@mui/icons-material/Lock';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { useLoaderData } from 'react-router-dom';
 
@@ -68,6 +68,11 @@ const StudentDashboard = () => {
   const initialChapter = Number(chapters?.[0]?.chapter_number || 1);
   const [expandedChapters, setExpandedChapters] = useState({ [initialChapter]: true });
   const [completedActivities, setCompletedActivities] = useState({});
+  const sidebarScrollRef = useRef(null);
+  const sidebarHideTimerRef = useRef(null);
+  const [sidebarThumb, setSidebarThumb] = useState({ top: 0, height: 32 });
+  const [isSidebarScrolling, setIsSidebarScrolling] = useState(false);
+  const [sidebarHasOverflow, setSidebarHasOverflow] = useState(false);
 
   const chaptersWithActivities = useMemo(() => {
     const out = {};
@@ -105,6 +110,54 @@ const StudentDashboard = () => {
     }
   };
 
+  useEffect(() => {
+    const el = sidebarScrollRef.current;
+    if (!el) return undefined;
+
+    const updateThumb = () => {
+      const { scrollTop, scrollHeight, clientHeight } = el;
+      if (clientHeight <= 0) return;
+      const hasOverflow = scrollHeight > clientHeight + 1;
+      setSidebarHasOverflow(hasOverflow);
+
+      const ratio = clientHeight / Math.max(scrollHeight, 1);
+      const thumbHeight = Math.max(28, Math.round(clientHeight * ratio));
+      const maxTop = Math.max(clientHeight - thumbHeight, 0);
+      const top =
+        hasOverflow
+          ? Math.round((scrollTop / (scrollHeight - clientHeight)) * maxTop)
+          : 0;
+
+      setSidebarThumb({ top, height: Math.min(thumbHeight, clientHeight) });
+    };
+
+    const handleScroll = () => {
+      setIsSidebarScrolling(true);
+      updateThumb();
+      if (sidebarHideTimerRef.current) {
+        clearTimeout(sidebarHideTimerRef.current);
+      }
+      sidebarHideTimerRef.current = setTimeout(() => {
+        setIsSidebarScrolling(false);
+      }, 700);
+    };
+
+    const resizeObserver = new ResizeObserver(updateThumb);
+    resizeObserver.observe(el);
+    updateThumb();
+    el.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', updateThumb);
+
+    return () => {
+      resizeObserver.disconnect();
+      el.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', updateThumb);
+      if (sidebarHideTimerRef.current) {
+        clearTimeout(sidebarHideTimerRef.current);
+      }
+    };
+  }, [chapters, expandedChapters, selectedRef]);
+
   return (
     <Box
       sx={{
@@ -117,8 +170,39 @@ const StudentDashboard = () => {
       }}
     >
       <Box sx={{ minHeight: 0, display: 'grid', gridTemplateColumns: { xs: '1fr', md: '320px 1fr' } }}>
-        <Box sx={{ minHeight: 0, borderRight: { md: '1px solid' }, borderColor: 'divider', bgcolor: 'background.paper', display: 'grid', gridTemplateRows: '1fr auto' }}>
-          <Box sx={{ minHeight: 0, overflowY: 'auto' }}>
+        <Box
+          sx={{
+            minHeight: 0,
+            bgcolor: 'background.paper',
+            display: 'grid',
+            gridTemplateRows: '1fr auto',
+            overflow: 'hidden',
+            position: 'relative',
+            '&::after': {
+              content: '""',
+              position: 'absolute',
+              top: 0,
+              right: 0,
+              bottom: 0,
+              width: '1px',
+              bgcolor: 'divider',
+              display: { xs: 'none', md: 'block' }
+            }
+          }}
+        >
+          <Box sx={{ minHeight: 0, position: 'relative' }}>
+            <Box
+              ref={sidebarScrollRef}
+              sx={{
+                height: '100%',
+                overflowY: 'auto',
+                overflowX: 'hidden',
+                scrollbarWidth: 'none',
+                '&::-webkit-scrollbar': {
+                  display: 'none'
+                }
+              }}
+            >
             <Box sx={{ px: 1.5, pt: 1.25, pb: 0.75, borderBottom: '1px solid', borderColor: 'divider', mb: 0.75 }}>
               <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
                 Signed in as
@@ -153,7 +237,21 @@ const StudentDashboard = () => {
                     borderTop: '1px solid',
                     borderColor: 'divider',
                     borderRadius: 0,
-                    '&:before': { display: 'none' }
+                    margin: 0,
+                    '&.MuiPaper-root': {
+                      borderRadius: 0
+                    },
+                    '&.Mui-expanded': {
+                      margin: 0,
+                      borderRadius: 0
+                    },
+                    '&:before': { display: 'none' },
+                    '& .MuiAccordionSummary-root': {
+                      borderRadius: 0
+                    },
+                    '& .MuiAccordionDetails-root': {
+                      borderRadius: 0
+                    }
                   }}
                 >
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -197,6 +295,32 @@ const StudentDashboard = () => {
                 </Accordion>
               );
             })}
+            </Box>
+            <Box
+              aria-hidden
+              sx={{
+                position: 'absolute',
+                top: 0,
+                right: 2,
+                bottom: 0,
+                width: 6,
+                pointerEvents: 'none'
+              }}
+            >
+              <Box
+                sx={{
+                  position: 'absolute',
+                  right: 0,
+                  top: `${sidebarThumb.top}px`,
+                  width: 6,
+                  height: `${sidebarThumb.height}px`,
+                  borderRadius: 999,
+                  bgcolor: 'grey.500',
+                  opacity: isSidebarScrolling && sidebarHasOverflow ? 1 : 0,
+                  transition: 'opacity 220ms ease'
+                }}
+              />
+            </Box>
           </Box>
 
           <Box sx={{ borderTop: '1px solid', borderColor: 'divider', p: 1, display: 'grid', gap: 0.25, bgcolor: '#fcfcfd' }}>
@@ -205,7 +329,33 @@ const StudentDashboard = () => {
           </Box>
         </Box>
 
-        <Box sx={{ minHeight: 0, overflowY: 'auto', p: { xs: 1.5, md: 2 }, bgcolor: '#fcfcfd' }}>
+        <Box
+          sx={{
+            minHeight: 0,
+            overflowY: 'auto',
+            p: { xs: 1.5, md: 2 },
+            bgcolor: '#fcfcfd',
+            scrollbarWidth: 'thin',
+            scrollbarColor: (theme) => `${theme.palette.grey[500]} #fcfcfd`,
+            '&::-webkit-scrollbar': {
+              width: 10
+            },
+            '&::-webkit-scrollbar-track': {
+              backgroundColor: '#fcfcfd',
+              borderLeft: '1px solid',
+              borderColor: 'divider'
+            },
+            '&::-webkit-scrollbar-thumb': {
+              backgroundColor: 'grey.500',
+              borderRadius: 8,
+              border: '2px solid',
+              borderColor: '#fcfcfd'
+            },
+            '&::-webkit-scrollbar-thumb:hover': {
+              backgroundColor: 'grey.600'
+            }
+          }}
+        >
           {selectedActivity ? (
             <Box>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
