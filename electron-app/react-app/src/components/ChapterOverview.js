@@ -59,20 +59,20 @@ const ChapterOverview = ({ userId, chapters, initialProgress }) => {
   }, [userId]);
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
+    <Container maxWidth="lg" sx={{ py: 2 }}>
       <Typography 
-        variant="h3" 
+        variant="h5" 
         component="h1" 
         align="center" 
         gutterBottom 
-        color="primary"
-        sx={{ fontWeight: 'bold', mb: 1 }}
+        color="text.primary"
+        sx={{ fontWeight: 700, mb: 0.5 }}
       >
         Course Chapters
       </Typography>
       
       <Typography 
-        variant="subtitle1" 
+        variant="body2" 
         align="center" 
         sx={{ mb: 4, color: 'text.secondary' }}
       >
@@ -84,8 +84,8 @@ const ChapterOverview = ({ userId, chapters, initialProgress }) => {
           display: 'flex',
           justifyContent: 'center',
           flexWrap: 'wrap',
-          gap: 3,
-          mt: 4
+          gap: 2,
+          mt: 2
         }}
       >
         {chapters.map(chapter => {

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Typography, Container } from '@mui/material';
 import AccountCard from './AccountCard';
-import NewAccountCard from './NewAccountCard';
 
 const AccountOverview = () => {
   const [accounts, setAccounts] = useState([]);
@@ -11,20 +10,20 @@ const AccountOverview = () => {
   }, []);
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
+    <Container maxWidth="lg" sx={{ py: 5 }}>
       <Typography 
-        variant="h3" 
+        variant="h4"
         component="h1" 
         align="center" 
         gutterBottom 
-        color="primary"
-        sx={{ fontWeight: 'bold', mb: 1 }}
+        color="text.primary"
+        sx={{ fontWeight: 700, mb: 0.75, letterSpacing: '-0.02em' }}
       >
         Deutsch im Blick
       </Typography>
       
       <Typography 
-        variant="subtitle1" 
+        variant="body2"
         align="center" 
         sx={{ mb: 4, color: 'text.secondary' }}
       >
@@ -33,11 +32,13 @@ const AccountOverview = () => {
 
       <Box
         sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          flexWrap: 'wrap',
-          gap: 3,
-          mt: 4
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(248px, 1fr))',
+          justifyItems: 'center',
+          gap: 1.5,
+          mt: 2,
+          maxWidth: 1040,
+          mx: 'auto'
         }}
       >
         {accounts.map(account => (

@@ -149,7 +149,7 @@ const InlineActivityChecks = ({ blocks = [], onSatisfiedChange }) => {
 
     if (b.type === 'mc') {
       return (
-        <Paper key={b.id} elevation={0} sx={{ p: 2, mb: 2, border: 1, borderColor: err ? 'error.main' : ok ? 'success.main' : 'divider' }}>
+        <Paper key={b.id} elevation={0} sx={{ p: 2, mb: 2, border: 1, borderRadius: 2.5, bgcolor: 'background.paper', borderColor: err ? 'error.main' : ok ? 'success.main' : 'divider' }}>
           <Typography variant="body2" fontWeight="medium" gutterBottom>
             {b.question}
           </Typography>
@@ -172,7 +172,7 @@ const InlineActivityChecks = ({ blocks = [], onSatisfiedChange }) => {
     if (b.type === 'multi') {
       const sel = multi[b.id] || [];
       return (
-        <Paper key={b.id} elevation={0} sx={{ p: 2, mb: 2, border: 1, borderColor: err ? 'error.main' : ok ? 'success.main' : 'divider' }}>
+        <Paper key={b.id} elevation={0} sx={{ p: 2, mb: 2, border: 1, borderRadius: 2.5, bgcolor: 'background.paper', borderColor: err ? 'error.main' : ok ? 'success.main' : 'divider' }}>
           <Typography variant="body2" fontWeight="medium" gutterBottom>
             {b.question}
           </Typography>
@@ -205,7 +205,7 @@ const InlineActivityChecks = ({ blocks = [], onSatisfiedChange }) => {
 
     if (b.type === 'tf') {
       return (
-        <Paper key={b.id} elevation={0} sx={{ p: 2, mb: 2, border: 1, borderColor: err ? 'error.main' : ok ? 'success.main' : 'divider' }}>
+        <Paper key={b.id} elevation={0} sx={{ p: 2, mb: 2, border: 1, borderRadius: 2.5, bgcolor: 'background.paper', borderColor: err ? 'error.main' : ok ? 'success.main' : 'divider' }}>
           <Typography variant="body2" gutterBottom>
             {b.statement}
           </Typography>
@@ -227,7 +227,7 @@ const InlineActivityChecks = ({ blocks = [], onSatisfiedChange }) => {
 
     if (b.type === 'short') {
       return (
-        <Paper key={b.id} elevation={0} sx={{ p: 2, mb: 2, border: 1, borderColor: err ? 'error.main' : ok ? 'success.main' : 'divider' }}>
+        <Paper key={b.id} elevation={0} sx={{ p: 2, mb: 2, border: 1, borderRadius: 2.5, bgcolor: 'background.paper', borderColor: err ? 'error.main' : ok ? 'success.main' : 'divider' }}>
           <Typography variant="body2" fontWeight="medium" gutterBottom>
             {b.prompt}
           </Typography>
@@ -254,7 +254,7 @@ const InlineActivityChecks = ({ blocks = [], onSatisfiedChange }) => {
     if (b.type === 'who') {
       const picked = who[b.id] || { H: false, E: false, S: false };
       return (
-        <Paper key={b.id} elevation={0} sx={{ p: 2, mb: 2, border: 1, borderColor: err ? 'error.main' : ok ? 'success.main' : 'divider' }}>
+        <Paper key={b.id} elevation={0} sx={{ p: 2, mb: 2, border: 1, borderRadius: 2.5, bgcolor: 'background.paper', borderColor: err ? 'error.main' : ok ? 'success.main' : 'divider' }}>
           <Typography variant="body2" gutterBottom>
             {b.statement}
           </Typography>
@@ -290,7 +290,7 @@ const InlineActivityChecks = ({ blocks = [], onSatisfiedChange }) => {
     if (b.type === 'classification') {
       const state = classification[b.id] || {};
       return (
-        <Paper key={b.id} elevation={0} sx={{ p: 2, mb: 2, border: 1, borderColor: err ? 'error.main' : ok ? 'success.main' : 'divider' }}>
+        <Paper key={b.id} elevation={0} sx={{ p: 2, mb: 2, border: 1, borderRadius: 2.5, bgcolor: 'background.paper', borderColor: err ? 'error.main' : ok ? 'success.main' : 'divider' }}>
           <Typography variant="body2" fontWeight="medium" gutterBottom>
             {b.instruction}
           </Typography>
@@ -339,13 +339,13 @@ const InlineActivityChecks = ({ blocks = [], onSatisfiedChange }) => {
       const ord = mergedOrder(b.id);
       const byId = Object.fromEntries((b.items || []).map((it) => [it.id, it.text]));
       return (
-        <Paper key={b.id} elevation={0} sx={{ p: 2, mb: 2, border: 1, borderColor: err ? 'error.main' : ok ? 'success.main' : 'divider' }}>
+        <Paper key={b.id} elevation={0} sx={{ p: 2, mb: 2, border: 1, borderRadius: 2.5, bgcolor: 'background.paper', borderColor: err ? 'error.main' : ok ? 'success.main' : 'divider' }}>
           <Typography variant="body2" fontWeight="medium" gutterBottom>
             {b.instruction || 'Put the steps in the correct order (first step at the top).'}
           </Typography>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
             {ord.map((id, idx) => (
-              <Box key={id} sx={{ display: 'flex', alignItems: 'center', gap: 1, bgcolor: 'action.hover', borderRadius: 1, p: 1 }}>
+              <Box key={id} sx={{ display: 'flex', alignItems: 'center', gap: 1, bgcolor: '#fafafa', border: '1px solid', borderColor: 'divider', borderRadius: 1.5, p: 1 }}>
                 <Box sx={{ flex: 1 }}>
                   <Typography variant="body2">{byId[id]}</Typography>
                 </Box>
@@ -379,7 +379,7 @@ const InlineActivityChecks = ({ blocks = [], onSatisfiedChange }) => {
         Answer the questions below, then click <strong>Check answers</strong>. You can complete this activity only after everything here is correct.
       </Typography>
       {blocks.map((b, i) => renderBlock(b, i))}
-      <Button variant="contained" color="secondary" onClick={validate} sx={{ mt: 1 }}>
+      <Button variant="contained" color="primary" onClick={validate} sx={{ mt: 1 }}>
         Check answers
       </Button>
       {results && (

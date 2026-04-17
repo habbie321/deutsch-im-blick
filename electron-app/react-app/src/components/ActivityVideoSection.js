@@ -24,7 +24,8 @@ const ActivityVideoSection = ({ activity }) => {
         p: 2,
         border: 1,
         borderColor: 'divider',
-        bgcolor: 'background.paper'
+        bgcolor: 'background.paper',
+        borderRadius: 3
       }}
     >
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1.5 }}>
@@ -38,7 +39,17 @@ const ActivityVideoSection = ({ activity }) => {
       </Typography>
       <Divider sx={{ mb: 2 }} />
       {clips.map((clip, i) => (
-        <Box key={`${clip.relativePath}-${i}`} sx={{ mb: i < clips.length - 1 ? 3 : 0 }}>
+        <Box
+          key={`${clip.relativePath}-${i}`}
+          sx={{
+            mb: i < clips.length - 1 ? 3 : 0,
+            p: 1.5,
+            borderRadius: 2,
+            border: '1px solid',
+            borderColor: 'divider',
+            bgcolor: '#fcfdff'
+          }}
+        >
           <Typography variant="body2" color="primary" fontWeight="medium" gutterBottom>
             {clip.label}
           </Typography>

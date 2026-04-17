@@ -1,6 +1,6 @@
 import ThemeToggle from '../components/ThemeToggle';
 import AccountOverview from '../components/AccountOverview';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 const AccountSelection = () => {
   return (
@@ -11,9 +11,9 @@ const AccountSelection = () => {
       
       <AccountOverview />
       
-      <Box sx={{ textAlign: 'center', mt: 4, color: 'text.secondary' }}>
-        <p id="info">Deutsch im Blick - Interactive German Learning Platform</p>
-      </Box>
+      <Typography id="info" variant="caption" sx={{ display: 'block', textAlign: 'center', mt: 4, color: 'text.secondary' }}>
+        Deutsch im Blick - Interactive German Learning Platform
+      </Typography>
     </Box>
   );
 }

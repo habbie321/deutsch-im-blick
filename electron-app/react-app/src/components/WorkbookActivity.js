@@ -126,7 +126,7 @@ const WorkbookActivity = ({ activityData, onComplete }) => {
 
   return (
     <Box sx={{ p: 2, maxWidth: 900, mx: 'auto' }}>
-      <Typography variant="h4" color="primary" align="center" gutterBottom>
+      <Typography variant="h4" color="text.primary" align="center" gutterBottom sx={{ fontWeight: 700 }}>
         {title}
       </Typography>
       <Typography variant="body1" color="text.secondary" align="center" sx={{ mb: 4 }}>
@@ -134,7 +134,7 @@ const WorkbookActivity = ({ activityData, onComplete }) => {
       </Typography>
 
       {isMultiStep && (
-        <Stepper activeStep={currentStep} sx={{ mb: 4 }}>
+        <Stepper activeStep={currentStep} sx={{ mb: 4, p: 1.5, border: '1px solid', borderColor: 'divider', borderRadius: 2, bgcolor: 'background.paper' }}>
           <Step><StepLabel>Richtig oder Falsch?</StepLabel></Step>
           <Step><StepLabel>Matching</StepLabel></Step>
         </Stepper>
@@ -151,7 +151,7 @@ const WorkbookActivity = ({ activityData, onComplete }) => {
 
         if (block.type === 'tf') {
           return (
-            <Paper key={block.id} elevation={0} sx={{ p: 2, mb: 1, borderBottom: '1px solid', borderColor: 'divider' }}>
+            <Paper key={block.id} elevation={0} sx={{ p: 2, mb: 1.25, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: 'background.paper' }}>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Typography variant="body1" sx={{ flexGrow: 1 }}>
                   {block.statement}
@@ -174,7 +174,7 @@ const WorkbookActivity = ({ activityData, onComplete }) => {
         if (block.type === 'mc' || block.type === 'who') {
           const options = block.options || ['H', 'E', 'S']; // Default for 'who' type
           return (
-            <Paper key={block.id} elevation={0} sx={{ p: 2, mb: 1, borderBottom: '1px solid', borderColor: 'divider' }}>
+            <Paper key={block.id} elevation={0} sx={{ p: 2, mb: 1.25, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: 'background.paper' }}>
               <Typography variant="body1" sx={{ mb: 1 }}>{block.question || block.statement}</Typography>
               <RadioGroup
                 row
@@ -196,7 +196,7 @@ const WorkbookActivity = ({ activityData, onComplete }) => {
 
         if (block.type === 'multi') {
           return (
-            <Paper key={block.id} elevation={0} sx={{ p: 2, mb: 1 }}>
+            <Paper key={block.id} elevation={0} sx={{ p: 2, mb: 1.25, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: 'background.paper' }}>
               <Typography variant="body1" sx={{ mb: 1, fontWeight: 'medium' }}>
                 {block.question}
               </Typography>
@@ -221,29 +221,29 @@ const WorkbookActivity = ({ activityData, onComplete }) => {
 
         if (block.type === 'text') {
           return (
-            <Box key={block.id} sx={{ mb: 3 }}>
+            <Paper key={block.id} elevation={0} sx={{ p: 2, mb: 1.25, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: 'background.paper' }}>
               {block.prompts.map((prompt, i) => (
                 <TextField
                   key={i}
                   fullWidth
                   label={prompt}
-                  variant="standard"
+                  variant="outlined"
                   value={textAnswers[block.id]?.[i] || ''}
                   onChange={(e) => handleTextChange(block.id, i, e.target.value)}
                   disabled={submitted}
-                  sx={{ mb: 2 }}
+                  sx={{ mb: i < block.prompts.length - 1 ? 1.5 : 0 }}
                   InputProps={{
                     sx: { fontStyle: 'italic' }
                   }}
                 />
               ))}
-            </Box>
+            </Paper>
           );
         }
 
         if (block.type === 'matching') {
           return (
-            <Box key={block.id} sx={{ mt: 4, p: 0, border: '2px dashed', borderColor: 'primary.light', borderRadius: 2 }}>
+            <Box key={block.id} sx={{ mt: 4, p: 0, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: 'background.paper' }}>
               {block.title && (
                 <Typography variant="h6" sx={{ px: 2, pt: 2, pb: 1, fontWeight: 'bold' }}>
                   {block.title}
@@ -314,7 +314,7 @@ const WorkbookActivity = ({ activityData, onComplete }) => {
               size="large"
               disabled={!canProceedToMatching}
               onClick={handleNext}
-              sx={{ px: 8, borderRadius: 2 }}
+              sx={{ px: 8 }}
             >
               Continue to Matching
             </Button>
@@ -324,7 +324,7 @@ const WorkbookActivity = ({ activityData, onComplete }) => {
               size="large"
               disabled={!canFinalize}
               onClick={handleSubmit}
-              sx={{ px: 8, borderRadius: 2 }}
+              sx={{ px: 8 }}
             >
               Check All Answers
             </Button>

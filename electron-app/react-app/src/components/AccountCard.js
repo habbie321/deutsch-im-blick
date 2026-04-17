@@ -3,10 +3,8 @@ import CardActionArea from '@mui/material/CardActionArea';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
 import Chip from '@mui/material/Chip';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
 import {
   Person as PersonIcon,
   School as TeacherIcon,
@@ -16,7 +14,6 @@ import {
 const AccountCard = ({ account }) => {
   const { first_name, role, id } = account;
   const navigate = useNavigate();
-  const [elevation, setElevation] = useState(2);
   const isNewAccount = id === 0;
   const isTeacher = role === 'teacher';
 
@@ -33,26 +30,27 @@ const AccountCard = ({ account }) => {
   return (
     <Card
       sx={{
-        width: 260,
-        height: 220,
+        width: 248,
+        height: 184,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: isNewAccount ? 'grey.50' : (isTeacher ? 'secondary.light' : 'primary.light'),
-        color: isNewAccount ? 'grey.600' : 'common.white',
-        boxShadow: elevation,
+        backgroundColor: 'background.paper',
+        color: 'text.primary',
+        border: '1px solid',
+        borderColor: 'divider',
+        borderRadius: 3,
+        boxShadow: '0 1px 2px rgba(24, 24, 27, 0.05)',
         cursor: 'pointer',
-        transition: 'all 0.3s ease',
-        margin: 1.5,
+        transition: 'all 0.2s ease',
+        margin: 1,
         position: 'relative',
-        overflow: 'visible',
+        overflow: 'hidden',
         '&:hover': {
-          transform: 'translateY(-4px)',
-          boxShadow: 6
+          transform: 'translateY(-2px)',
+          boxShadow: '0 12px 24px rgba(24, 24, 27, 0.08)'
         }
       }}
-      onMouseEnter={() => setElevation(4)}
-      onMouseLeave={() => setElevation(2)}
     >
       <CardActionArea
         onClick={handleClick}
@@ -63,76 +61,49 @@ const AccountCard = ({ account }) => {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: 2
+          padding: 2.5
         }}
       >
         {/* Avatar/Icon */}
         <Box
           sx={{
-            width: 70,
-            height: 70,
+            width: 56,
+            height: 56,
             borderRadius: '50%',
-            backgroundColor: isNewAccount ? 'grey.300' : (isTeacher ? 'secondary.main' : 'primary.main'),
-            display: 'flex',
+            backgroundColor: isNewAccount ? '#f4f4f5' : '#18181b',
+            color: isNewAccount ? '#71717a' : '#fff',
+            display: 'inline-flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: 'white',
-            mb: 2,
-            boxShadow: 3
+            mb: 2
           }}
         >
           {isNewAccount ? (
-            <AddIcon sx={{ fontSize: 40 }} />
+            <AddIcon sx={{ fontSize: 30 }} />
           ) : isTeacher ? (
-            <TeacherIcon sx={{ fontSize: 40 }} />
+            <TeacherIcon sx={{ fontSize: 30 }} />
           ) : (
-            <PersonIcon sx={{ fontSize: 40 }} />
+            <PersonIcon sx={{ fontSize: 30 }} />
           )}
         </Box>
 
         <CardContent sx={{ textAlign: 'center', p: 0 }}>
-          <Typography variant="h6" sx={{ mb: 1, fontWeight: 'bold' }}>
+          <Typography variant="h6" sx={{ mb: 1, fontWeight: 650, fontSize: '1rem' }}>
             {first_name}
           </Typography>
           
           <Chip 
             label={isNewAccount ? 'New Account' : (isTeacher ? 'Teacher' : 'Student')} 
             size="small"
-            color={isNewAccount ? 'default' : (isTeacher ? 'secondary' : 'primary')}
-            variant={isNewAccount ? 'outlined' : 'filled'}
+            color="default"
+            variant="outlined"
             sx={{ 
-              color: isNewAccount ? 'grey.600' : 'white',
-              backgroundColor: isNewAccount ? 'transparent' : 'rgba(255, 255, 255, 0.2)',
-              borderColor: isNewAccount ? 'grey.400' : 'rgba(255, 255, 255, 0.5)'
+              color: 'text.secondary',
+              borderColor: 'divider',
+              bgcolor: '#fafafa'
             }}
           />
         </CardContent>
-
-        {/* Decorative elements */}
-        <Box
-          sx={{
-            position: 'absolute',
-            bottom: 8,
-            right: 8,
-            width: 16,
-            height: 16,
-            borderRadius: '50%',
-            backgroundColor: isNewAccount ? 'grey.400' : (isTeacher ? 'secondary.main' : 'primary.main'),
-            opacity: 0.7
-          }}
-        />
-        <Box
-          sx={{
-            position: 'absolute',
-            top: 8,
-            left: 8,
-            width: 8,
-            height: 8,
-            borderRadius: '50%',
-            backgroundColor: isNewAccount ? 'grey.400' : (isTeacher ? 'secondary.main' : 'primary.main'),
-            opacity: 0.7
-          }}
-        />
       </CardActionArea>
     </Card>
   );

@@ -2,9 +2,8 @@ import { useState, useEffect } from 'react';
 import { useLoaderData } from 'react-router-dom';
 import VideoPlayer from '../components/VideoPlayer';
 import BackButton from '../components/BackButton';
-import { Backdrop } from '@mui/material';
-import { Button } from '@mui/material';
 import ActivitiesStepper from '../components/ActivitiesStepper';
+import { Backdrop, Box, Button, Container, Paper, Typography } from '@mui/material';
 
 function ChapterPage() {
 
@@ -30,34 +29,52 @@ function ChapterPage() {
   const introSrc = `app://${chFolder}/intro.mp4`;
 
   return (
-    <div className="relative">
+    <Box sx={{ minHeight: '100vh', backgroundColor: 'background.default', py: 3 }}>
       {/* Intro Video Overlay */}
       {showIntro && (
-        <div>
         <Backdrop
-          sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+          sx={(theme) => ({
+            color: '#fff',
+            zIndex: theme.zIndex.drawer + 1,
+            backdropFilter: 'blur(6px)',
+            px: 2
+          })}
           open={open}
         >
-          <VideoPlayer
-            src={introSrc}
-            relativePath={`${chFolder}/intro.mp4`}
-            title={`Kapitel ${chapterNumber} — Einführung`}
-            fallbackUrl={`https://coerll.utexas.edu/dib/toc.php?k=${chapterNumber}`}
-            autoPlay
-          />
-          <Button onClick={handleClose}>Close</Button>
+          <Paper sx={{ p: 2, maxWidth: 860, width: '100%', borderRadius: 3 }}>
+            <Typography variant="h6" sx={{ mb: 1.5, color: 'text.primary' }}>
+              Kapitel {chapterNumber} — Einführung
+            </Typography>
+            <VideoPlayer
+              src={introSrc}
+              relativePath={`${chFolder}/intro.mp4`}
+              title={`Kapitel ${chapterNumber} — Einführung`}
+              fallbackUrl={`https://coerll.utexas.edu/dib/toc.php?k=${chapterNumber}`}
+              autoPlay
+            />
+            <Box sx={{ mt: 1.5, display: 'flex', justifyContent: 'flex-end' }}>
+              <Button variant="contained" onClick={handleClose}>Continue</Button>
+            </Box>
+          </Paper>
         </Backdrop>
-        </div>
       )}
 
       {/* Chapter Stuff */}
-      <div className="container">
-        <h1>Chapter {chapterNumber} Stuff</h1>
-        <BackButton />
-        <ActivitiesStepper chapterNumber={chapterNumber}/>
+      <Container maxWidth="lg">
+        <Paper sx={{ p: { xs: 2, md: 3 }, mb: 2, borderRadius: 3 }}>
+          <Typography variant="h4" sx={{ fontWeight: 800, mb: 0.5 }}>
+            Kapitel {chapterNumber}
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            Activities, listening clips, and workbook practice
+          </Typography>
+          <BackButton />
+        </Paper>
+
+        <ActivitiesStepper chapterNumber={chapterNumber} />
         {/* ... */}
-      </div>
-    </div>
+      </Container>
+    </Box>
   );
 }
 

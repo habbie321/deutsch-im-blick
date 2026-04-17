@@ -161,13 +161,14 @@ const ActivitiesStepper = ({ chapterNumber }) => {
       sx={{
         maxWidth: 1000,
         margin: '0 auto',
-        p: 3,
-        backgroundColor: theme.palette.grey[100],
-        borderRadius: 2,
-        boxShadow: 2
+        p: { xs: 2, md: 3 },
+        backgroundColor: 'background.default',
+        borderRadius: 3,
+        border: '1px solid',
+        borderColor: 'divider'
       }}
     >
-      <Typography variant="h4" component="h1" gutterBottom align="center" color="primary">
+      <Typography variant="h4" component="h1" gutterBottom align="center" color="text.primary">
         Chapter activities
       </Typography>
 
@@ -188,9 +189,10 @@ const ActivitiesStepper = ({ chapterNumber }) => {
         sx={{
           mb: 4,
           p: 2,
-          backgroundColor: 'white',
-          borderRadius: 2,
-          boxShadow: 1
+          bgcolor: 'background.paper',
+          borderRadius: 3,
+          border: '1px solid',
+          borderColor: 'divider'
         }}
       >
         {currentActivities.map((activity) => {
@@ -205,7 +207,8 @@ const ActivitiesStepper = ({ chapterNumber }) => {
                 icon={
                   <Avatar
                     sx={{
-                      bgcolor: locked ? 'grey.400' : done ? 'success.main' : 'primary.main',
+                      bgcolor: locked ? 'grey.300' : done ? 'grey.900' : 'grey.100',
+                      color: locked ? 'grey.700' : done ? 'common.white' : 'text.primary',
                       width: 32,
                       height: 32
                     }}
@@ -238,10 +241,15 @@ const ActivitiesStepper = ({ chapterNumber }) => {
               sx={{
                 opacity: locked ? 0.7 : 1,
                 cursor: locked ? 'not-allowed' : 'pointer',
-                transition: 'all 0.2s',
+                borderRadius: 3,
+                border: '1px solid',
+                borderColor: 'divider',
+                boxShadow: '0 1px 2px rgba(24, 24, 27, 0.05)',
+                transition: 'transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease',
                 '&:hover': {
-                  transform: locked ? 'none' : 'translateY(-4px)',
-                  boxShadow: locked ? 1 : 4
+                  transform: locked ? 'none' : 'translateY(-2px)',
+                  boxShadow: locked ? '0 1px 2px rgba(24, 24, 27, 0.05)' : '0 8px 20px rgba(24, 24, 27, 0.08)',
+                  borderColor: locked ? 'divider' : 'primary.light'
                 }
               }}
               onClick={() => handleActivityClick(activity)}
@@ -251,7 +259,8 @@ const ActivitiesStepper = ({ chapterNumber }) => {
                   <Avatar
                     sx={{
                       mr: 2,
-                      bgcolor: locked ? 'grey.400' : done ? 'success.main' : 'primary.main'
+                      bgcolor: locked ? 'grey.300' : done ? 'grey.900' : 'grey.100',
+                      color: locked ? 'grey.700' : done ? 'common.white' : 'text.primary'
                     }}
                   >
                     {locked ? <Lock /> : done ? <CheckCircle /> : activity.id}
@@ -268,7 +277,7 @@ const ActivitiesStepper = ({ chapterNumber }) => {
                   <Chip icon={<Schedule />} label={activity.duration} size="small" variant="outlined" sx={{ mr: 1 }} />
                   <Chip
                     label={done ? 'Completed' : locked ? 'Locked' : 'Start'}
-                    color={done ? 'success' : locked ? 'default' : 'primary'}
+                    color={done ? 'default' : locked ? 'default' : 'primary'}
                     variant={done ? 'filled' : 'outlined'}
                     icon={!done && !locked ? <PlayArrow /> : undefined}
                   />
@@ -290,12 +299,21 @@ const ActivitiesStepper = ({ chapterNumber }) => {
         fullScreen
         PaperProps={{
           sx: {
-            background: 'linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%)'
+            bgcolor: 'background.default'
           }
         }}
       >
-        <AppBar position="relative" color="transparent" elevation={1}>
-          <Toolbar>
+        <AppBar
+          position="relative"
+          color="transparent"
+          elevation={0}
+          sx={{
+            bgcolor: 'rgba(255,255,255,0.96)',
+            borderBottom: '1px solid',
+            borderColor: 'divider'
+          }}
+        >
+          <Toolbar sx={{ minHeight: 68 }}>
             <Typography variant="h6" sx={{ flexGrow: 1 }}>
               {selectedActivity?.title}
             </Typography>
@@ -310,7 +328,7 @@ const ActivitiesStepper = ({ chapterNumber }) => {
             display: 'flex',
             flexDirection: 'column',
             height: 'calc(100% - 64px)',
-            p: 3,
+            p: { xs: 2, md: 3 },
             maxWidth: 900,
             mx: 'auto',
             width: '100%',
@@ -341,8 +359,7 @@ const ActivitiesStepper = ({ chapterNumber }) => {
                   borderRadius: 3,
                   px: 4,
                   py: 1.5,
-                  fontSize: '1.1rem',
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+                  fontSize: '1.1rem'
                 }}
               >
                 Next activity
@@ -379,7 +396,15 @@ const ActivitiesStepper = ({ chapterNumber }) => {
         </Button>
       </Box>
 
-      <Paper sx={{ p: 2, mt: 3, backgroundColor: 'primary.light', color: 'primary.contrastText' }}>
+      <Paper
+        sx={{
+          p: 2,
+          mt: 3,
+          borderRadius: 3,
+          bgcolor: 'background.paper',
+          color: 'text.primary'
+        }}
+      >
         <Typography variant="h6" gutterBottom>
           Progress
         </Typography>
@@ -396,8 +421,8 @@ const ActivitiesStepper = ({ chapterNumber }) => {
               sx={{
                 height: 10,
                 borderRadius: 5,
-                backgroundColor: 'rgba(255, 255, 255, 0.3)',
-                '& .MuiLinearProgress-bar': { backgroundColor: 'white' }
+                backgroundColor: '#e5e7eb',
+                '& .MuiLinearProgress-bar': { backgroundColor: '#18181b' }
               }}
             />
           </Box>
