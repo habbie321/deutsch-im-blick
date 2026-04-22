@@ -33,6 +33,7 @@ const WorkbookActivity = ({ activityData, onComplete }) => {
   const [multiAnswers, setMultiAnswers] = useState({});
   const [mcAnswers, setMcAnswers] = useState({});
   const [textAnswers, setTextAnswers] = useState({});
+  const [clozeAnswers, setClozeAnswers] = useState({});
   const [orderStates, setOrderStates] = useState(
     checks?.blocks
       .filter(b => b.type === 'order')
@@ -83,6 +84,13 @@ const WorkbookActivity = ({ activityData, onComplete }) => {
     }));
   };
 
+  const handleClozeChange = (blockId, lineIndex, value) => {
+    setClozeAnswers(prev => ({
+      ...prev,
+      [blockId]: { ...(prev[blockId] || {}), [lineIndex]: value }
+    }));
+  };
+
   // Determine blocks for the current view
   const visibleBlocks = checks?.blocks.filter(block => {
     if (!isMultiStep) return true;
@@ -100,6 +108,8 @@ const WorkbookActivity = ({ activityData, onComplete }) => {
       case 'multi': return (multiAnswers[block.id] || []).length > 0;
       case 'text': 
         return true; // Text prompts in workbooks are usually optional/supplemental
+      case 'cloze':
+        return (block.lines || []).every((_, i) => (clozeAnswers[block.id]?.[i] || '').trim().length > 0);
       case 'matching': return matchingComplete;
       case 'order': return true; // Order blocks are always in a valid state
       default: return true; // sectionTitle or unknown types don't block
@@ -223,19 +233,53 @@ const WorkbookActivity = ({ activityData, onComplete }) => {
           return (
             <Paper key={block.id} elevation={0} sx={{ p: 2, mb: 1.25, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: 'background.paper' }}>
               {block.prompts.map((prompt, i) => (
-                <TextField
-                  key={i}
-                  fullWidth
-                  label={prompt}
-                  variant="outlined"
-                  value={textAnswers[block.id]?.[i] || ''}
-                  onChange={(e) => handleTextChange(block.id, i, e.target.value)}
-                  disabled={submitted}
-                  sx={{ mb: i < block.prompts.length - 1 ? 1.5 : 0 }}
-                  InputProps={{
-                    sx: { fontStyle: 'italic' }
+                <Box key={i} sx={{ mb: i < block.prompts.length - 1 ? 1.5 : 0 }}>
+                  <Typography variant="body1" sx={{ mb: 0.75, fontWeight: 700 }}>
+                    {prompt}
+                  </Typography>
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    value={textAnswers[block.id]?.[i] || ''}
+                    onChange={(e) => handleTextChange(block.id, i, e.target.value)}
+                    disabled={submitted}
+                    placeholder="Your answer"
+                  />
+                </Box>
+              ))}
+            </Paper>
+          );
+        }
+
+        if (block.type === 'cloze') {
+          return (
+            <Paper key={block.id} elevation={0} sx={{ p: 2, mb: 1.25, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: 'background.paper' }}>
+              {block.prompt && (
+                <Typography variant="body1" sx={{ mb: 1.5, fontWeight: 'medium' }}>
+                  {block.prompt}
+                </Typography>
+              )}
+              {(block.lines || []).map((line, i) => (
+                <Box
+                  key={`${block.id}-${i}`}
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    flexWrap: 'wrap',
+                    mb: i < block.lines.length - 1 ? 1.5 : 0
                   }}
-                />
+                >
+                  {line.prefix ? <Typography sx={{ mr: 1 }}>{line.prefix}</Typography> : null}
+                  <TextField
+                    size="small"
+                    value={clozeAnswers[block.id]?.[i] || ''}
+                    onChange={(e) => handleClozeChange(block.id, i, e.target.value)}
+                    disabled={submitted}
+                    placeholder="Your answer"
+                    sx={{ width: { xs: '100%', sm: 220 }, mx: 1 }}
+                  />
+                  {line.suffix ? <Typography sx={{ ml: 1 }}>{line.suffix}</Typography> : null}
+                </Box>
               ))}
             </Paper>
           );

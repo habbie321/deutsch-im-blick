@@ -9,6 +9,7 @@ import SelfCheckReadingActivity from '../components/SelfCheckReadingActivity';
 import WritingActivity from '../components/WritingActivity';
 import ClassificationGridActivity from '../components/ClassificationGridActivity';
 import ClozeActivity from '../components/ClozeActivity';
+import MultiPageActivity from '../components/MultiPageActivity';
 import ActivityBlurb from '../components/ActivityBlurb';
 import activityData from '../data/activites.json';
 import {
@@ -32,32 +33,44 @@ import { useLoaderData } from 'react-router-dom';
 function ActivityContent({ activity, onComplete }) {
   if (!activity) return null;
 
-  switch (activity.type) {
-    case 'multiple_choice':
-      return <MultipleChoiceQuiz quizData={activity} onComplete={onComplete} />;
-    case 'matching_activity':
-    case 'qa_matching':
-      return <MatchingActivity activityData={activity} onComplete={onComplete} />;
-    case 'reading_self_check':
-      return <SelfCheckReadingActivity activityData={activity} onComplete={onComplete} />;
-    case 'workbook':
-      return <WorkbookActivity activityData={activity} onComplete={onComplete} />;
-    case 'writing':
-    case 'multi_speaker_writing':
-      return <WritingActivity activityData={activity} onComplete={onComplete} />;
-    case 'classification_grid':
-      return <ClassificationGridActivity activityData={activity} onComplete={onComplete} />;
-    case 'cloze':
-      return <ClozeActivity activityData={activity} onComplete={onComplete} />;
-    case 'blurb':
-      return <ActivityBlurb title={activity.title} text={activity.text} />;
-    default:
-      return (
-        <Paper sx={{ p: 2, borderRadius: 2 }}>
-          <Typography color="error">Unknown activity type: {activity.type}</Typography>
-        </Paper>
-      );
-  }
+  const renderByType = (activityNode, onNodeComplete) => {
+    switch (activityNode.type) {
+      case 'multiple_choice':
+        return <MultipleChoiceQuiz quizData={activityNode} onComplete={onNodeComplete} />;
+      case 'matching_activity':
+      case 'qa_matching':
+        return <MatchingActivity activityData={activityNode} onComplete={onNodeComplete} />;
+      case 'reading_self_check':
+        return <SelfCheckReadingActivity activityData={activityNode} onComplete={onNodeComplete} />;
+      case 'workbook':
+        return <WorkbookActivity activityData={activityNode} onComplete={onNodeComplete} />;
+      case 'writing':
+      case 'multi_speaker_writing':
+        return <WritingActivity activityData={activityNode} onComplete={onNodeComplete} />;
+      case 'classification_grid':
+        return <ClassificationGridActivity activityData={activityNode} onComplete={onNodeComplete} />;
+      case 'cloze':
+        return <ClozeActivity activityData={activityNode} onComplete={onNodeComplete} />;
+      case 'multi_page':
+        return (
+          <MultiPageActivity
+            activityData={activityNode}
+            onComplete={onNodeComplete}
+            renderPageContent={(pageActivity, completePage) => renderByType(pageActivity, completePage)}
+          />
+        );
+      case 'blurb':
+        return <ActivityBlurb title={activityNode.title} text={activityNode.text} />;
+      default:
+        return (
+          <Paper sx={{ p: 2, borderRadius: 2 }}>
+            <Typography color="error">Unknown activity type: {activityNode.type}</Typography>
+          </Paper>
+        );
+    }
+  };
+
+  return renderByType(activity, onComplete);
 }
 
 const StudentDashboard = () => {
@@ -365,7 +378,9 @@ const StudentDashboard = () => {
                 <Chip size="small" label={selectedActivity.duration || 'varies'} variant="outlined" />
               </Box>
 
-              {selectedActivity.type !== 'classification_grid' && selectedActivity.type !== 'multi_speaker_writing' && (
+              {selectedActivity.type !== 'classification_grid' &&
+                selectedActivity.type !== 'multi_speaker_writing' &&
+                selectedActivity.type !== 'multi_page' && (
                 <ActivityVideoSection activity={selectedActivity} />
               )}
 

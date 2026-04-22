@@ -36,6 +36,7 @@ import SelfCheckReadingActivity from './SelfCheckReadingActivity';
 import WritingActivity from './WritingActivity';
 import ClassificationGridActivity from './ClassificationGridActivity';
 import ClozeActivity from './ClozeActivity';
+import MultiPageActivity from './MultiPageActivity';
 import ActivityBlurb from './ActivityBlurb';
 import ActivityVideoSection from './ActivityVideoSection';
 import activityData from '../data/activites.json';
@@ -43,30 +44,42 @@ import activityData from '../data/activites.json';
 function ActivityContent({ activity, onComplete }) {
   if (!activity) return null;
 
-  switch (activity.type) {
-    case 'multiple_choice':
-      return <MultipleChoiceQuiz quizData={activity} onComplete={onComplete} />;
-    case 'matching_activity':
-    case 'qa_matching':
-      return <MatchingActivity activityData={activity} onComplete={onComplete} />;
-    case 'reading_self_check':
-      return <SelfCheckReadingActivity activityData={activity} onComplete={onComplete} />;
-    case 'workbook':
-      return <WorkbookActivity activityData={activity} onComplete={onComplete} />;
-    case 'writing':
-    case 'multi_speaker_writing':
-      return <WritingActivity activityData={activity} onComplete={onComplete} />;
-    case 'classification_grid':
-      return <ClassificationGridActivity activityData={activity} onComplete={onComplete} />;
-    case 'cloze':
-      return <ClozeActivity activityData={activity} onComplete={onComplete} />;
-    default:
-      return (
-        <Box sx={{ p: 2, textAlign: 'center' }}>
-          <Typography color="error">Unknown activity type: {activity.type}</Typography>
-        </Box>
-      );
-  }
+  const renderByType = (activityNode, onNodeComplete) => {
+    switch (activityNode.type) {
+      case 'multiple_choice':
+        return <MultipleChoiceQuiz quizData={activityNode} onComplete={onNodeComplete} />;
+      case 'matching_activity':
+      case 'qa_matching':
+        return <MatchingActivity activityData={activityNode} onComplete={onNodeComplete} />;
+      case 'reading_self_check':
+        return <SelfCheckReadingActivity activityData={activityNode} onComplete={onNodeComplete} />;
+      case 'workbook':
+        return <WorkbookActivity activityData={activityNode} onComplete={onNodeComplete} />;
+      case 'writing':
+      case 'multi_speaker_writing':
+        return <WritingActivity activityData={activityNode} onComplete={onNodeComplete} />;
+      case 'classification_grid':
+        return <ClassificationGridActivity activityData={activityNode} onComplete={onNodeComplete} />;
+      case 'cloze':
+        return <ClozeActivity activityData={activityNode} onComplete={onNodeComplete} />;
+      case 'multi_page':
+        return (
+          <MultiPageActivity
+            activityData={activityNode}
+            onComplete={onNodeComplete}
+            renderPageContent={(pageActivity, completePage) => renderByType(pageActivity, completePage)}
+          />
+        );
+      default:
+        return (
+          <Box sx={{ p: 2, textAlign: 'center' }}>
+            <Typography color="error">Unknown activity type: {activityNode.type}</Typography>
+          </Box>
+        );
+    }
+  };
+
+  return renderByType(activity, onComplete);
 }
 
 const ActivitiesStepper = ({ chapterNumber }) => {
@@ -338,7 +351,8 @@ const ActivitiesStepper = ({ chapterNumber }) => {
           {selectedActivity && (
             <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
               {selectedActivity.type !== 'classification_grid' &&
-                selectedActivity.type !== 'multi_speaker_writing' && (
+                selectedActivity.type !== 'multi_speaker_writing' &&
+                selectedActivity.type !== 'multi_page' && (
                   <ActivityVideoSection activity={selectedActivity.raw} />
                 )}
               <ActivityContent

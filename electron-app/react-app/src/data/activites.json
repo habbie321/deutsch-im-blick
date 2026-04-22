@@ -3,115 +3,131 @@
     {
       "chapter": 1,
       "id": 1,
-      "type": "multiple_choice",
+      "type": "multi_page",
       "icon": "videoclips",
       "title": "Aktivität 1. Harald und Peter: Wer bin ich?",
       "description": "Listen to the interviews and choose the correct answers.",
       "duration": "10 min",
       "prerequisites": [],
-      "questionSets": [
+      "pages": [
         {
-          "setId": 1,
+          "id": "harald",
+          "type": "multiple_choice",
           "title": "Harald",
-          "questions": [
+          "mediaCards": [
             {
-              "id": 1,
-              "question": "Herkunft? Er kommt aus",
-              "options": [
-                "Münster",
-                "München",
-                "Mainz"
-              ],
-              "correctAnswer": 0
-            },
+              "id": "video-1",
+              "title": "Harald — Wer bin ich?",
+              "videoPath": "chapter01/k01_interview_harald.mp4"
+            }
+          ],
+          "questionSets": [
             {
-              "id": 2,
-              "question": "Alter? Er ist",
-              "options": [
-                "15 Jahre alt",
-                "25 Jahre alt",
-                "50 Jahre alt"
-              ],
-              "correctAnswer": 1
-            },
-            {
-              "id": 3,
-              "question": "Lieblingsfarbe? Seine Lieblingsfarbe ist",
-              "options": [
-                "Rot",
-                "Blau",
-                "Braun"
-              ],
-              "correctAnswer": 1
-            },
-            {
-              "id": 4,
-              "question": "Warum? Warum ist das seine Lieblingsfarbe?",
-              "options": [
-                "Sie ist wie Bayern und der Himmel (sky).",
-                "Er weiß es nicht.",
-                "Diese Farbe ist energisch."
-              ],
-              "correctAnswer": 0
+              "setId": 1,
+              "title": "Harald",
+              "questions": [
+                {
+                  "id": 1,
+                  "question": "Herkunft? Er kommt aus",
+                  "options": [
+                    "Münster",
+                    "München",
+                    "Mainz"
+                  ],
+                  "correctAnswer": 0
+                },
+                {
+                  "id": 2,
+                  "question": "Alter? Er ist",
+                  "options": [
+                    "15 Jahre alt",
+                    "25 Jahre alt",
+                    "50 Jahre alt"
+                  ],
+                  "correctAnswer": 1
+                },
+                {
+                  "id": 3,
+                  "question": "Lieblingsfarbe? Seine Lieblingsfarbe ist",
+                  "options": [
+                    "Rot",
+                    "Blau",
+                    "Braun"
+                  ],
+                  "correctAnswer": 1
+                },
+                {
+                  "id": 4,
+                  "question": "Warum? Warum ist das seine Lieblingsfarbe?",
+                  "options": [
+                    "Sie ist wie Bayern und der Himmel (sky).",
+                    "Er weiß es nicht.",
+                    "Diese Farbe ist energisch."
+                  ],
+                  "correctAnswer": 0
+                }
+              ]
             }
           ]
         },
         {
-          "setId": 2,
+          "id": "peter",
+          "type": "multiple_choice",
           "title": "Peter",
-          "questions": [
+          "mediaCards": [
             {
-              "id": 1,
-              "question": "Herkunft? Er kommt aus",
-              "options": [
-                "der Schweiz",
-                "Texas",
-                "Stuttgart"
-              ],
-              "correctAnswer": 0
-            },
+              "id": "video-2",
+              "title": "Peter — Wer bin ich?",
+              "videoPath": "chapter01/k01_interview_peter.mp4"
+            }
+          ],
+          "questionSets": [
             {
-              "id": 2,
-              "question": "Nummer? Welche Nummer sagt er?",
-              "options": [
-                "seine Telefonnummer",
-                "seine Hausnummer"
-              ],
-              "correctAnswer": 0
-            },
-            {
-              "id": 3,
-              "question": "Lieblingsfarbe? Seine Lieblingsfarbe ist",
-              "options": [
-                "Rot",
-                "Blau",
-                "Braun"
-              ],
-              "correctAnswer": 0
-            },
-            {
-              "id": 4,
-              "question": "Warum? Warum ist das seine Lieblingsfarbe?",
-              "options": [
-                "Sie ist ruhig (peaceful).",
-                "Sie ist intensiv.",
-                "Sie ist die Farbe der Liebe (love)."
-              ],
-              "correctAnswer": 0
+              "setId": 1,
+              "title": "Peter",
+              "questions": [
+                {
+                  "id": 1,
+                  "question": "Herkunft? Er kommt aus",
+                  "options": [
+                    "der Schweiz",
+                    "Texas",
+                    "Stuttgart"
+                  ],
+                  "correctAnswer": 0
+                },
+                {
+                  "id": 2,
+                  "question": "Nummer? Welche Nummer sagt er?",
+                  "options": [
+                    "seine Telefonnummer",
+                    "seine Hausnummer"
+                  ],
+                  "correctAnswer": 0
+                },
+                {
+                  "id": 3,
+                  "question": "Lieblingsfarbe? Seine Lieblingsfarbe ist",
+                  "options": [
+                    "Rot",
+                    "Blau",
+                    "Braun"
+                  ],
+                  "correctAnswer": 0
+                },
+                {
+                  "id": 4,
+                  "question": "Warum? Warum ist das seine Lieblingsfarbe?",
+                  "options": [
+                    "Sie ist ruhig (peaceful).",
+                    "Sie ist intensiv.",
+                    "Sie ist die Farbe der Liebe (love)."
+                  ],
+                  "correctAnswer": 0
+                }
+              ]
             }
           ]
-        }
-      ],
-      "mediaCards": [
-        {
-          "id": "video-1",
-          "title": "Harald — Wer bin ich?",
-          "videoPath": "chapter01/k01_interview_harald.mp4"
-        },
-        {
-          "id": "video-2",
-          "title": "Peter — Wer bin ich?",
-          "videoPath": "chapter01/k01_interview_peter.mp4"
         }
       ]
     },
@@ -262,45 +278,32 @@
     {
       "chapter": 1,
       "id": 6,
-      "type": "reading_self_check",
+      "type": "multi_page",
       "icon": "readingtask",
       "title": "Aktivität 6. Wichtige Adressen & Telefonnummern in Deutschland",
       "description": "Read authentic contact information and answer in English (or German).",
       "duration": "20 min",
       "prerequisites": [],
       "intro": "Use the media cards above (embassy information, international office listing, pizza ad, and emergency numbers) to answer the questions.",
-      "mediaCards": [
+      "pdfNote": "All required information is provided in the media cards above.",
+      "pages": [
         {
-          "id": "embassy-contact",
-          "title": "Amerikanische Botschaft Berlin",
-          "body": "Neustädtische Kirchstr. 4-5\n10117 Berlin\nTel.: (030) 2385 174"
-        },
-        {
-          "id": "citizen-services",
-          "title": "American Citizen Services",
-          "body": "Tel.: (030) 832-9233, 14-16 Uhr, Montag bis Freitag\nTel. in Notfällen außerhalb der Öffnungszeiten:\n(030) 8305-0, Fax: (030) 8305-1215\nÖffnungszeiten: 8:30-12:00 Uhr, Montag bis Freitag\nGeschlossen an deutschen und amerikanischen\nFeiertagen"
-        },
-        {
-          "id": "pizza-station",
-          "title": "Pizza Station",
-          "imagePath": "chapter01/activity06/pizza-station.png"
-        },
-        {
-          "id": "notrufnummern",
-          "title": "Notrufnummern",
-          "imagePath": "chapter01/activity06/notrufnummern.png"
-        },
-        {
-          "id": "international-office",
-          "title": "International Office",
-          "imagePath": "chapter01/activity06/international-office.png"
-        }
-      ],
-      "questionSets": [
-        {
-          "setId": 1,
+          "id": "q1",
+          "type": "reading_self_check",
           "title": "Question 1",
-          "questions": [
+          "mediaCards": [
+            {
+              "id": "embassy-contact",
+              "title": "Amerikanische Botschaft Berlin",
+              "body": "Neustädtische Kirchstr. 4-5\n10117 Berlin\nTel.: (030) 2385 174"
+            },
+            {
+              "id": "citizen-services",
+              "title": "American Citizen Services",
+              "body": "Tel.: (030) 832-9233, 14-16 Uhr, Montag bis Freitag\nTel. in Notfällen außerhalb der Öffnungszeiten:\n(030) 8305-0, Fax: (030) 8305-1215\nÖffnungszeiten: 8:30-12:00 Uhr, Montag bis Freitag\nGeschlossen an deutschen und amerikanischen\nFeiertagen"
+            }
+          ],
+          "readingItems": [
             {
               "id": 1,
               "prompt": "What are the address and the telephone number of the American Embassy?",
@@ -319,9 +322,17 @@
           ]
         },
         {
-          "setId": 2,
+          "id": "q2",
+          "type": "reading_self_check",
           "title": "Question 2",
-          "questions": [
+          "mediaCards": [
+            {
+              "id": "international-office",
+              "title": "International Office",
+              "imagePath": "chapter01/activity06/international-office.png"
+            }
+          ],
+          "readingItems": [
             {
               "id": 4,
               "prompt": "What is the address of the Uni Würzburg international student office? Where could you get more information about the office?",
@@ -330,9 +341,17 @@
           ]
         },
         {
-          "setId": 3,
+          "id": "q3",
+          "type": "reading_self_check",
           "title": "Question 3",
-          "questions": [
+          "mediaCards": [
+            {
+              "id": "pizza-station",
+              "title": "Pizza Station",
+              "imagePath": "chapter01/activity06/pizza-station.png"
+            }
+          ],
+          "readingItems": [
             {
               "id": 5,
               "prompt": "What is the address of the pizza delivery service? What is the zip code? What is the phone number?",
@@ -341,9 +360,17 @@
           ]
         },
         {
-          "setId": 4,
+          "id": "q4",
+          "type": "reading_self_check",
           "title": "Question 4",
-          "questions": [
+          "mediaCards": [
+            {
+              "id": "notrufnummern",
+              "title": "Notrufnummern",
+              "imagePath": "chapter01/activity06/notrufnummern.png"
+            }
+          ],
+          "readingItems": [
             {
               "id": 6,
               "prompt": "What do you think Notrufnummern means? What does Feuer mean and who do you call with the number 112?",
@@ -351,8 +378,7 @@
             }
           ]
         }
-      ],
-      "pdfNote": "All required information is provided in the media cards above."
+      ]
     },
     {
       "chapter": 1,
@@ -470,79 +496,156 @@
     {
       "chapter": 1,
       "id": 10,
-      "type": "workbook",
+      "type": "multi_page",
       "icon": "videoclips",
       "title": "Aktivität 10. Sprache im Kontext: Mit dem Bus zur Uni",
       "description": "Video: Tobias — bus, ticket, student ID, campus.",
       "duration": "25 min",
       "prerequisites": [],
-      "sections": [
+      "intro": "Watch the Sprache im Kontext clip with Tobias and complete Parts A-D.",
+      "mediaCards": [
         {
-          "heading": "A. First viewing",
-          "paragraphs": [
-            "Watch the clip and note setting, people, and topic."
-          ]
-        },
-        {
-          "heading": "B. Second viewing",
-          "paragraphs": [
-            "Check off each word you hear from the vocabulary checklist in the workbook (Busticket, Universität, Bargeld, …)."
-          ]
-        },
-        {
-          "heading": "C. Third viewing",
-          "paragraphs": [
-            "Answer the multiple-choice tasks in the workbook (which buses; what you need for the Hubland)."
-          ]
-        },
-        {
-          "heading": "D. Articles",
-          "paragraphs": [
-            "Listen again: which articles does Tobias use with key nouns? What do they signal about gender?"
-          ]
+          "id": "sik-bus-to-uni",
+          "videoPath": "chapter01/k01_a10.mp4",
+          "videoFallbackUrl": "https://coerll.utexas.edu/dib/vid.php?f=01_28_sik_bus-to-uni"
         }
       ],
-      "checks": {
-        "blocks": [
-          {
-            "type": "multi",
-            "id": "buses",
-            "question": "Aktivität 10 C — Which THREE bus lines go to die Stadt and to the Hubland? (select exactly three)",
-            "options": [
-              "1",
-              "10",
-              "14",
-              "40",
-              "114",
-              "1400"
-            ],
-            "correctIndices": [
-              2,
-              3,
-              4
+      "pages": [
+        {
+          "id": "part-a",
+          "type": "workbook",
+          "title": "Part A",
+          "intro": "A. Watch the Sprache im Kontext clip with Tobias, and write down what the clip is about.",
+          "checks": {
+            "blocks": [
+              {
+                "type": "text",
+                "id": "a_notes",
+                "prompts": [
+                  "What do you notice?",
+                  "Who is in the clip?",
+                  "Where does it take place?"
+                ]
+              }
             ]
-          },
-          {
-            "type": "mc",
-            "id": "hubland_need",
-            "question": "What do you need to get to the Hubland campus by bus?",
-            "options": [
-              "A bus pass bought on any bus or tram in Würzburg",
-              "Cash (Bargeld); at least 10 Euro",
-              "Your student ID — travel free on public transportation in Würzburg"
-            ],
-            "correctIndex": 2
           }
-        ]
-      },
+        },
+        {
+          "id": "part-b",
+          "type": "workbook",
+          "title": "Part B",
+          "intro": "B. Watch the clip again and check all words that you hear.",
+          "checks": {
+            "blocks": [
+              {
+                "type": "multi",
+                "id": "heard_words",
+                "question": "Check all words that you hear.",
+                "options": [
+                  "Busticket",
+                  "Universität",
+                  "Bargeld",
+                  "Studenten",
+                  "Studentenausweis",
+                  "bezahlen",
+                  "kosten",
+                  "fahren",
+                  "Fahrplan"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "part-c",
+          "type": "workbook",
+          "title": "Part C",
+          "intro": "C. Watch the clip again and answer the questions below.",
+          "checks": {
+            "blocks": [
+              {
+                "type": "multi",
+                "id": "buses",
+                "question": "1) Which three buses go in die Stadt and to the Hubland?",
+                "options": [
+                  "1",
+                  "10",
+                  "14",
+                  "40",
+                  "114",
+                  "1400"
+                ]
+              },
+              {
+                "type": "mc",
+                "id": "hubland_need",
+                "question": "2) What do you need to get to the Hubland campus by bus?",
+                "options": [
+                  "A bus pass, which you can buy on any bus or tram in Würzburg",
+                  "Cash (Bargeld); at least 10 Euro",
+                  "Your student ID card, which lets you travel free on any public transportation in Würzburg"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "part-d",
+          "type": "workbook",
+          "title": "Part D",
+          "intro": "D. Listen to the clip one more time. What article does Tobias use in front of the key nouns in his message? What does the article indicate about the gender of these nouns?",
+          "checks": {
+            "blocks": [
+              {
+                "type": "cloze",
+                "id": "d_articles",
+                "prompt": "Fill in the article for each noun:",
+                "lines": [
+                  {
+                    "prefix": "",
+                    "suffix": "Tobias"
+                  },
+                  {
+                    "prefix": "",
+                    "suffix": "Hubland (Campus)"
+                  },
+                  {
+                    "prefix": "",
+                    "suffix": "Bushaltestelle"
+                  },
+                  {
+                    "prefix": "",
+                    "suffix": "Nummer"
+                  },
+                  {
+                    "prefix": "",
+                    "suffix": "Linie"
+                  },
+                  {
+                    "prefix": "",
+                    "suffix": "Studentenausweis"
+                  }
+                ]
+              },
+              {
+                "type": "text",
+                "id": "d_gender_note",
+                "prompts": [
+                  "What does the article indicate about the gender of these nouns?"
+                ]
+              }
+            ]
+          }
+        }
+      ],
       "links": [
         {
           "label": "Kapitel 1 — Sprache im Kontext",
           "url": "https://coerll.utexas.edu/dib/toc.php?k=1"
         },
         {
-          "label": "Grimm Grammar — sein",
-          "url": "https://coerll.utexas.edu/gg/gr/vi_11.html"
+          "label": "Ankunft in Würzburg (video)",
+          "url": "https://coerll.utexas.edu/dib/vid.php?f=01_28_sik_bus-to-uni"
         }
       ],
       "pdfNote": "QR 1.28 in the workbook points to this clip."
@@ -556,13 +659,28 @@
       "description": "Map task: addresses, phones, bus lines.",
       "duration": "25 min",
       "prerequisites": [],
-      "intro": "Answer using the Würzburg map in your printed workbook.",
-      "tasks": [
-        "Studentenwerk address (write PLZ digits).",
-        "Jugendherberge phone number.",
-        "University street and Hausnummer.",
-        "From “Am Kugelfang”: which bus(es) to the university?"
+      "intro": "Answer the short questions below using the map and directory information.",
+      "mediaCards": [
+        {
+          "id": "wuerzburg-map-placeholder",
+          "title": "Map / directory placeholder",
+          "body": "Add the Würzburg map or directory image for Aktivität 11 here."
+        }
       ],
+      "checks": {
+        "blocks": [
+          {
+            "type": "text",
+            "id": "a11_short_answers",
+            "prompts": [
+              "1. Wie lautet die Adresse des Studentenwerks? (Write out the numbers of the zip code.)",
+              "2. Wie lautet die Telefonnummer der Jugendherberge in Würzburg?",
+              "3. In welcher Straße liegt die Universität in Würzburg und welche Hausnummer hat sie?",
+              "4. Deine Wohnung liegt „Am Kugelfang”. Welchen Bus/welche Busse musst du zur Uni nehmen?"
+            ]
+          }
+        ]
+      },
       "links": [
         {
           "label": "Workbook PDF",
