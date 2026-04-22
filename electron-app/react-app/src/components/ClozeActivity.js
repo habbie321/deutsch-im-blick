@@ -14,7 +14,7 @@ import { EditNote } from '@mui/icons-material';
  * Lines are rendered with a prefix, an input field, and a suffix.
  */
 const ClozeActivity = ({ activityData, onComplete }) => {
-  const { title, intro, lines = [], pdfNote } = activityData;
+  const { title, intro, lines = [], examples = [], pdfNote } = activityData;
   
   // Initialize inputs based on the number of lines provided in data
   const [inputs, setInputs] = useState(() => lines.map(() => ''));
@@ -43,42 +43,64 @@ const ClozeActivity = ({ activityData, onComplete }) => {
       </Typography>
       
       {intro && (
-        <Typography variant="body1" color="text.secondary" sx={{ mb: 4, textAlign: 'center' }}>
+        <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
           {intro}
         </Typography>
       )}
 
+      {examples.length > 0 && (
+        <Paper
+          elevation={0}
+          sx={{
+            p: { xs: 2, md: 3 },
+            mb: 2,
+            bgcolor: 'background.paper',
+            borderRadius: 2,
+            border: '1px solid',
+            borderColor: 'divider'
+          }}
+        >
+          <Typography variant="subtitle2" fontWeight="bold" sx={{ mb: 1 }}>
+            Examples
+          </Typography>
+          {examples.map((example, idx) => (
+            <Typography key={idx} variant="body2" sx={{ mb: idx < examples.length - 1 ? 0.75 : 0 }}>
+              {example}
+            </Typography>
+          ))}
+        </Paper>
+      )}
+
       <Paper 
-        elevation={2} 
+        elevation={0}
         sx={{ 
-          p: { xs: 2, md: 4 }, 
-          mb: 4, 
-          bgcolor: '#fafafa', 
-          borderRadius: 3, 
+          p: { xs: 2, md: 3 },
+          mb: 3,
+          bgcolor: 'background.paper',
+          borderRadius: 2,
           border: '1px solid', 
           borderColor: 'divider' 
         }}
       >
+        <Typography variant="subtitle2" fontWeight="bold" sx={{ mb: 2 }}>
+          Fill in each sentence.
+        </Typography>
         {lines.map((line, idx) => (
           <Box 
             key={idx} 
             sx={{ 
               display: 'flex', 
-              alignItems: 'center', 
+              alignItems: 'center',
               flexWrap: 'wrap', 
-              mb: 3,
-              justifyContent: 'center'
+              mb: 2.5
             }}
           >
             {line.prefix && (
               <Typography 
-                variant="h5" 
+                variant="body1"
                 sx={{ 
-                  fontFamily: '"Georgia", serif', 
-                  fontStyle: 'italic', 
                   mr: 1,
-                  color: 'text.primary',
-                  fontSize: { xs: '1.1rem', md: '1.5rem' }
+                  color: 'text.primary'
                 }}
               >
                 {line.prefix}
@@ -86,34 +108,25 @@ const ClozeActivity = ({ activityData, onComplete }) => {
             )}
             
             <TextField
-              variant="standard"
-              placeholder="________________"
+              variant="outlined"
+              placeholder="Your answer"
               value={inputs[idx]}
               onChange={(e) => handleInputChange(idx, e.target.value)}
               disabled={done}
               autoComplete="off"
+              size="small"
               sx={{ 
-                minWidth: 120,
-                mx: 1,
-                '& .MuiInput-input': { 
-                  textAlign: 'center', 
-                  fontSize: { xs: '1.1rem', md: '1.5rem' },
-                  fontWeight: 'bold',
-                  color: 'primary.main',
-                  fontFamily: '"Georgia", serif'
-                }
+                width: { xs: '100%', sm: 280 },
+                mx: 1
               }}
             />
 
             {line.suffix && (
               <Typography 
-                variant="h5" 
+                variant="body1"
                 sx={{ 
-                  fontFamily: '"Georgia", serif', 
-                  fontStyle: 'italic', 
                   ml: 1,
-                  color: 'text.primary',
-                  fontSize: { xs: '1.1rem', md: '1.5rem' }
+                  color: 'text.primary'
                 }}
               >
                 {line.suffix}

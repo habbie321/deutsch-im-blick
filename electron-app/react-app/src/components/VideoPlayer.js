@@ -70,6 +70,7 @@ const VideoPlayer = ({
   return (
     <Box sx={{ width: '100%', ...sx }}>
       <video
+        key={src}
         controls
         autoPlay={autoPlay}
         preload="metadata"

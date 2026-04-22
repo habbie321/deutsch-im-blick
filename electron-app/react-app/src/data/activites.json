@@ -9,16 +9,6 @@
       "description": "Listen to the interviews and choose the correct answers.",
       "duration": "10 min",
       "prerequisites": [],
-      "videos": [
-        {
-          "path": "chapter01/k01_interview_harald.mp4",
-          "label": "Harald — Wer bin ich?"
-        },
-        {
-          "path": "chapter01/k01_interview_peter.mp4",
-          "label": "Peter — Wer bin ich?"
-        }
-      ],
       "questionSets": [
         {
           "setId": 1,
@@ -111,6 +101,18 @@
             }
           ]
         }
+      ],
+      "mediaCards": [
+        {
+          "id": "video-1",
+          "title": "Harald — Wer bin ich?",
+          "videoPath": "chapter01/k01_interview_harald.mp4"
+        },
+        {
+          "id": "video-2",
+          "title": "Peter — Wer bin ich?",
+          "videoPath": "chapter01/k01_interview_peter.mp4"
+        }
       ]
     },
     {
@@ -122,16 +124,6 @@
       "description": "Match each interview question with its English meaning.",
       "duration": "15 min",
       "prerequisites": [],
-      "videos": [
-        {
-          "path": "chapter01/k01_interview_harald.mp4",
-          "label": "Harald — noch einmal"
-        },
-        {
-          "path": "chapter01/k01_interview_peter.mp4",
-          "label": "Peter — noch einmal"
-        }
-      ],
       "leftColumnTitle": "Frage (Deutsch)",
       "rightColumnTitle": "English",
       "matchInstruction": "Match each German question with its English translation (Harald & Peter interviews).",
@@ -165,6 +157,18 @@
           "id": 6,
           "german": "Warum?",
           "english": "Why?"
+        }
+      ],
+      "mediaCards": [
+        {
+          "id": "video-1",
+          "title": "Harald — noch einmal",
+          "videoPath": "chapter01/k01_interview_harald.mp4"
+        },
+        {
+          "id": "video-2",
+          "title": "Peter — noch einmal",
+          "videoPath": "chapter01/k01_interview_peter.mp4"
         }
       ]
     },
@@ -264,87 +268,91 @@
       "description": "Read authentic contact information and answer in English (or German).",
       "duration": "20 min",
       "prerequisites": [],
-      "intro": "Use the embassy notice and related materials in your workbook. Part of the answers depend on figures in the printed packet; model answers cover the embassy block from the PDF text.",
-      "readingItems": [
+      "intro": "Use the media cards above (embassy information, international office listing, pizza ad, and emergency numbers) to answer the questions.",
+      "mediaCards": [
         {
-          "id": 1,
-          "prompt": "What is the address of the American Embassy (Berlin)?",
-          "modelAnswer": "Neustädtische Kirchstr. 4–5, 10117 Berlin.",
-          "acceptedAnswers": [
-            "Neustädtische Kirchstr. 4-5, 10117 Berlin",
-            "neustädtische kirchstrasse 4-5 10117 berlin",
-            "Neustädtische Kirchstr 4-5 10117 Berlin"
+          "id": "embassy-contact",
+          "title": "Amerikanische Botschaft Berlin",
+          "body": "Neustädtische Kirchstr. 4-5\n10117 Berlin\nTel.: (030) 2385 174"
+        },
+        {
+          "id": "citizen-services",
+          "title": "American Citizen Services",
+          "body": "Tel.: (030) 832-9233, 14-16 Uhr, Montag bis Freitag\nTel. in Notfällen außerhalb der Öffnungszeiten:\n(030) 8305-0, Fax: (030) 8305-1215\nÖffnungszeiten: 8:30-12:00 Uhr, Montag bis Freitag\nGeschlossen an deutschen und amerikanischen\nFeiertagen"
+        },
+        {
+          "id": "pizza-station",
+          "title": "Pizza Station",
+          "imagePath": "chapter01/activity06/pizza-station.png"
+        },
+        {
+          "id": "notrufnummern",
+          "title": "Notrufnummern",
+          "imagePath": "chapter01/activity06/notrufnummern.png"
+        },
+        {
+          "id": "international-office",
+          "title": "International Office",
+          "imagePath": "chapter01/activity06/international-office.png"
+        }
+      ],
+      "questionSets": [
+        {
+          "setId": 1,
+          "title": "Question 1",
+          "questions": [
+            {
+              "id": 1,
+              "prompt": "What are the address and the telephone number of the American Embassy?",
+              "modelAnswer": "Amerikanische Botschaft Berlin, Neustädtische Kirchstr. 4-5, 10117 Berlin; Tel. (030) 2385 174."
+            },
+            {
+              "id": 2,
+              "prompt": "When is its office for citizenship services open? Which days and what time?",
+              "modelAnswer": "American Citizen Services is open Montag bis Freitag, 14-16 Uhr."
+            },
+            {
+              "id": 3,
+              "prompt": "What is the phone number and what is the fax number?",
+              "modelAnswer": "Phone: (030) 832-9233; Fax: (030) 8305-1215."
+            }
           ]
         },
         {
-          "id": 2,
-          "prompt": "What is its main telephone number?",
-          "modelAnswer": "(030) 2385 174",
-          "acceptedAnswers": [
-            "(030) 2385 174",
-            "030 2385 174",
-            "2385 174",
-            "0302385174"
+          "setId": 2,
+          "title": "Question 2",
+          "questions": [
+            {
+              "id": 4,
+              "prompt": "What is the address of the Uni Würzburg international student office? Where could you get more information about the office?",
+              "modelAnswer": "Use the international-office media card for the address and office details. Additional information can be found on the Uni Würzburg international office website."
+            }
           ]
         },
         {
-          "id": 3,
-          "prompt": "When is American Citizen Services open (hours)?",
-          "modelAnswer": "14–16 Uhr",
-          "acceptedAnswers": [
-            "14-16 Uhr",
-            "14–16 Uhr",
-            "14 bis 16 Uhr",
-            "2-4 pm",
-            "14 to 16"
+          "setId": 3,
+          "title": "Question 3",
+          "questions": [
+            {
+              "id": 5,
+              "prompt": "What is the address of the pizza delivery service? What is the zip code? What is the phone number?",
+              "modelAnswer": "Use the pizza-station media card to provide the full address, PLZ (zip code), and telephone number."
+            }
           ]
         },
         {
-          "id": 4,
-          "prompt": "Which days?",
-          "modelAnswer": "Montag bis Freitag",
-          "acceptedAnswers": [
-            "Montag bis Freitag",
-            "Monday through Friday",
-            "monday to friday",
-            "weekdays"
-          ]
-        },
-        {
-          "id": 5,
-          "prompt": "What is the American Citizen Services phone number?",
-          "modelAnswer": "(030) 832-9233",
-          "acceptedAnswers": [
-            "(030) 832-9233",
-            "030 832 9233",
-            "832-9233",
-            "8329233"
-          ]
-        },
-        {
-          "id": 6,
-          "prompt": "What is the address of the Uni Würzburg international student office? Where can you get more information?",
-          "modelAnswer": "Not printed in the excerpt we extracted from the PDF; use the map/directory pages in your printed workbook or the current international office page at uni-wuerzburg.de.",
-          "acknowledgeLabel": "I answered this using the printed workbook map/directory or the current Uni Würzburg international office website."
-        },
-        {
-          "id": 7,
-          "prompt": "Pizza delivery: address, PLZ, and phone number?",
-          "modelAnswer": "Specifics appear on the workbook map/ad page bundled with COERLL Kapitel 1; check your printed PDF packet or instructor copy.",
-          "acknowledgeLabel": "I answered this using the printed workbook map or ad page (or my instructor’s copy)."
-        },
-        {
-          "id": 8,
-          "prompt": "What do you think Notrufnummern means? What does Feuer mean, and who do you call with 112?",
-          "modelAnswer": "Notrufnummern = emergency numbers. Feuer = fire. 112 is the European emergency number (fire, medical, police in many EU countries).",
-          "keywords": [
-            "112",
-            "feuer",
-            "emergency|notruf"
+          "setId": 4,
+          "title": "Question 4",
+          "questions": [
+            {
+              "id": 6,
+              "prompt": "What do you think Notrufnummern means? What does Feuer mean and who do you call with the number 112?",
+              "modelAnswer": "Notrufnummern = emergency numbers. Feuer = fire. 112 is the European emergency number (fire, medical, police in many EU countries)."
+            }
           ]
         }
       ],
-      "pdfNote": "Full layout: https://coerll.utexas.edu/dib/pdfs/k_01.pdf"
+      "pdfNote": "All required information is provided in the media cards above."
     },
     {
       "chapter": 1,
@@ -411,17 +419,51 @@
     {
       "chapter": 1,
       "id": 9,
-      "type": "workbook",
+      "type": "cloze",
       "icon": "readingtask",
       "title": "Aktivität 9. Wie viel kostet es?",
       "description": "Read a Rechnung and write prices in words.",
       "duration": "20 min",
       "prerequisites": [],
-      "intro": "Identify prices for Pizza Margherita, house salad, cola, mineral water, and espresso; write totals in words following the modeled sentences in the workbook.",
-      "links": [
+      "intro": "You use double and triple digits for expressing how much something costs as well. Look at the following Rechnung and identify how much we paid for the Pizza Margherita, the \"Quo Vadis\" house salad, the coke, the Pellegrino mineral water, and the espresso. Write the prices out with words; some of the items have already been modeled for you.",
+      "mediaCards": [
         {
-          "label": "Workbook PDF",
-          "url": "https://coerll.utexas.edu/dib/pdfs/k_01.pdf"
+          "id": "rechnung",
+          "title": "Eine Rechnung",
+          "imagePath": "chapter01/activity09/rechnung.png",
+          "alt": "Restaurant bill (Rechnung) for Activity 9"
+        }
+      ],
+      "examples": [
+        "Das Eis (der Schneemann) kostet zwei Euro fünfzig.",
+        "Die Pizza Molto Forte kostet sechs Euro achtzig.",
+        "Ein Glas Apfelschorle kostet einen Euro neunzig.",
+        "Die Mehrwertsteuer beträgt sechs Euro fünfundsiebzig."
+      ],
+      "lines": [
+        {
+          "prefix": "Die Pizza Margherita",
+          "suffix": "."
+        },
+        {
+          "prefix": "Der Salat",
+          "suffix": "."
+        },
+        {
+          "prefix": "Die Cola",
+          "suffix": "."
+        },
+        {
+          "prefix": "Das Mineralwasser",
+          "suffix": "."
+        },
+        {
+          "prefix": "Ein Espresso",
+          "suffix": "."
+        },
+        {
+          "prefix": "Insgesamt bezahlen wir",
+          "suffix": "."
         }
       ]
     },
@@ -2437,12 +2479,6 @@
       "duration": "25 min",
       "prerequisites": [],
       "intro": "What are typical days for Erin? Watch her video clip and determine which of the following statements are richtig and which are falsch. Make sure to correct the falsche Aussagen! In Teil B, watch the clip again and match the German expressions with their English equivalents.",
-      "videos": [
-        {
-          "path": "chapter03/k03_a02.mp4",
-          "label": "Erins typischer Tag"
-        }
-      ],
       "checks": {
         "blocks": [
           {
@@ -2539,7 +2575,14 @@
           "url": "https://coerll.utexas.edu/dib/toc.php?k=3"
         }
       ],
-      "pdfNote": "COERLL Kapitel 3 workbook, pp. 110–111: https://coerll.utexas.edu/dib/pdfs/k_03.pdf"
+      "pdfNote": "COERLL Kapitel 3 workbook, pp. 110–111: https://coerll.utexas.edu/dib/pdfs/k_03.pdf",
+      "mediaCards": [
+        {
+          "id": "video-1",
+          "title": "Erins typischer Tag",
+          "videoPath": "chapter03/k03_a02.mp4"
+        }
+      ]
     },
     {
       "chapter": 3,
@@ -2551,12 +2594,6 @@
       "duration": "15 min",
       "prerequisites": [],
       "intro": "What is a typical day like for Berna? View her „Ein typischer Tag” video and number her daily routines in the order in which she describes them. How is Berna’s typical day different from Erin’s?",
-      "videos": [
-        {
-          "path": "chapter03/k03_a03.mp4",
-          "label": "Bernas typischer Tag"
-        }
-      ],
       "checks": {
         "blocks": [
           {
@@ -2621,7 +2658,14 @@
           }
         ]
       },
-      "pdfNote": "COERLL Kapitel 3 workbook, p. 112 (QR 3.3): https://coerll.utexas.edu/dib/pdfs/k_03.pdf"
+      "pdfNote": "COERLL Kapitel 3 workbook, p. 112 (QR 3.3): https://coerll.utexas.edu/dib/pdfs/k_03.pdf",
+      "mediaCards": [
+        {
+          "id": "video-1",
+          "title": "Bernas typischer Tag",
+          "videoPath": "chapter03/k03_a03.mp4"
+        }
+      ]
     },
     {
       "chapter": 3,
@@ -2640,13 +2684,14 @@
         "Was macht er am Nachmittag?",
         "Warum ist Hassan momentan nicht an der Universität?"
       ],
-      "videos": [
+      "pdfNote": "COERLL Kapitel 3 workbook, p. 112 (QR 3.5): https://coerll.utexas.edu/dib/pdfs/k_03.pdf",
+      "mediaCards": [
         {
-          "path": "chapter03/k03_a04.mp4",
-          "label": "Hassans typischer Tag"
+          "id": "video-1",
+          "title": "Hassans typischer Tag",
+          "videoPath": "chapter03/k03_a04.mp4"
         }
-      ],
-      "pdfNote": "COERLL Kapitel 3 workbook, p. 112 (QR 3.5): https://coerll.utexas.edu/dib/pdfs/k_03.pdf"
+      ]
     },
     {
       "chapter": 3,
@@ -2957,40 +3002,6 @@
       "duration": "25 min",
       "prerequisites": [],
       "intro": "Watch the „Sind Sie ein Morgenmensch” videos as these people discuss whether they consider themselves to be “morning people,” “night people,” neither of the two, or both. After watching, classify each speaker.",
-      "videos": [
-        {
-          "path": "chapter03/k03_a11_berna.mp4",
-          "label": "Berna"
-        },
-        {
-          "path": "chapter03/k03_a11_eva.mp4",
-          "label": "Eva"
-        },
-        {
-          "path": "chapter03/k03_a11_harald.mp4",
-          "label": "Harald"
-        },
-        {
-          "path": "chapter03/k03_a11_jan.mp4",
-          "label": "Jan"
-        },
-        {
-          "path": "chapter03/k03_a11_adan.mp4",
-          "label": "Adan"
-        },
-        {
-          "path": "chapter03/k03_a11_hassan.mp4",
-          "label": "Hassan"
-        },
-        {
-          "path": "chapter03/k03_a11_erin.mp4",
-          "label": "Erin"
-        },
-        {
-          "path": "chapter03/k03_a11_sara.mp4",
-          "label": "Sara"
-        }
-      ],
       "grid": {
         "categories": [
           "Morgenmenschen",
@@ -3041,7 +3052,49 @@
           }
         ]
       },
-      "pdfNote": "COERLL Kapitel 3 workbook, pp. 117–118: https://coerll.utexas.edu/dib/pdfs/k_03.pdf"
+      "pdfNote": "COERLL Kapitel 3 workbook, pp. 117–118: https://coerll.utexas.edu/dib/pdfs/k_03.pdf",
+      "mediaCards": [
+        {
+          "id": "video-1",
+          "title": "Berna",
+          "videoPath": "chapter03/k03_a11_berna.mp4"
+        },
+        {
+          "id": "video-2",
+          "title": "Eva",
+          "videoPath": "chapter03/k03_a11_eva.mp4"
+        },
+        {
+          "id": "video-3",
+          "title": "Harald",
+          "videoPath": "chapter03/k03_a11_harald.mp4"
+        },
+        {
+          "id": "video-4",
+          "title": "Jan",
+          "videoPath": "chapter03/k03_a11_jan.mp4"
+        },
+        {
+          "id": "video-5",
+          "title": "Adan",
+          "videoPath": "chapter03/k03_a11_adan.mp4"
+        },
+        {
+          "id": "video-6",
+          "title": "Hassan",
+          "videoPath": "chapter03/k03_a11_hassan.mp4"
+        },
+        {
+          "id": "video-7",
+          "title": "Erin",
+          "videoPath": "chapter03/k03_a11_erin.mp4"
+        },
+        {
+          "id": "video-8",
+          "title": "Sara",
+          "videoPath": "chapter03/k03_a11_sara.mp4"
+        }
+      ]
     },
     {
       "chapter": 3,
@@ -3324,17 +3377,19 @@
         "Isst Jan manchmal in der Cafeteria auf dem Campus?",
         "Wo isst Jan, wenn er sein Essen mitbringt?"
       ],
-      "videos": [
+      "pdfNote": "COERLL Kapitel 3 workbook, page 121.",
+      "mediaCards": [
         {
-          "path": "chapter03/k03_a17_berna.mp4",
-          "label": "Berna (QR 3.8)"
+          "id": "video-1",
+          "title": "Berna (QR 3.8)",
+          "videoPath": "chapter03/k03_a17_berna.mp4"
         },
         {
-          "path": "chapter03/k03_a17_jan.mp4",
-          "label": "Jan (QR 3.9)"
+          "id": "video-2",
+          "title": "Jan (QR 3.9)",
+          "videoPath": "chapter03/k03_a17_jan.mp4"
         }
-      ],
-      "pdfNote": "COERLL Kapitel 3 workbook, page 121."
+      ]
     },
     {
       "chapter": 3,
@@ -3432,14 +3487,15 @@
         "Wie oft isst Austin Döner? (Austin sagt...)",
         "Is there a Döner stand in your town? (Check out Kebabalicious if you're in Austin!)"
       ],
-      "videos": [
-        {
-          "path": "chapter03/k03_a20_doener_kaufen.mp4",
-          "label": "Andrew/Austin: Döner kaufen (QR 3.35)"
-        }
-      ],
       "notaBene": "Another Döner topping frequently served at Dönerbuden is a spicy red pepper sauce. When ordering at a Dönerbude which serves this sauce, you’ll be asked if you’d like yours „mit scharf” (with heat) or „ohne scharf” (without heat).\n\nYou can try Döner with a variety of toppings right here in Austin at a Döner stand called ”Kebabalicious”. Check out their website: http://www.austinkebab.com",
-      "pdfNote": "COERLL Kapitel 3 workbook, page 121 (QR 3.35)."
+      "pdfNote": "COERLL Kapitel 3 workbook, page 121 (QR 3.35).",
+      "mediaCards": [
+        {
+          "id": "video-1",
+          "title": "Andrew/Austin: Döner kaufen (QR 3.35)",
+          "videoPath": "chapter03/k03_a20_doener_kaufen.mp4"
+        }
+      ]
     },
     {
       "chapter": 3,
@@ -3627,20 +3683,6 @@
       "duration": "20 min",
       "prerequisites": [],
       "intro": "Some type of caffeine is essential for many people, especially students! Watch each speaker’s video clip and decide whether the statements are true or false.",
-      "videos": [
-        {
-          "path": "chapter03/k03_a25_adan.mp4",
-          "label": "Adan (QR 3.11)"
-        },
-        {
-          "path": "chapter03/k03_a25_eva.mp4",
-          "label": "Eva (QR 3.13)"
-        },
-        {
-          "path": "chapter03/k03_a25_harald.mp4",
-          "label": "Harald (QR 3.14)"
-        }
-      ],
       "checks": {
         "blocks": [
           {
@@ -3663,7 +3705,24 @@
           }
         ]
       },
-      "pdfNote": "COERLL Kapitel 3 workbook, page 127."
+      "pdfNote": "COERLL Kapitel 3 workbook, page 127.",
+      "mediaCards": [
+        {
+          "id": "video-1",
+          "title": "Adan (QR 3.11)",
+          "videoPath": "chapter03/k03_a25_adan.mp4"
+        },
+        {
+          "id": "video-2",
+          "title": "Eva (QR 3.13)",
+          "videoPath": "chapter03/k03_a25_eva.mp4"
+        },
+        {
+          "id": "video-3",
+          "title": "Harald (QR 3.14)",
+          "videoPath": "chapter03/k03_a25_harald.mp4"
+        }
+      ]
     },
     {
       "chapter": 3,
@@ -3682,13 +3741,14 @@
         "D. Milch oder Frucht? List three Milcheis and two Fruchteis flavors.",
         "E. Jetzt sind Sie dran! Act out an ice-cream buying event with a partner."
       ],
-      "videos": [
+      "pdfNote": "COERLL Kapitel 3 workbook, page 128-130.",
+      "mediaCards": [
         {
-          "path": "chapter03/k03_a26_eis.mp4",
-          "label": "Sprache im Kontext: Eis (QR 3.24)"
+          "id": "video-1",
+          "title": "Sprache im Kontext: Eis (QR 3.24)",
+          "videoPath": "chapter03/k03_a26_eis.mp4"
         }
-      ],
-      "pdfNote": "COERLL Kapitel 3 workbook, page 128-130."
+      ]
     },
     {
       "chapter": 3,
@@ -3807,12 +3867,6 @@
         "A. Write down what you notice in the clip. What is Sophia talking about?",
         "B. Fill in her grocery list with the missing items from the clip."
       ],
-      "videos": [
-        {
-          "path": "chapter03/k03_a30_sophia.mp4",
-          "label": "Sophia im Supermarkt (QR 3.19)"
-        }
-      ],
       "checks": {
         "blocks": [
           {
@@ -3826,7 +3880,14 @@
           }
         ]
       },
-      "pdfNote": "COERLL Kapitel 3 workbook, page 133."
+      "pdfNote": "COERLL Kapitel 3 workbook, page 133.",
+      "mediaCards": [
+        {
+          "id": "video-1",
+          "title": "Sophia im Supermarkt (QR 3.19)",
+          "videoPath": "chapter03/k03_a30_sophia.mp4"
+        }
+      ]
     },
     {
       "chapter": 3,
@@ -3841,16 +3902,6 @@
       "tasks": [
         "Determine the origin and price of the 10 fruits mentioned.",
         "Determine the origin and price of the 8 vegetables mentioned."
-      ],
-      "videos": [
-        {
-          "path": "chapter03/k03_a31_obst.mp4",
-          "label": "Obst (QR 3.31)"
-        },
-        {
-          "path": "chapter03/k03_a31_gemuese.mp4",
-          "label": "Gemüse (QR 3.32)"
-        }
       ],
       "wordBank": [
         {
@@ -3890,7 +3941,19 @@
           "english": "season / in season"
         }
       ],
-      "pdfNote": "COERLL Kapitel 3 workbook, page 134."
+      "pdfNote": "COERLL Kapitel 3 workbook, page 134.",
+      "mediaCards": [
+        {
+          "id": "video-1",
+          "title": "Obst (QR 3.31)",
+          "videoPath": "chapter03/k03_a31_obst.mp4"
+        },
+        {
+          "id": "video-2",
+          "title": "Gemüse (QR 3.32)",
+          "videoPath": "chapter03/k03_a31_gemuese.mp4"
+        }
+      ]
     },
     {
       "chapter": 3,
@@ -3926,13 +3989,14 @@
         "C. Answer: Was brauchen Austin und Andrew nicht? Was für Cereals kaufen Sie?",
         "D. Write down all the adjectives you hear in the video."
       ],
-      "videos": [
+      "pdfNote": "COERLL Kapitel 3 workbook, page 135.",
+      "mediaCards": [
         {
-          "path": "chapter03/k03_a33_austin.mp4",
-          "label": "Austin kauft ein (QR 3.28)"
+          "id": "video-1",
+          "title": "Austin kauft ein (QR 3.28)",
+          "videoPath": "chapter03/k03_a33_austin.mp4"
         }
-      ],
-      "pdfNote": "COERLL Kapitel 3 workbook, page 135."
+      ]
     },
     {
       "chapter": 3,
@@ -3988,12 +4052,6 @@
       "tasks": [
         "A. Match the German Drogerie terms with their English equivalents.",
         "B. Fill in the German stationery terms based on their initial letters."
-      ],
-      "videos": [
-        {
-          "path": "chapter03/k03_a36_drogerie.mp4",
-          "label": "In der Drogerie (QR 3.26)"
-        }
       ],
       "checks": {
         "blocks": [
@@ -4067,7 +4125,14 @@
           }
         ]
       },
-      "pdfNote": "COERLL Kapitel 3 workbook, page 139."
+      "pdfNote": "COERLL Kapitel 3 workbook, page 139.",
+      "mediaCards": [
+        {
+          "id": "video-1",
+          "title": "In der Drogerie (QR 3.26)",
+          "videoPath": "chapter03/k03_a36_drogerie.mp4"
+        }
+      ]
     },
     {
       "chapter": 3,
@@ -5603,12 +5668,6 @@
       "duration": "25 min",
       "prerequisites": [],
       "intro": "A. Watch Peter Süß beim Bezahlen (QR 4.32) and put the statements in order; mark PS (Peter Süß) or K (Kellner). B. Read „Das Trinkgeld“ and compare US vs German tipping.",
-      "videos": [
-        {
-          "path": "chapter04/k04_a31_trinkgeld.mp4",
-          "label": "Peter Süß gibt Trinkgeld (QR 4.32)"
-        }
-      ],
       "checks": {
         "blocks": [
           {
@@ -5666,7 +5725,14 @@
           "url": "https://coerll.utexas.edu/dib/voc.php?k=4"
         }
       ],
-      "pdfNote": "COERLL Kapitel 4 workbook: https://coerll.utexas.edu/dib/pdfs/k_04.pdf"
+      "pdfNote": "COERLL Kapitel 4 workbook: https://coerll.utexas.edu/dib/pdfs/k_04.pdf",
+      "mediaCards": [
+        {
+          "id": "video-1",
+          "title": "Peter Süß gibt Trinkgeld (QR 4.32)",
+          "videoPath": "chapter04/k04_a31_trinkgeld.mp4"
+        }
+      ]
     },
     {
       "chapter": 4,
