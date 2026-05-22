@@ -69,24 +69,25 @@ const ActivityVideoSection = ({ activity }) => {
         };
       })
       .filter((item) => item.video || item.imagePath || item.body);
-  }, [activity]);
+  }, [activity?.mediaCards]);
+
+  const pageScopeKey = `${activity?.chapter}-${activity?.id}`;
 
   useEffect(() => {
     setCurrentIndex(0);
-  }, [activity?.chapter, activity?.id]);
-
-  useEffect(() => {
     setImageFailed(false);
-  }, [currentIndex, activity?.chapter, activity?.id]);
+    setZoomOpen(false);
+  }, [pageScopeKey, mediaItems.length]);
 
   if (!mediaItems.length) {
     return null;
   }
 
-  const currentItem = mediaItems[currentIndex];
+  const safeIndex = Math.min(currentIndex, mediaItems.length - 1);
+  const currentItem = mediaItems[safeIndex];
   const hasNavigation = mediaItems.length > 1;
-  const showPrev = hasNavigation && currentIndex > 0;
-  const showNext = hasNavigation && currentIndex < mediaItems.length - 1;
+  const showPrev = hasNavigation && safeIndex > 0;
+  const showNext = hasNavigation && safeIndex < mediaItems.length - 1;
   const hasAnyVideo = mediaItems.some((item) => item.video);
 
   return (
@@ -124,6 +125,7 @@ const ActivityVideoSection = ({ activity }) => {
         {currentItem.video && (
           <>
             <VideoPlayer
+              key={currentItem.video.appSrc}
               src={currentItem.video.appSrc}
               title={currentItem.title}
               relativePath={currentItem.video.relativePath}
@@ -178,7 +180,7 @@ const ActivityVideoSection = ({ activity }) => {
             Previous
           </Button>
           <Typography variant="caption" color="text.secondary">
-            {currentIndex + 1} of {mediaItems.length}
+            {safeIndex + 1} of {mediaItems.length}
           </Typography>
           <Button
             size="small"

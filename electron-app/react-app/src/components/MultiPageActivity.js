@@ -41,7 +41,10 @@ const MultiPageActivity = ({ activityData, onComplete, renderPageContent }) => {
 
   return (
     <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-      <ActivityVideoSection activity={mergedPageActivity} />
+      <ActivityVideoSection
+        key={`${activityData.chapter}-${activityData.id}-${currentPage?.id ?? currentPageIndex}`}
+        activity={mergedPageActivity}
+      />
 
       {currentPage?.title ? (
         <Typography variant="h6" color="primary" sx={{ textAlign: 'center', mb: 1 }}>
