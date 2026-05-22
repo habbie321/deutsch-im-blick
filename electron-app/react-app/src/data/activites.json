@@ -774,54 +774,82 @@
     {
       "chapter": 1,
       "id": 13,
-      "type": "workbook",
+      "type": "multi_page",
       "icon": "readingtask",
       "title": "Aktivität 13. Würzburg versus Deutschland",
-      "description": "Compare city and national statistics; research online.",
+      "description": "Compare city and national statistics; discuss nationalities.",
       "duration": "35 min",
       "prerequisites": [],
-      "sections": [
+      "intro": "Use the media cards on each page to compare Würzburg and Germany, then interpret the nationalities statistic.",
+      "pdfNote": "Add PNG images to electron-app/resources/videos/chapter01/activity13/ (see imagePath in each page).",
+      "pages": [
         {
-          "heading": "A. Compare & discuss",
-          "paragraphs": [
-            "Use the Infobox (Einwohner, Ausländeranteil, …) and answer the reflection questions in the workbook."
-          ]
-        },
-        {
-          "heading": "B. Nationalities",
-          "paragraphs": [
-            "Complete nationality forms (Türkei/Türke/Türkin, …) and add two more countries."
-          ]
-        }
-      ],
-      "checks": {
-        "blocks": [
-          {
-            "type": "short",
-            "id": "ausl",
-            "prompt": "In your own words: what does Ausländeranteil refer to in the Infobox?",
-            "acceptedAnswers": [
-              "percentage of foreigners",
-              "share of foreigners",
-              "percent of foreign citizens",
-              "proportion of foreigners",
-              "foreigner share"
-            ],
-            "hint": "Think: percent of the population without German citizenship."
-          },
-          {
-            "type": "short",
-            "id": "mig",
-            "prompt": "What does Bevölkerung mit Migrationshintergrund mean (short phrase in English)?",
-            "acceptedAnswers": [
-              "population with migration background",
-              "people with immigrant background",
-              "residents with migration background",
-              "population migration background"
+          "id": "q1-compare",
+          "type": "workbook",
+          "title": "Question 1 — Compare & discuss",
+          "intro": "Compare and discuss the information about Würzburg and Germany.",
+          "mediaCards": [
+            {
+              "id": "wuerzburg-deutschland-infobox",
+              "title": "Würzburg vs. Deutschland — Infobox",
+              "imagePath": "chapter01/activity13/wuerzburg-deutschland-infobox.png"
+            }
+          ],
+          "checks": {
+            "blocks": [
+              {
+                "type": "text",
+                "id": "a13_compare",
+                "prompts": [
+                  "What does Bevölkerung mit Migrationshintergrund mean? How is it different to Ausländeranteil?",
+                  "What is a Kita-Quote? Do you have that in your city or country?",
+                  "Which information surprise/confuse/shock you?"
+                ]
+              }
             ]
           }
-        ]
-      },
+        },
+        {
+          "id": "q2-nationalities",
+          "type": "workbook",
+          "title": "Question 2 — Nationalities statistic",
+          "intro": "What does the following statistic tell you?",
+          "mediaCards": [
+            {
+              "id": "nationalitaeten-statistik",
+              "title": "Ausländer nach Nationalität",
+              "imagePath": "chapter01/activity13/nationalitaeten-statistik.png"
+            }
+          ],
+          "checks": {
+            "blocks": [
+              {
+                "type": "text",
+                "id": "a13_nations_en",
+                "prompts": [
+                  "Wie heißen die Nationen auf Englisch? Welche Nation ist am meisten vertreten (most represented)? Warum?"
+                ]
+              },
+              {
+                "type": "cloze",
+                "id": "a13_nationality_forms",
+                "prompt": "Wie heißen die Personen aus den Ländern? Complete below and pick two more.\n\ndie Türkei · Österreich · Italien\n(Example: die Türkei — der Türke / die Türkin)",
+                "lines": [
+                  { "prefix": "Österreich — der Österreicher / die" },
+                  { "prefix": "Italien — der" },
+                  { "prefix": "Italien — die" },
+                  { "prefix": "Land 1 (country):" },
+                  { "prefix": "Land 1 — der" },
+                  { "prefix": "Land 1 — die" },
+                  { "prefix": "Land 2 (country):" },
+                  { "prefix": "Land 2 — der" },
+                  { "prefix": "Land 2 — die" }
+                ]
+              }
+            ]
+          }
+        }
+      ],
       "links": [
         {
           "label": "BIB Demografie",
@@ -834,74 +862,171 @@
         {
           "label": "Auswärtiges Amt",
           "url": "https://www.auswaertiges-amt.de"
+        },
+        {
+          "label": "Workbook PDF",
+          "url": "https://coerll.utexas.edu/dib/pdfs/k_01.pdf"
         }
       ]
     },
     {
       "chapter": 1,
       "id": 14,
-      "type": "workbook",
+      "type": "multi_page",
       "icon": "videoclips",
       "title": "Aktivität 14. Wer sind sie?",
       "description": "Video notes: native speakers in “Wer bin ich?”",
       "duration": "30 min",
       "prerequisites": [],
-      "intro": "Watch the native-speaker clips and fill a chart: Name, Herkunft, Alter, Telefonnummer, Lieblingsfarbe (+ warum). Optionally locate towns on maps.google.de.",
+      "intro": "Watch each „Wer bin ich?” clip and take notes about the native speakers of German.",
+      "pdfNote": "QR 1.15 (Berna), 1.18 (Eva), 1.23 (Jan). Place MP4s under electron-app/resources/videos/chapter01/.",
+      "pages": [
+        {
+          "id": "berna",
+          "type": "workbook",
+          "title": "Berna",
+          "intro": "Watch Berna's clip and fill in the chart below.",
+          "mediaCards": [
+            {
+              "id": "berna-video",
+              "title": "Berna — Wer bin ich?",
+              "videoPath": "chapter01/k01_a14_berna.mp4",
+              "videoFallbackUrl": "https://coerll.utexas.edu/dib/vid.php?f=01_15_int_bg_who"
+            }
+          ],
+          "checks": {
+            "blocks": [
+              {
+                "type": "cloze",
+                "id": "a14_berna",
+                "lines": [
+                  { "prefix": "Name" },
+                  { "prefix": "Kommt aus" },
+                  { "prefix": "Alter" },
+                  { "prefix": "Telefonnummer" },
+                  { "prefix": "Lieblingsfarbe (warum?)" }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "eva",
+          "type": "workbook",
+          "title": "Eva",
+          "intro": "Watch Eva's clip and fill in the chart below.",
+          "mediaCards": [
+            {
+              "id": "eva-video",
+              "title": "Eva — Wer bin ich?",
+              "videoPath": "chapter01/k01_a14_eva.mp4",
+              "videoFallbackUrl": "https://coerll.utexas.edu/dib/vid.php?f=01_18_int_ek_who"
+            }
+          ],
+          "checks": {
+            "blocks": [
+              {
+                "type": "cloze",
+                "id": "a14_eva",
+                "lines": [
+                  { "prefix": "Name" },
+                  { "prefix": "Kommt aus" },
+                  { "prefix": "Alter" },
+                  { "prefix": "Telefonnummer" },
+                  { "prefix": "Lieblingsfarbe (warum?)" }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "jan",
+          "type": "workbook",
+          "title": "Jan",
+          "intro": "Watch Jan's clip and fill in the chart below.",
+          "mediaCards": [
+            {
+              "id": "jan-video",
+              "title": "Jan — Wer bin ich?",
+              "videoPath": "chapter01/k01_a14_jan.mp4",
+              "videoFallbackUrl": "https://coerll.utexas.edu/dib/vid.php?f=01_23_int_ju_who"
+            }
+          ],
+          "checks": {
+            "blocks": [
+              {
+                "type": "cloze",
+                "id": "a14_jan",
+                "lines": [
+                  { "prefix": "Name" },
+                  { "prefix": "Kommt aus" },
+                  { "prefix": "Alter" },
+                  { "prefix": "Telefonnummer" },
+                  { "prefix": "Lieblingsfarbe (warum?)" }
+                ]
+              }
+            ]
+          }
+        }
+      ],
       "links": [
         {
           "label": "Kapitel 1 interviews",
           "url": "https://coerll.utexas.edu/dib/toc.php?k=1"
+        },
+        {
+          "label": "Workbook PDF",
+          "url": "https://coerll.utexas.edu/dib/pdfs/k_01.pdf"
         }
-      ],
-      "pdfNote": "QR 1.15, 1.18, 1.23 in workbook."
+      ]
     },
     {
       "chapter": 1,
       "id": 15,
-      "type": "workbook",
+      "type": "matching_activity",
       "icon": "videoclips",
       "title": "Aktivität 15. Was ist die Antwort?",
       "description": "Match Berna's questions to her answers (re-listen to QR 1.15).",
       "duration": "15 min",
       "prerequisites": [],
-      "checks": {
-        "blocks": [
-          {
-            "type": "matching",
-            "id": "berna_qa_match",
-            "leftColumnTitle": "Frage",
-            "rightColumnTitle": "Antwort",
-            "matchInstruction": "Listen again to Berna’s clip and match each question to the answer she gives.",
-            "matchingPairs": [
-              {
-                "id": 1,
-                "german": "Wie heißt du?",
-                "english": "Ich heiße Berna."
-              },
-              {
-                "id": 2,
-                "german": "Woher kommst du?",
-                "english": "Aus Kiel."
-              },
-              {
-                "id": 3,
-                "german": "Wie alt bist du?",
-                "english": "30."
-              },
-              {
-                "id": 4,
-                "german": "Was ist deine Telefonnummer?",
-                "english": "(512) 749-8940."
-              },
-              {
-                "id": 5,
-                "german": "Was ist deine Lieblingsfarbe?",
-                "english": "Rot, weil es temperamentvoll ist."
-              }
-            ]
-          }
-        ]
-      }
+      "leftColumnTitle": "Frage",
+      "rightColumnTitle": "Antwort",
+      "matchInstruction": "Listen again to Berna's clip and match each question to the answer she gives.",
+      "matchingPairs": [
+        {
+          "id": 1,
+          "german": "Wie heißt du?",
+          "english": "Ich heiße Berna."
+        },
+        {
+          "id": 2,
+          "german": "Woher kommst du?",
+          "english": "Aus Kiel."
+        },
+        {
+          "id": 3,
+          "german": "Wie alt bist du?",
+          "english": "30."
+        },
+        {
+          "id": 4,
+          "german": "Was ist deine Telefonnummer?",
+          "english": "(512) 749-8940."
+        },
+        {
+          "id": 5,
+          "german": "Was ist deine Lieblingsfarbe?",
+          "english": "Rot, weil es temperamentvoll ist."
+        }
+      ],
+      "mediaCards": [
+        {
+          "id": "berna-video",
+          "title": "Berna — Wer bin ich?",
+          "videoPath": "chapter01/k01_a14_berna.mp4",
+          "videoFallbackUrl": "https://coerll.utexas.edu/dib/vid.php?f=01_15_int_bg_who"
+        }
+      ]
     },
     {
       "chapter": 1,
@@ -924,20 +1049,198 @@
     {
       "chapter": 1,
       "id": 17,
-      "type": "workbook",
+      "type": "multi_page",
       "icon": "videoclips",
       "title": "Aktivität 17. Wer sind die Amerikaner?",
       "description": "Chart the American students from “Wer bin ich?”",
       "duration": "30 min",
       "prerequisites": [],
-      "intro": "Watch the U.S. student clips and complete the same chart as in Aktivität 14. Reflect: which word is used for “you”? How does that differ from Harald and Peter (Sie)?",
+      "intro": "Watch each American student's „Wer bin ich?” clip and fill in the chart. Then reflect on du vs. Sie.",
+      "pdfNote": "QR 1.2 (Adan), 1.5 (Hassan), 1.7 (Erin), 1.10 (Sara), 1.13 (Sophia). Place MP4s under electron-app/resources/videos/chapter01/.",
+      "pages": [
+        {
+          "id": "adan",
+          "type": "workbook",
+          "title": "Adan",
+          "intro": "Watch Adan's clip and fill in the chart below.",
+          "mediaCards": [
+            {
+              "id": "adan-video",
+              "title": "Adan — Wer bin ich?",
+              "videoPath": "chapter01/k01_a17_adan.mp4",
+              "videoFallbackUrl": "https://coerll.utexas.edu/dib/vid.php?f=01_02_int_ag_who"
+            }
+          ],
+          "checks": {
+            "blocks": [
+              {
+                "type": "cloze",
+                "id": "a17_adan",
+                "lines": [
+                  { "prefix": "Name" },
+                  { "prefix": "Herkunft" },
+                  { "prefix": "Alter" },
+                  { "prefix": "Telefonnummer" },
+                  { "prefix": "Lieblingsfarbe (warum?)" }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "hassan",
+          "type": "workbook",
+          "title": "Hassan",
+          "intro": "Watch Hassan's clip and fill in the chart below.",
+          "mediaCards": [
+            {
+              "id": "hassan-video",
+              "title": "Hassan — Wer bin ich?",
+              "videoPath": "chapter01/k01_a17_hassan.mp4",
+              "videoFallbackUrl": "https://coerll.utexas.edu/dib/vid.php?f=01_05_int_hm_who"
+            }
+          ],
+          "checks": {
+            "blocks": [
+              {
+                "type": "cloze",
+                "id": "a17_hassan",
+                "lines": [
+                  { "prefix": "Name" },
+                  { "prefix": "Herkunft" },
+                  { "prefix": "Alter" },
+                  { "prefix": "Telefonnummer" },
+                  { "prefix": "Lieblingsfarbe (warum?)" }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "erin",
+          "type": "workbook",
+          "title": "Erin",
+          "intro": "Watch Erin's clip and fill in the chart below.",
+          "mediaCards": [
+            {
+              "id": "erin-video",
+              "title": "Erin — Wer bin ich?",
+              "videoPath": "chapter01/k01_a17_erin.mp4",
+              "videoFallbackUrl": "https://coerll.utexas.edu/dib/vid.php?f=01_07_int_ec_who"
+            }
+          ],
+          "checks": {
+            "blocks": [
+              {
+                "type": "cloze",
+                "id": "a17_erin",
+                "lines": [
+                  { "prefix": "Name" },
+                  { "prefix": "Herkunft" },
+                  { "prefix": "Alter" },
+                  { "prefix": "Telefonnummer" },
+                  { "prefix": "Lieblingsfarbe (warum?)" }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "sara",
+          "type": "workbook",
+          "title": "Sara",
+          "intro": "Watch Sara's clip and fill in the chart below.",
+          "mediaCards": [
+            {
+              "id": "sara-video",
+              "title": "Sara — Wer bin ich?",
+              "videoPath": "chapter01/k01_a17_sara.mp4",
+              "videoFallbackUrl": "https://coerll.utexas.edu/dib/vid.php?f=01_10_int_sco_who"
+            }
+          ],
+          "checks": {
+            "blocks": [
+              {
+                "type": "cloze",
+                "id": "a17_sara",
+                "lines": [
+                  { "prefix": "Name" },
+                  { "prefix": "Herkunft" },
+                  { "prefix": "Alter" },
+                  { "prefix": "Telefonnummer" },
+                  { "prefix": "Lieblingsfarbe (warum?)" }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "sophia",
+          "type": "workbook",
+          "title": "Sophia",
+          "intro": "Watch Sophia's clip and fill in the chart below.",
+          "mediaCards": [
+            {
+              "id": "sophia-video",
+              "title": "Sophia — Wer bin ich?",
+              "videoPath": "chapter01/k01_a17_sophia.mp4",
+              "videoFallbackUrl": "https://coerll.utexas.edu/dib/vid.php?f=01_13_int_scl_who"
+            }
+          ],
+          "checks": {
+            "blocks": [
+              {
+                "type": "cloze",
+                "id": "a17_sophia",
+                "lines": [
+                  { "prefix": "Name" },
+                  { "prefix": "Herkunft" },
+                  { "prefix": "Alter" },
+                  { "prefix": "Telefonnummer" },
+                  { "prefix": "Lieblingsfarbe (warum?)" }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "reflection",
+          "type": "workbook",
+          "title": "Reflection — du or Sie?",
+          "intro": "Consider the questions posed to both the American and German speakers in Aktivität 13 and 16.",
+          "checks": {
+            "blocks": [
+              {
+                "type": "cloze",
+                "id": "a17_you_word",
+                "prompt": "What word is used to refer to \"you\" with these people?",
+                "lines": [
+                  { "prefix": "The word for \"you\" is:" }
+                ]
+              },
+              {
+                "type": "text",
+                "id": "a17_reflection",
+                "multiline": true,
+                "minRows": 8,
+                "prompts": [
+                  "Consider now your answer to the question as it referred to Harald and Peter in Aktivität 1 and 2. What has changed? How do those two men differ from the people interviewed in Aktivität 13 and 16? Write down your thoughts and discuss them with your classmates."
+                ]
+              }
+            ]
+          }
+        }
+      ],
       "links": [
         {
           "label": "Kapitel 1 interviews",
           "url": "https://coerll.utexas.edu/dib/toc.php?k=1"
+        },
+        {
+          "label": "Workbook PDF",
+          "url": "https://coerll.utexas.edu/dib/pdfs/k_01.pdf"
         }
-      ],
-      "pdfNote": "QR 1.2, 1.5, 1.7, 1.10, 1.13."
+      ]
     },
     {
       "chapter": 1,

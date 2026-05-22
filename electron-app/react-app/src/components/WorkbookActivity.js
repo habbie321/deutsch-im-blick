@@ -230,23 +230,34 @@ const WorkbookActivity = ({ activityData, onComplete }) => {
         }
 
         if (block.type === 'text') {
+          const promptEntries = (block.prompts || []).map((prompt) =>
+            typeof prompt === 'string' ? { text: prompt } : prompt
+          );
+
           return (
             <Paper key={block.id} elevation={0} sx={{ p: 2, mb: 1.25, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: 'background.paper' }}>
-              {block.prompts.map((prompt, i) => (
-                <Box key={i} sx={{ mb: i < block.prompts.length - 1 ? 1.5 : 0 }}>
-                  <Typography variant="body1" sx={{ mb: 0.75, fontWeight: 700 }}>
-                    {prompt}
+              {promptEntries.map((prompt, i) => {
+                const multiline = prompt.multiline ?? block.multiline ?? false;
+                const minRows = prompt.minRows ?? block.minRows ?? 6;
+
+                return (
+                <Box key={i} sx={{ mb: i < promptEntries.length - 1 ? 1.5 : 0 }}>
+                  <Typography variant="body1" sx={{ mb: 0.75, fontWeight: 700, whiteSpace: 'pre-wrap' }}>
+                    {prompt.text}
                   </Typography>
                   <TextField
                     fullWidth
                     variant="outlined"
+                    multiline={multiline}
+                    minRows={multiline ? minRows : undefined}
                     value={textAnswers[block.id]?.[i] || ''}
                     onChange={(e) => handleTextChange(block.id, i, e.target.value)}
                     disabled={submitted}
-                    placeholder="Your answer"
+                    placeholder={prompt.placeholder || block.placeholder || (multiline ? 'Write your answer here…' : 'Your answer')}
                   />
                 </Box>
-              ))}
+              );
+              })}
             </Paper>
           );
         }
@@ -255,7 +266,7 @@ const WorkbookActivity = ({ activityData, onComplete }) => {
           return (
             <Paper key={block.id} elevation={0} sx={{ p: 2, mb: 1.25, border: '1px solid', borderColor: 'divider', borderRadius: 2.5, bgcolor: 'background.paper' }}>
               {block.prompt && (
-                <Typography variant="body1" sx={{ mb: 1.5, fontWeight: 'medium' }}>
+                <Typography variant="body1" sx={{ mb: 1.5, fontWeight: 700, whiteSpace: 'pre-wrap' }}>
                   {block.prompt}
                 </Typography>
               )}
