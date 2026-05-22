@@ -65,6 +65,14 @@ const COERLL_SLUG = {
   'chapter01/k01_a17_sara.mp4': '01_10_int_sco_who',
   'chapter01/k01_a17_sophia.mp4': '01_13_int_scl_who',
   'chapter01/k01_a20.mp4': '01_29_sik_student-id',
+  // Activity 22 — Eva & Berna & Jan: COERLL “Deutsche und Schweizer” interviews
+  'chapter01/k01_a22_eva_studium.mp4': '01_19_int_ek_studies-home', // QR 1.19
+  'chapter01/k01_a22_eva_hobbys.mp4': '01_21_int_ek_interests', // QR 1.21
+  'chapter01/k01_a22_eva_freunde.mp4': '01_20_int_ek_friends', // QR 1.20
+  'chapter01/k01_a22_berna_studium.mp4': '01_16_int_bg_studies-home', // QR 1.16
+  'chapter01/k01_a22_berna_freunde.mp4': '01_17_int_bg_friends', // QR 1.17
+  'chapter01/k01_a22_jan_studium.mp4': '01_24_int_ju_studies-home', // QR 1.24
+  'chapter01/k01_a22_jan_freunde.mp4': '01_25_int_ju_friends', // QR 1.25
   'chapter01/k01_a22.mp4': '01_16_int_bg_studies-home',
   'chapter01/k01_a25.mp4': '01_06_int_hm_studies-home',
   'chapter01/k01_a26.mp4': '01_09_int_ec_friends',

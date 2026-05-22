@@ -1285,66 +1285,139 @@
     {
       "chapter": 1,
       "id": 20,
-      "type": "workbook",
+      "type": "multi_page",
       "icon": "videoclips",
       "title": "Aktivität 20. Sprache im Kontext: Der Studentenausweis",
       "description": "Mario explains the German student ID.",
       "duration": "30 min",
       "prerequisites": [],
-      "sections": [
+      "intro": "Watch the „Sprache im Kontext” clip „Studentenausweis — Student ID” and complete Parts A–D.",
+      "mediaCards": [
         {
-          "heading": "A. Vocabulary check",
-          "paragraphs": [
-            "Tick words you hear (Name, Universität, Studienfach, …)."
-          ]
-        },
-        {
-          "heading": "B. Purposes",
-          "paragraphs": [
-            "Circle all true statements about what the card is for (workbook list)."
-          ]
-        },
-        {
-          "heading": "C. Cloze",
-          "paragraphs": [
-            "Fill gaps with the word bank (Student, Ticket, Semester, Bücher, …)."
-          ]
+          "id": "studentenausweis",
+          "title": "Studentenausweis — Student ID",
+          "videoPath": "chapter01/k01_a20.mp4",
+          "videoFallbackUrl": "https://coerll.utexas.edu/dib/vid.php?f=01_29_sik_student-id"
         }
       ],
-      "checks": {
-        "blocks": [
-          {
-            "type": "sectionTitle",
-            "text": "Aktivität 20 B — Which purposes apply? (select all that are true in the clip)"
-          },
-          {
-            "type": "multi",
-            "id": "sid_uses",
-            "question": "Circle all that apply (per Mario’s explanation).",
-            "options": [
-              "Proof of student status",
-              "Lets students take a vacation in Germany",
-              "Use of public transportation (for free, with Semesterticket)",
-              "Borrowing books from the library",
-              "Helps students find a course of study",
-              "Shows your course of study / Studiengang"
-            ],
-            "correctIndices": [
-              0,
-              2,
-              3,
-              5
+      "pages": [
+        {
+          "id": "part-a",
+          "type": "workbook",
+          "title": "Part A",
+          "intro": "A. Watch the video and check all the words you hear.",
+          "checks": {
+            "blocks": [
+              {
+                "type": "multi",
+                "id": "a20_vocab",
+                "question": "Check all the words you hear.",
+                "options": [
+                  "Name",
+                  "Universität",
+                  "Studienfach",
+                  "Monate",
+                  "Bibliothek",
+                  "lesen",
+                  "Barcode",
+                  "Studiengang",
+                  "Vorlesung",
+                  "ausgehen",
+                  "offen",
+                  "Verkehrssystem"
+                ]
+              }
             ]
           }
-        ]
-      },
+        },
+        {
+          "id": "part-b",
+          "type": "workbook",
+          "title": "Part B",
+          "intro": "B. What purposes does the Studentenausweis serve? Circle the numbers of all the sentences that apply.",
+          "checks": {
+            "blocks": [
+              {
+                "type": "multi",
+                "id": "a20_purposes",
+                "question": "Select all sentences that apply.",
+                "options": [
+                  "It's proof of one's status as student.",
+                  "It lets students take a vacation in Germany.",
+                  "Students can use the public transportation system (for free).",
+                  "It allows students to borrow books from the library.",
+                  "It allows students to find a course of study.",
+                  "It provides information about one's course of study."
+                ],
+                "correctIndices": [0, 2, 3, 5]
+              }
+            ]
+          }
+        },
+        {
+          "id": "part-c",
+          "type": "workbook",
+          "title": "Part C",
+          "intro": "C. Watch the clip again and fill in the blanks with the missing words (they are provided on the left, out of order).",
+          "checks": {
+            "blocks": [
+              {
+                "type": "cloze",
+                "id": "a20_cloze",
+                "prompt": "Word bank (out of order): studiere · Deutschland · Student · Name · geht · Bücher · Semester · Ticket",
+                "lines": [
+                  { "prefix": "Der Studentenausweis. Damit können wir jedem zeigen, dass wir", "suffix": "sind." },
+                  { "prefix": "Semesterticket bedeutet,", "suffix": "einfach, ja, es gibt zwei Semester im Jahr und dazwischen jeweils 2 oder 3 Monate Pause in" },
+                  { "prefix": "", "suffix": "." },
+                  { "prefix": "Und mit diesem", "suffix": "können wir im öffentlichen Verkehrssystem herumfahren." },
+                  { "prefix": "Der", "suffix": "ist darauf gemerkt, in dem wievielten Semester ich mich befinde." },
+                  { "prefix": "Und ein Barcode, damit man in der Bibliothek", "suffix": "ausleihen kann." },
+                  { "prefix": "Zudem ist vermerkt, welchen Studiengang ich belege und was ich", "suffix": "." },
+                  { "prefix": "Und die Vorlesungsdauer, wie lang eben das Semester", "suffix": "." }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "part-d",
+          "type": "workbook",
+          "title": "Part D",
+          "intro": "Das ist ein Studentenausweis von einer Studentin.",
+          "mediaCards": [
+            {
+              "id": "studentenausweis-studentin",
+              "title": "Studentenausweis (Studentin)",
+              "imagePath": "chapter01/activity20/studentenausweis-studentin.png"
+            }
+          ],
+          "checks": {
+            "blocks": [
+              {
+                "type": "text",
+                "id": "a20_student_card",
+                "prompts": [
+                  "Wie heißt sie?",
+                  "Was ist ihre Matrikelnummer?",
+                  "Was ist eine Matrikelnummer überhaupt?",
+                  "Wann, wo und was hat sie studiert (did she study)?"
+                ]
+              }
+            ]
+          }
+        }
+      ],
       "links": [
         {
           "label": "Kapitel 1 — Sprache im Kontext",
           "url": "https://coerll.utexas.edu/dib/toc.php?k=1"
+        },
+        {
+          "label": "Workbook PDF",
+          "url": "https://coerll.utexas.edu/dib/pdfs/k_01.pdf"
         }
       ],
-      "pdfNote": "QR 1.29."
+      "pdfNote": "QR 1.29. Add PNG to electron-app/resources/videos/chapter01/activity20/studentenausweis-studentin.png (workbook p. 33)."
     },
     {
       "chapter": 1,
@@ -1370,20 +1443,188 @@
     {
       "chapter": 1,
       "id": 22,
-      "type": "workbook",
+      "type": "multi_page",
       "icon": "videoclips",
       "title": "Aktivität 22. Was machen sie gern?",
-      "description": "Eva, Sara, Adan — Studium & Wohnen / Hobbys / Freunde",
+      "description": "Eva, Berna, Jan — Studium & Wohnen / Hobbys / Freunde",
       "duration": "35 min",
       "prerequisites": [],
-      "intro": "Take notes while watching the clips whose titles match the table columns. Use the word bank in the workbook to listen for key terms.",
+      "intro": "Listen to the videoclips from Eva, Berna and Jan. The titles of the videos are the column headings in the table. Take notes about what information they give you about themselves. Use the word bank to help you listen better.",
+      "pdfNote": "QR 1.19–1.21 (Eva), 1.16–1.17 (Berna), 1.24–1.25 (Jan). Place MP4s under electron-app/resources/videos/chapter01/.",
+      "pages": [
+        {
+          "id": "eva",
+          "type": "writing",
+          "embedded": true,
+          "title": "Eva",
+          "intro": "Watch Eva's clips and take notes for each topic below.",
+          "wordBank": [
+            "Gymnasium",
+            "Kulturwissenschaften",
+            "Eltern",
+            "Wohnung",
+            "Sportverein",
+            "Freunde",
+            "turnen",
+            "Weindorf",
+            "Fluss",
+            "Grundschule",
+            "Hauptfach",
+            "Studentenwohnheim",
+            "viele Bekannte",
+            "Ruderklub",
+            "verstehen",
+            "schwer",
+            "auf Deutsch denken",
+            "Lieblingsfarbe",
+            "neutral",
+            "Deutsch als Fremdsprache",
+            "Musik",
+            "ins Konzert gehen",
+            "teuer",
+            "Haustiere"
+          ],
+          "tasks": [
+            { "text": "Studium & Wohnen", "multiline": true, "minRows": 6 },
+            { "text": "Hobbys & Interessen", "multiline": true, "minRows": 6 },
+            { "text": "Freunde & Weiteres", "multiline": true, "minRows": 6 }
+          ],
+          "mediaCards": [
+            {
+              "id": "eva-studium",
+              "title": "Eva — Studium & Wohnen (QR 1.19)",
+              "videoPath": "chapter01/k01_a22_eva_studium.mp4",
+              "videoFallbackUrl": "https://coerll.utexas.edu/dib/vid.php?f=01_19_int_ek_studies-home"
+            },
+            {
+              "id": "eva-hobbys",
+              "title": "Eva — Hobbys & Interessen (QR 1.21)",
+              "videoPath": "chapter01/k01_a22_eva_hobbys.mp4",
+              "videoFallbackUrl": "https://coerll.utexas.edu/dib/vid.php?f=01_21_int_ek_interests"
+            },
+            {
+              "id": "eva-freunde",
+              "title": "Eva — Freunde & Weiteres (QR 1.20)",
+              "videoPath": "chapter01/k01_a22_eva_freunde.mp4",
+              "videoFallbackUrl": "https://coerll.utexas.edu/dib/vid.php?f=01_20_int_ek_friends"
+            }
+          ]
+        },
+        {
+          "id": "berna",
+          "type": "writing",
+          "embedded": true,
+          "title": "Berna",
+          "intro": "Watch Berna's clips and take notes for each topic below.",
+          "wordBank": [
+            "Gymnasium",
+            "Kulturwissenschaften",
+            "Eltern",
+            "Wohnung",
+            "Sportverein",
+            "Freunde",
+            "turnen",
+            "Weindorf",
+            "Fluss",
+            "Grundschule",
+            "Hauptfach",
+            "Studentenwohnheim",
+            "viele Bekannte",
+            "Ruderklub",
+            "verstehen",
+            "schwer",
+            "auf Deutsch denken",
+            "Lieblingsfarbe",
+            "neutral",
+            "Deutsch als Fremdsprache",
+            "Musik",
+            "ins Konzert gehen",
+            "teuer",
+            "Haustiere"
+          ],
+          "tasks": [
+            { "text": "Studium & Wohnen", "multiline": true, "minRows": 6 },
+            { "text": "Hobbys & Interessen", "multiline": true, "minRows": 6 },
+            { "text": "Freunde & Weiteres", "multiline": true, "minRows": 6 }
+          ],
+          "mediaCards": [
+            {
+              "id": "berna-studium",
+              "title": "Berna — Studium & Wohnen (QR 1.16)",
+              "videoPath": "chapter01/k01_a22_berna_studium.mp4",
+              "videoFallbackUrl": "https://coerll.utexas.edu/dib/vid.php?f=01_16_int_bg_studies-home"
+            },
+            {
+              "id": "berna-freunde",
+              "title": "Berna — Freunde & Weiteres (QR 1.17)",
+              "videoPath": "chapter01/k01_a22_berna_freunde.mp4",
+              "videoFallbackUrl": "https://coerll.utexas.edu/dib/vid.php?f=01_17_int_bg_friends"
+            }
+          ]
+        },
+        {
+          "id": "jan",
+          "type": "writing",
+          "embedded": true,
+          "title": "Jan",
+          "intro": "Watch Jan's clips and take notes for each topic below.",
+          "wordBank": [
+            "Gymnasium",
+            "Kulturwissenschaften",
+            "Eltern",
+            "Wohnung",
+            "Sportverein",
+            "Freunde",
+            "turnen",
+            "Weindorf",
+            "Fluss",
+            "Grundschule",
+            "Hauptfach",
+            "Studentenwohnheim",
+            "viele Bekannte",
+            "Ruderklub",
+            "verstehen",
+            "schwer",
+            "auf Deutsch denken",
+            "Lieblingsfarbe",
+            "neutral",
+            "Deutsch als Fremdsprache",
+            "Musik",
+            "ins Konzert gehen",
+            "teuer",
+            "Haustiere"
+          ],
+          "tasks": [
+            { "text": "Studium & Wohnen", "multiline": true, "minRows": 6 },
+            { "text": "Hobbys & Interessen", "multiline": true, "minRows": 6 },
+            { "text": "Freunde & Weiteres", "multiline": true, "minRows": 6 }
+          ],
+          "mediaCards": [
+            {
+              "id": "jan-studium",
+              "title": "Jan — Studium & Wohnen (QR 1.24)",
+              "videoPath": "chapter01/k01_a22_jan_studium.mp4",
+              "videoFallbackUrl": "https://coerll.utexas.edu/dib/vid.php?f=01_24_int_ju_studies-home"
+            },
+            {
+              "id": "jan-freunde",
+              "title": "Jan — Freunde & Weiteres (QR 1.25)",
+              "videoPath": "chapter01/k01_a22_jan_freunde.mp4",
+              "videoFallbackUrl": "https://coerll.utexas.edu/dib/vid.php?f=01_25_int_ju_friends"
+            }
+          ]
+        }
+      ],
       "links": [
         {
           "label": "Kapitel 1 interviews",
           "url": "https://coerll.utexas.edu/dib/toc.php?k=1"
+        },
+        {
+          "label": "Workbook PDF",
+          "url": "https://coerll.utexas.edu/dib/pdfs/k_01.pdf"
         }
-      ],
-      "pdfNote": "See workbook for QR list (1.16–1.25)."
+      ]
     },
     {
       "chapter": 1,

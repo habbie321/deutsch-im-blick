@@ -49,7 +49,9 @@ const MultiPageActivity = ({ activityData, onComplete, renderPageContent }) => {
         </Typography>
       ) : null}
 
-      {renderPageContent(mergedPageActivity, handlePageComplete)}
+      <Box key={currentPage?.id ?? currentPageIndex}>
+        {renderPageContent(mergedPageActivity, handlePageComplete)}
+      </Box>
 
       {pages.length > 1 && (
         <Box sx={{ mt: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>

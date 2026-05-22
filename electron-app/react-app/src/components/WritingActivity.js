@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Typography,
@@ -34,11 +34,27 @@ const WritingActivity = ({ activityData, onComplete }) => {
     wordBank = [],
     chapter,
     image,
-    notaBene
+    notaBene,
+    embedded = false
   } = activityData;
 
+  const normalizeTask = (task) => {
+    if (typeof task === 'object' && task !== null) {
+      return {
+        text: task.text || '',
+        multiline: Boolean(task.multiline),
+        minRows: task.minRows || 6
+      };
+    }
+    const text = String(task);
+    const multiline = text.includes('\n');
+    return { text, multiline, minRows: multiline ? 6 : 1 };
+  };
+
+  const normalizedTasks = tasks.map(normalizeTask);
+
   const isMultiSpeaker = speakers.length > 0;
-  const isParagraphMode = !isMultiSpeaker && tasks.length <= 1;
+  const isParagraphMode = !isMultiSpeaker && normalizedTasks.length <= 1;
 
   // State
   const [showExample, setShowExample] = useState(false);
@@ -52,7 +68,7 @@ const WritingActivity = ({ activityData, onComplete }) => {
       }));
       return init;
     }
-    return tasks.reduce((acc, _, idx) => ({ ...acc, [idx]: '' }), {});
+    return normalizedTasks.reduce((acc, _, idx) => ({ ...acc, [idx]: '' }), {});
   });
 
   // Computed helpers for Multi-Speaker mode
@@ -96,10 +112,12 @@ const WritingActivity = ({ activityData, onComplete }) => {
   const vocabLabel = wordBank.length > 0 ? "Word Bank" : "Helpful Expressions";
 
   return (
-    <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', maxWidth: 800, mx: 'auto', width: '100%', p: 1 }}>
-      <Typography variant="h4" component="h2" align="center" gutterBottom color="primary">
-        {title}
-      </Typography>
+    <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', maxWidth: 800, mx: 'auto', width: '100%', p: embedded ? 0 : 1 }}>
+      {!embedded && (
+        <Typography variant="h4" component="h2" align="center" gutterBottom color="primary">
+          {title}
+        </Typography>
+      )}
       
       {intro && (
         <Typography variant="body1" color="text.secondary" sx={{ mb: 3, textAlign: 'center' }}>
@@ -118,11 +136,11 @@ const WritingActivity = ({ activityData, onComplete }) => {
         </Box>
       )}
       {/* Task Instructions */}
-      {!isMultiSpeaker && isParagraphMode && tasks.length > 0 && (
+      {!isMultiSpeaker && isParagraphMode && normalizedTasks.length > 0 && (
         <Box sx={{ mb: 3 }}>
-          {tasks.map((task, idx) => (
+          {normalizedTasks.map((task, idx) => (
             <Typography key={idx} variant="body1" sx={{ fontWeight: 'medium', mb: 1 }}>
-              &bull; {task}
+              &bull; {task.text}
             </Typography>
           ))}
         </Box>
@@ -235,28 +253,26 @@ const WritingActivity = ({ activityData, onComplete }) => {
         </Paper>
       ) : !isParagraphMode ? (
         <Box sx={{ mb: 2 }}>
-          {tasks.map((task, idx) => {
-            const isLongTask = task.includes('\n');
-            return (
-              <Box key={idx} sx={{ mb: 3 }}>
-                <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 1, whiteSpace: 'pre-wrap' }}>
-                  {idx + 1}. {task.trim()}
-                </Typography>
-                <TextField
-                  fullWidth
-                  variant="outlined"
-                  size={isLongTask ? "medium" : "small"}
-                  multiline={isLongTask}
-                  rows={isLongTask ? 6 : 1}
-                  placeholder="Ihre Antwort..."
-                  value={responses[idx] || ''}
-                  onChange={(e) => setResponses(prev => ({ ...prev, [idx]: e.target.value }))}
-                  disabled={done}
-                  sx={{ bgcolor: 'background.paper' }}
-                />
-              </Box>
-            );
-          })}
+          {normalizedTasks.map((task, idx) => (
+            <Box key={idx} sx={{ mb: 3 }}>
+              <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 1, whiteSpace: 'pre-wrap' }}>
+                {normalizedTasks.length > 1 ? `${idx + 1}. ` : ''}{task.text.trim()}
+              </Typography>
+              <TextField
+                fullWidth
+                variant="outlined"
+                size={task.multiline ? 'medium' : 'small'}
+                multiline={task.multiline}
+                minRows={task.multiline ? task.minRows : undefined}
+                rows={task.multiline ? task.minRows : 1}
+                placeholder="Ihre Antwort..."
+                value={responses[idx] || ''}
+                onChange={(e) => setResponses(prev => ({ ...prev, [idx]: e.target.value }))}
+                disabled={done}
+                sx={{ bgcolor: 'background.paper' }}
+              />
+            </Box>
+          ))}
         </Box>
       ) : (
         <TextField
