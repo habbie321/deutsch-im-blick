@@ -84,6 +84,16 @@ app.whenReady().then(async () => { // calls function after ready event is fired
         await protocol.handle('app', async (request) => {
             const filePath = request.url.replace('app://', '');
             const fullPath = path.join(__dirname, '../resources/videos', filePath);
+            const ext = path.extname(fullPath).toLowerCase();
+            const contentTypeByExt = {
+                '.mp4': 'video/mp4',
+                '.png': 'image/png',
+                '.jpg': 'image/jpeg',
+                '.jpeg': 'image/jpeg',
+                '.gif': 'image/gif',
+                '.webp': 'image/webp'
+            };
+            const contentType = contentTypeByExt[ext] || 'application/octet-stream';
 
             try {
                 const stats = await new Promise((resolve, reject) => {
@@ -108,7 +118,7 @@ app.whenReady().then(async () => { // calls function after ready event is fired
                             'Content-Range': `bytes ${start}-${end}/${stats.size}`,
                             'Accept-Ranges': 'bytes',
                             'Content-Length': chunksize.toString(),
-                            'Content-Type': 'video/mp4'
+                            'Content-Type': contentType
                         }
                     });
                 }
@@ -116,7 +126,7 @@ app.whenReady().then(async () => { // calls function after ready event is fired
                 return new Response(fs.createReadStream(fullPath), {
                     headers: {
                         'Content-Length': stats.size.toString(),
-                        'Content-Type': 'video/mp4'
+                        'Content-Type': contentType
                     }
                 });
             } catch (err) {

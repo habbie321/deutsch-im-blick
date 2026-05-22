@@ -371,14 +371,77 @@ const activities = [
   {
     chapter: 1,
     id: 12,
-    type: 'workbook',
+    type: 'multi_page',
     icon: 'readingtask',
     title: 'Aktivität 12. Und wer wohnt in Würzburg?',
-    description: 'Statistics table + vocabulary matching + discussion.',
+    description: 'Statistics table vocabulary + age-structure graph discussion.',
     duration: '30 min',
     prerequisites: [],
     intro:
-      'Match English glosses to German row labels (Bevölkerung, Einwohner, …), then discuss the age-structure graph with classmates.',
+      'Use the media cards on each page: first write German translations for the statistics vocabulary, then discuss the age-structure graph.',
+    pdfNote:
+      'Add PNG images to electron-app/resources/videos/chapter01/activity12/ (see imagePath in each page).',
+    pages: [
+      {
+        id: 'q1-vocabulary',
+        type: 'workbook',
+        title: 'Question 1 — Vocabulary',
+        intro: 'Using the Würzburg statistics table above, write the German equivalent of each English term.',
+        mediaCards: [
+          {
+            id: 'wuerzburg-statistics',
+            title: 'Würzburg — Bevölkerungsstatistik',
+            imagePath: 'chapter01/activity12/wuerzburg-statistics.png'
+          }
+        ],
+        checks: {
+          blocks: [
+            {
+              type: 'cloze',
+              id: 'a12_vocab',
+              prompt: 'Write the German word or phrase for each term:',
+              lines: [
+                { prefix: 'moves away from:' },
+                { prefix: 'births:' },
+                { prefix: 'women:' },
+                { prefix: 'moves to:' },
+                { prefix: 'citizens:' },
+                { prefix: 'men:' },
+                { prefix: 'foreign citizens:' },
+                { prefix: 'population:' },
+                { prefix: 'deaths:' }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        id: 'q2-graph',
+        type: 'workbook',
+        title: 'Question 2 — Age-structure graph',
+        intro: 'Look at the age-structure graph above and answer the questions below.',
+        mediaCards: [
+          {
+            id: 'altersstruktur',
+            title: 'Altersstruktur der Stadt Würzburg',
+            imagePath: 'chapter01/activity12/altersstruktur.png'
+          }
+        ],
+        checks: {
+          blocks: [
+            {
+              type: 'text',
+              id: 'a12_graph',
+              prompts: [
+                'What do you call this type of graph?',
+                'What does it tell us about the city of Würzburg?',
+                'Do you know how this graph would look like for your city?'
+              ]
+            }
+          ]
+        }
+      }
+    ],
     links: [
       { label: 'Stadt Würzburg', url: 'https://www.wuerzburg.de' },
       { label: 'Workbook PDF', url: PDF_K1 }
