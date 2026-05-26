@@ -74,9 +74,18 @@ const COERLL_SLUG = {
   'chapter01/k01_a22_jan_studium.mp4': '01_24_int_ju_studies-home', // QR 1.24
   'chapter01/k01_a22_jan_freunde.mp4': '01_25_int_ju_friends', // QR 1.25
   'chapter01/k01_a22.mp4': '01_16_int_bg_studies-home',
+  'chapter01/k01_a25_hassan.mp4': '01_06_int_hm_studies-home', // QR 1.6
+  'chapter01/k01_a25_erin.mp4': '01_08_int_ec_studies-home', // QR 1.8
+  'chapter01/k01_a25_sophia.mp4': '01_14_int_scl_studies-home', // QR 1.14
   'chapter01/k01_a25.mp4': '01_06_int_hm_studies-home',
+  'chapter01/k01_a26_erin.mp4': '01_09_int_ec_friends', // QR 1.9
+  'chapter01/k01_a26_hassan.mp4': '01_27_int_hm_friends', // QR 1.27
   'chapter01/k01_a26.mp4': '01_09_int_ec_friends',
+  'chapter01/k01_a27_studium.mp4': '01_16_int_bg_studies-home', // QR 1.16
+  'chapter01/k01_a27_freunde.mp4': '01_17_int_bg_friends', // QR 1.17
   'chapter01/k01_a27.mp4': '01_16_int_bg_studies-home',
+  'chapter01/k01_a28_studium.mp4': '01_24_int_ju_studies-home', // QR 1.24
+  'chapter01/k01_a28_freunde.mp4': '01_25_int_ju_friends', // QR 1.25
   'chapter01/k01_a28.mp4': '01_24_int_ju_studies-home',
   'chapter01/k01_a30.mp4': '01_30_sik_cell-phone',
 

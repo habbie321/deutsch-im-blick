@@ -1209,14 +1209,23 @@ const activities = [
   {
     chapter: 1,
     id: 23,
-    type: 'workbook',
-    icon: 'readingtask',
+    type: 'writing',
+    icon: 'writing',
     title: 'Aktivität 23. Ein bisschen Journalismus',
-    description: 'Re-tell what Eva, Berna, and Jan said.',
+    description: "Re-create Eva's, Berna's, and Jan's comments from your Aktivität 22 notes.",
     duration: '25 min',
-    prerequisites: [],
-    intro: 'Using your notes from Aktivität 22 and related clips, reconstruct short statements in German (present tense). Review regular verbs on Grimm Grammar.',
-    links: [{ label: 'Grimm Grammar — present regular verbs', url: 'https://coerll.utexas.edu/gg/gr/v_02.htm' }]
+    prerequisites: [22],
+    intro: "Using the notes you took above, try to re-create Eva's, Berna's and Jan's comments.",
+    tasks: [
+      { text: 'Eva — re-create her comments in German (present tense).', multiline: true, minRows: 8 },
+      { text: "Berna — re-create her comments in German (present tense).", multiline: true, minRows: 8 },
+      { text: 'Jan — re-create his comments in German (present tense).', multiline: true, minRows: 8 }
+    ],
+    links: [
+      { label: 'Grimm Grammar — present regular verbs', url: 'https://coerll.utexas.edu/gg/gr/v_02.htm' },
+      { label: 'Workbook PDF', url: PDF_K1 }
+    ],
+    pdfNote: 'Review present tense of regular verbs before you write. See Aktivität 22 for your listening notes.'
   },
   {
     chapter: 1,
@@ -1237,74 +1246,95 @@ const activities = [
   {
     chapter: 1,
     id: 25,
-    type: 'workbook',
+    type: 'multiple_choice',
     icon: 'videoclips',
     title: 'Aktivität 25. Wer macht was?',
-    description: 'Hassan, Erin, Sophia — who said each line?',
+    description: 'Watch the Studium & Wohnen clips and choose who said each line.',
     duration: '25 min',
     prerequisites: [],
-    intro:
-      'Watch the “Studium & Wohnen” clips for Hassan, Erin, and Sophia. Label each statement with H, E, and/or S as in the workbook.',
+    mediaCards: [
+      {
+        id: 'hassan-studium',
+        title: 'Hassan — Studium & Wohnen (QR 1.6)',
+        videoPath: 'chapter01/k01_a25_hassan.mp4',
+        videoFallbackUrl: 'https://coerll.utexas.edu/dib/vid.php?f=01_06_int_hm_studies-home'
+      },
+      {
+        id: 'erin-studium',
+        title: 'Erin — Studium & Wohnen (QR 1.8)',
+        videoPath: 'chapter01/k01_a25_erin.mp4',
+        videoFallbackUrl: 'https://coerll.utexas.edu/dib/vid.php?f=01_08_int_ec_studies-home'
+      },
+      {
+        id: 'sophia-studium',
+        title: 'Sophia — Studium & Wohnen (QR 1.14)',
+        videoPath: 'chapter01/k01_a25_sophia.mp4',
+        videoFallbackUrl: 'https://coerll.utexas.edu/dib/vid.php?f=01_14_int_scl_studies-home'
+      }
+    ],
+    questionSets: [
+      {
+        setId: 1,
+        title: 'Wer macht was?',
+        questions: [
+          {
+            id: 1,
+            question: 'Ich wohne in der Nähe der Universität.',
+            options: ['Hassan', 'Erin', 'Sophia'],
+            correctAnswer: 2
+          },
+          {
+            id: 2,
+            question: 'Ich studierte Philosophie, Altgriechisch und Latein.',
+            options: ['Hassan', 'Erin', 'Sophia'],
+            correctAnswer: 0
+          },
+          {
+            id: 3,
+            question: 'Ich wohne in der Nähe von der Autobahn.',
+            options: ['Hassan', 'Erin', 'Sophia'],
+            correctAnswer: 0
+          },
+          {
+            id: 4,
+            question: 'Ich wohne im Europahaus 1.',
+            options: ['Hassan', 'Erin', 'Sophia'],
+            correctAnswer: 1
+          },
+          {
+            id: 5,
+            question: 'Ich studiere Deutsch und Kunstgeschichte.',
+            options: ['Hassan', 'Erin', 'Sophia'],
+            correctAnswer: 1
+          },
+          {
+            id: 6,
+            question: 'Jetzt wohne ich in Würzburg.',
+            options: ['Hassan', 'Erin', 'Sophia', 'Alle drei'],
+            correctAnswer: 3
+          },
+          {
+            id: 7,
+            question: 'In der ersten Woche ist es schwer [in Deutschland] Deutsch zu verstehen.',
+            options: ['Hassan', 'Erin', 'Sophia', 'Alle drei'],
+            correctAnswer: 3
+          },
+          {
+            id: 8,
+            question: 'Ich wohne in Austin.',
+            options: ['Hassan', 'Erin', 'Sophia'],
+            correctAnswer: 1
+          }
+        ]
+      }
+    ],
     links: [{ label: 'Kapitel 1 interviews', url: DIB_K1 }],
-    pdfNote: 'QR 1.6, 1.8, 1.14.',
-    checks: {
-      blocks: [
-        { type: 'sectionTitle', text: 'Who said it? (H = Hassan, E = Erin, S = Sophia)' },
-        {
-          type: 'who',
-          id: 'w1',
-          statement: 'Ich wohne in der Nähe der Universität.',
-          correctLetters: ['S']
-        },
-        {
-          type: 'who',
-          id: 'w2',
-          statement: 'Ich studierte Philosophie, Altgriechisch und Latein.',
-          correctLetters: ['H']
-        },
-        {
-          type: 'who',
-          id: 'w3',
-          statement: 'Ich wohne in der Nähe von der Autobahn.',
-          correctLetters: ['H']
-        },
-        {
-          type: 'who',
-          id: 'w4',
-          statement: 'Ich wohne im Europahaus 1.',
-          correctLetters: ['E']
-        },
-        {
-          type: 'who',
-          id: 'w5',
-          statement: 'Ich studiere Deutsch und Kunstgeschichte.',
-          correctLetters: ['E']
-        },
-        {
-          type: 'who',
-          id: 'w6',
-          statement: 'Jetzt wohne ich in Würzburg.',
-          correctLetters: ['E', 'H', 'S']
-        },
-        {
-          type: 'who',
-          id: 'w7',
-          statement: 'In der ersten Woche ist es schwer [in Deutschland] Deutsch zu verstehen.',
-          correctLetters: ['E', 'H', 'S']
-        },
-        {
-          type: 'who',
-          id: 'w8',
-          statement: 'Ich wohne in Austin.',
-          correctLetters: ['E']
-        }
-      ]
-    }
+    pdfNote: 'QR 1.6 (p. 50), QR 1.8 (p. 50), QR 1.14 (p. 50).'
   },
   {
     chapter: 1,
     id: 26,
-    type: 'workbook',
+    type: 'multi_page',
     icon: 'videoclips',
     title: 'Aktivität 26. Erin und Hassan — „Freunde & Weiteres“',
     description: 'True / false while viewing.',
@@ -1312,50 +1342,165 @@ const activities = [
     prerequisites: [],
     intro:
       'For each statement, mark R (richtig) or F (falsch) and correct the false ones, following the workbook lists for Erin and Hassan.',
+    pages: [
+      {
+        id: 'erin',
+        type: 'workbook',
+        title: 'Erin — Richtig oder falsch?',
+        mediaCards: [
+          {
+            id: 'erin-freunde',
+            title: 'Erin — Freunde & Weiteres (QR 1.9)',
+            videoPath: 'chapter01/k01_a26_erin.mp4',
+            videoFallbackUrl: 'https://coerll.utexas.edu/dib/vid.php?f=01_09_int_ec_friends'
+          }
+        ],
+        checks: {
+          blocks: [
+            { type: 'tf', id: 'e1', statement: 'Ich habe viele deutsche Freunde.', correct: false },
+            { type: 'tf', id: 'e2', statement: 'Ich habe in Würzburg ein Praktikum gemacht.', correct: false },
+            { type: 'tf', id: 'e3', statement: 'In Bayern kann ich Deutsch nicht verstehen.', correct: true },
+            { type: 'tf', id: 'e4', statement: 'Nach ein paar Tagen versteht man viel Deutsch.', correct: true }
+          ]
+        }
+      },
+      {
+        id: 'hassan',
+        type: 'workbook',
+        title: 'Hassan — Richtig oder falsch?',
+        mediaCards: [
+          {
+            id: 'hassan-freunde',
+            title: 'Hassan — Freunde & Weiteres (QR 1.27)',
+            videoPath: 'chapter01/k01_a26_hassan.mp4',
+            videoFallbackUrl: 'https://coerll.utexas.edu/dib/vid.php?f=01_27_int_hm_friends'
+          }
+        ],
+        checks: {
+          blocks: [
+            { type: 'tf', id: 'h1', statement: 'Ich war letzten Sommer in Würzburg.', correct: false },
+            { type: 'tf', id: 'h2', statement: 'Ich habe viele Freunde getroffen.', correct: true },
+            { type: 'tf', id: 'h3', statement: 'Meine Freunde heißen Alfred und Tina.', correct: false },
+            { type: 'tf', id: 'h4', statement: 'Meine Freunde wollen, dass ich ihnen mit ihrem Englisch helfe.', correct: true },
+            { type: 'tf', id: 'h5', statement: 'Es ist leicht in Würzburg Deutsch zu verstehen.', correct: false }
+          ]
+        }
+      }
+    ],
     links: [{ label: 'Kapitel 1 interviews', url: DIB_K1 }],
-    pdfNote: 'QR 1.9 and 1.27.',
-    checks: {
-      blocks: [
-        { type: 'sectionTitle', text: 'Erin — Richtig oder falsch? (after watching QR 1.9)' },
-        { type: 'tf', id: 'e1', statement: 'Ich habe viele deutsche Freunde.', correct: false },
-        { type: 'tf', id: 'e2', statement: 'Ich habe in Würzburg ein Praktikum gemacht.', correct: false },
-        { type: 'tf', id: 'e3', statement: 'In Bayern kann ich Deutsch nicht verstehen.', correct: true },
-        { type: 'tf', id: 'e4', statement: 'Nach ein paar Tagen versteht man viel Deutsch.', correct: true },
-        { type: 'sectionTitle', text: 'Hassan — Richtig oder falsch? (after watching QR 1.27)' },
-        { type: 'tf', id: 'h1', statement: 'Ich war letzten Sommer in Würzburg.', correct: false },
-        { type: 'tf', id: 'h2', statement: 'Ich habe viele Freunde getroffen.', correct: true },
-        { type: 'tf', id: 'h3', statement: 'Meine Freunde heißen Alfred und Tina.', correct: false },
-        { type: 'tf', id: 'h4', statement: 'Meine Freunde wollen, dass ich ihnen mit ihrem Englisch helfe.', correct: true },
-        { type: 'tf', id: 'h5', statement: 'Es ist leicht in Würzburg Deutsch zu verstehen.', correct: false }
-      ]
-    }
+    pdfNote: 'QR 1.9 and 1.27.'
   },
   {
     chapter: 1,
     id: 27,
-    type: 'workbook',
+    type: 'multi_page',
     icon: 'videoclips',
     title: 'Aktivität 27. Berna',
     description: 'Short answers on two clips: Studium & Wohnen / Freunde & Weiteres',
     duration: '25 min',
     prerequisites: [],
-    intro: 'Answer the guided questions in the workbook while re-watching Berna’s two themed clips.',
+    intro:
+      "View Berna's videos, „Studium & Wohnen” and „Freunde & Weiteres” and find out more about her by answering the following questions.",
+    pages: [
+      {
+        id: 'studium',
+        type: 'writing',
+        embedded: true,
+        title: 'Studium & Wohnen',
+        mediaCards: [
+          {
+            id: 'berna-studium',
+            title: 'Berna — Studium & Wohnen (QR 1.16)',
+            videoPath: 'chapter01/k01_a27_studium.mp4',
+            videoFallbackUrl: 'https://coerll.utexas.edu/dib/vid.php?f=01_16_int_bg_studies-home'
+          }
+        ],
+        tasks: [
+          { text: 'What does Berna study at the university?' },
+          { text: 'Which languages does Berna know?' },
+          { text: 'In which city does Berna live now?' },
+          { text: 'When did Berna move there?' }
+        ]
+      },
+      {
+        id: 'freunde',
+        type: 'writing',
+        embedded: true,
+        title: 'Freunde & Weiteres',
+        mediaCards: [
+          {
+            id: 'berna-freunde',
+            title: 'Berna — Freunde & Weiteres (QR 1.17)',
+            videoPath: 'chapter01/k01_a27_freunde.mp4',
+            videoFallbackUrl: 'https://coerll.utexas.edu/dib/vid.php?f=01_17_int_bg_friends'
+          }
+        ],
+        tasks: [
+          { text: "What are Berna's best friends called?" },
+          { text: 'Where are her friends from?' },
+          { text: 'Did she find it difficult to learn English?' },
+          { text: 'How long did she study English in Germany?' }
+        ]
+      }
+    ],
     links: [{ label: 'Kapitel 1 interviews', url: DIB_K1 }],
-    pdfNote: 'QR 1.16 and 1.17.'
+    pdfNote: 'QR 1.16 (p. 50), QR 1.17 (p. 50).'
   },
   {
     chapter: 1,
     id: 28,
-    type: 'workbook',
+    type: 'multi_page',
     icon: 'videoclips',
     title: 'Aktivität 28. Jan',
-    description: 'Cloze summaries + reflection on studieren vs. English “study”.',
+    description: "Fill in the blanks after watching Jan's Studium & Wohnen and Freunde & Weiteres clips.",
     duration: '30 min',
     prerequisites: [],
     intro:
-      'Fill the blanks for Jan’s “Studium & Wohnen” and “Freunde & Weiteres” clips, then discuss Schule, Gymnasium, and the meaning of studieren.',
+      "You would like to get to know Berna's housemate, Jan. Fill in the blanks with the missing information after you watch the following clips of him.",
+    pages: [
+      {
+        id: 'studium',
+        type: 'cloze',
+        title: 'Studium & Wohnen',
+        mediaCards: [
+          {
+            id: 'jan-studium',
+            title: 'Jan — Studium & Wohnen (QR 1.24)',
+            videoPath: 'chapter01/k01_a28_studium.mp4',
+            videoFallbackUrl: 'https://coerll.utexas.edu/dib/vid.php?f=01_24_int_ju_studies-home'
+          }
+        ],
+        lines: [
+          { prefix: 'Ich studiere', suffix: '.' },
+          { prefix: 'Ich wohne in', suffix: ',' },
+          { prefix: '', suffix: '.' },
+          { prefix: 'Ich bin im Jahre', suffix: 'in Amerika angekommen.' },
+          { prefix: 'Ich habe hier schon in', suffix: 'gelebt und ich habe in Austin gelebt.' }
+        ]
+      },
+      {
+        id: 'freunde',
+        type: 'cloze',
+        title: 'Freunde & Weiteres',
+        mediaCards: [
+          {
+            id: 'jan-freunde',
+            title: 'Jan — Freunde & Weiteres (QR 1.25)',
+            videoPath: 'chapter01/k01_a28_freunde.mp4',
+            videoFallbackUrl: 'https://coerll.utexas.edu/dib/vid.php?f=01_25_int_ju_friends'
+          }
+        ],
+        lines: [
+          { prefix: 'Meine besten Freunde in Austin sind', suffix: '.' },
+          { prefix: 'Sie kommen beide aus', suffix: '.' },
+          { prefix: 'Wir haben schon im deutschen Gymnasium', suffix: 'gelernt, ab der' },
+          { prefix: '', suffix: 'ten Klasse.' },
+          { prefix: 'Und ich habe in', suffix: 'auch schon etwas Englisch studiert.' }
+        ]
+      }
+    ],
     links: [{ label: 'Kapitel 1 interviews', url: DIB_K1 }],
-    pdfNote: 'QR 1.24 and 1.25.'
+    pdfNote: 'QR 1.24 (p. 50), QR 1.25 (p. 50).'
   },
   {
     chapter: 1,
