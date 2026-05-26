@@ -1531,35 +1531,116 @@ const activities = [
   {
     chapter: 1,
     id: 30,
-    type: 'workbook',
+    type: 'multi_page',
     icon: 'videoclips',
     title: 'Aktivität 30. Sprache im Kontext: Das Handy',
     description: 'Adam — buying and using a mobile phone in Germany.',
     duration: '35 min',
     prerequisites: [],
-    sections: [
-      { heading: 'A–C', paragraphs: ['Summarize the clip; list words you recognize; define what a Handy is in German.'] },
-      { heading: 'D', paragraphs: ['Answer detail questions (store name, offer, Konto, prices, SMS, …).'] },
-      { heading: 'E', paragraphs: ['Order the purchase steps as in the workbook.'] }
+    intro:
+      'Now that you got to know new people in Würzburg you need a way to contact them. Therefore, one of the first things you will need (ok, want) to buy right away in Würzburg is a Handy. Listen to Adam to learn what a Handy actually is, how to get it, and what phrases you will need to be able to purchase it.',
+    mediaCards: [
+      {
+        id: 'handy-video',
+        title: 'Sprache im Kontext: Das Handy (QR 1.30)',
+        videoPath: 'chapter01/k01_a30.mp4',
+        videoFallbackUrl: 'https://coerll.utexas.edu/dib/vid.php?f=01_30_sik_cell-phone'
+      }
     ],
-    links: [{ label: 'Kapitel 1 — Sprache im Kontext', url: DIB_K1 }],
-    pdfNote: 'QR 1.30.',
-    checks: {
-      blocks: [
-        {
-          type: 'order',
-          id: 'handy_order',
-          instruction: 'Aktivität 30 E — Order the steps for loading prepaid credit (first step at the top).',
-          items: [
-            { id: 1, text: 'Sie sagen: „Ich brauche 30 Euro Guthaben, bitte.”' },
-            { id: 2, text: 'Sie bezahlen 30 Euro.' },
-            { id: 3, text: 'Sie bekommen eine Karte mit einem PIN-Code darauf.' },
-            { id: 4, text: 'Der Verkäufer kann das Geld auf Ihr Handy laden.' }
-          ],
-          correctOrder: [1, 2, 3, 4]
+    pages: [
+      {
+        id: 'parts-a-c',
+        type: 'workbook',
+        title: 'Parts A–C',
+        checks: {
+          blocks: [
+            {
+              type: 'sectionTitle',
+              text: 'A. Watch the „Sprache im Kontext” clip with Adam and write down what the clip is about:'
+            },
+            {
+              type: 'text',
+              id: 'a30_a',
+              multiline: true,
+              minRows: 4,
+              prompts: [
+                'What do you notice?',
+                'Who is in the video?',
+                'Where does it take place?',
+                'What do you think it is about?'
+              ]
+            },
+            {
+              type: 'sectionTitle',
+              text: 'B. Watch the clip again, jot down all the words you recognize:'
+            },
+            {
+              type: 'text',
+              id: 'a30_b',
+              multiline: true,
+              minRows: 6,
+              prompts: ['Words you recognize:']
+            },
+            {
+              type: 'sectionTitle',
+              text: 'C. Watch the clip a third time, and figure out what a Handy is:'
+            },
+            { type: 'text', id: 'a30_c', prompts: ['A Handy is:'] }
+          ]
         }
-      ]
-    }
+      },
+      {
+        id: 'part-d',
+        type: 'workbook',
+        title: 'Part D',
+        intro: 'D. When you watch the clip the fourth time, answer these more detailed questions:',
+        checks: {
+          blocks: [
+            {
+              type: 'text',
+              id: 'a30_d',
+              prompts: [
+                'What is the name of the Handy-store?',
+                'What is the special offer?',
+                'What kind of a Konto does he recommend opening?',
+                'How much does it cost to use the Handy in Germany?',
+                'What kind of a Handy can you buy?',
+                'How much does it cost when someone calls you?',
+                'How much is a Handy without a SIM-Karte?',
+                'How much is it to send and receive an SMS?'
+              ]
+            }
+          ]
+        }
+      },
+      {
+        id: 'part-e',
+        type: 'workbook',
+        title: 'Part E',
+        intro: 'E. Watch the clip one more time and bring the following statements in the right order:',
+        checks: {
+          blocks: [
+            {
+              type: 'order',
+              id: 'handy_order',
+              instruction: 'Order the steps for loading prepaid credit (first step at the top).',
+              items: [
+                { id: 1, text: 'Sie sagen: „Ich brauche 30 Euro Guthaben, bitte.”' },
+                { id: 2, text: 'Sie bezahlen 30 Euro.' },
+                { id: 3, text: 'Sie bekommen eine Karte mit einem PIN-Code darauf.' },
+                { id: 4, text: 'Der Verkäufer kann das Geld auf Ihr Handy laden.' }
+              ],
+              correctOrder: [1, 2, 3, 4]
+            }
+          ]
+        }
+      }
+    ],
+    links: [
+      { label: 'Kapitel 1 — Sprache im Kontext', url: DIB_K1 },
+      { label: 'Workbook PDF', url: PDF_K1 }
+    ],
+    pdfNote: 'QR 1.30 (p. 41).'
   },
   {
     chapter: 1,
