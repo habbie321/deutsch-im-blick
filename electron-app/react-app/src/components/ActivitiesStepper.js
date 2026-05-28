@@ -29,58 +29,11 @@ import {
   ArrowForward
 } from '@mui/icons-material';
 
-import MultipleChoiceQuiz from './MultipleChoiceQuiz';
-import MatchingActivity from './MatchingActivity';
-import WorkbookActivity from './WorkbookActivity';
-import SelfCheckReadingActivity from './SelfCheckReadingActivity';
-import WritingActivity from './WritingActivity';
-import ClassificationGridActivity from './ClassificationGridActivity';
-import ClozeActivity from './ClozeActivity';
-import MultiPageActivity from './MultiPageActivity';
-import ActivityBlurb from './ActivityBlurb';
 import ActivityVideoSection from './ActivityVideoSection';
+import ActivityBlurb from './ActivityBlurb';
 import activityData from '../data/activites.json';
-
-function ActivityContent({ activity, onComplete }) {
-  if (!activity) return null;
-
-  const renderByType = (activityNode, onNodeComplete) => {
-    switch (activityNode.type) {
-      case 'multiple_choice':
-        return <MultipleChoiceQuiz quizData={activityNode} onComplete={onNodeComplete} />;
-      case 'matching_activity':
-      case 'qa_matching':
-        return <MatchingActivity activityData={activityNode} onComplete={onNodeComplete} />;
-      case 'reading_self_check':
-        return <SelfCheckReadingActivity activityData={activityNode} onComplete={onNodeComplete} />;
-      case 'workbook':
-        return <WorkbookActivity activityData={activityNode} onComplete={onNodeComplete} />;
-      case 'writing':
-      case 'multi_speaker_writing':
-        return <WritingActivity activityData={activityNode} onComplete={onNodeComplete} />;
-      case 'classification_grid':
-        return <ClassificationGridActivity activityData={activityNode} onComplete={onNodeComplete} />;
-      case 'cloze':
-        return <ClozeActivity activityData={activityNode} onComplete={onNodeComplete} />;
-      case 'multi_page':
-        return (
-          <MultiPageActivity
-            activityData={activityNode}
-            onComplete={onNodeComplete}
-            renderPageContent={(pageActivity, completePage) => renderByType(pageActivity, completePage)}
-          />
-        );
-      default:
-        return (
-          <Box sx={{ p: 2, textAlign: 'center' }}>
-            <Typography color="error">Unknown activity type: {activityNode.type}</Typography>
-          </Box>
-        );
-    }
-  };
-
-  return renderByType(activity, onComplete);
-}
+import { ActivityContent, showsDashboardVideoSection } from '../utils/renderActivity';
+import { normalizeActivity, isBlurb } from '../utils/normalizeActivity';
 
 const ActivitiesStepper = ({ chapterNumber }) => {
   const theme = useTheme();
@@ -98,15 +51,18 @@ const ActivitiesStepper = ({ chapterNumber }) => {
     return activityData.activities
       .filter((a) => a.chapter === chapter)
       .sort((a, b) => a.id - b.id)
-      .map((a) => ({
-        id: a.id,
-        title: a.title,
-        description: a.description || '',
-        duration: a.duration || 'varies',
-        prerequisites: a.prerequisites || [],
-        type: a.type,
-        raw: a
-      }));
+      .map((a) => {
+        const normalized = normalizeActivity(a);
+        return {
+          id: normalized.id,
+          title: normalized.title,
+          description: normalized.description || '',
+          duration: normalized.duration || 'varies',
+          prerequisites: normalized.prerequisites || [],
+          isBlurb: isBlurb(normalized),
+          raw: normalized
+        };
+      });
   }, [chapter]);
 
   const totalPages = Math.max(1, Math.ceil(allActivities.length / activitiesPerPage));
@@ -211,7 +167,7 @@ const ActivitiesStepper = ({ chapterNumber }) => {
         {currentActivities.map((activity) => {
           const locked = isLocked(activity);
           const done = isCompleted(activity.id);
-          if (activity.type === 'blurb') return null;
+          if (activity.isBlurb) return null;
           return (
             <Step key={activity.id} completed={done}>
               <StepButton
@@ -244,7 +200,7 @@ const ActivitiesStepper = ({ chapterNumber }) => {
           const locked = isLocked(activity);
           const done = isCompleted(activity.id);
 
-          if (activity.type === 'blurb') {
+          if (activity.isBlurb) {
             return <ActivityBlurb key={activity.id} title={activity.title} text={activity.raw.text} />;
           }
 
@@ -350,11 +306,9 @@ const ActivitiesStepper = ({ chapterNumber }) => {
         >
           {selectedActivity && (
             <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-              {selectedActivity.type !== 'classification_grid' &&
-                selectedActivity.type !== 'multi_speaker_writing' &&
-                selectedActivity.type !== 'multi_page' && (
-                  <ActivityVideoSection activity={selectedActivity.raw} />
-                )}
+              {showsDashboardVideoSection(selectedActivity.raw) && (
+                <ActivityVideoSection activity={selectedActivity.raw} />
+              )}
               <ActivityContent
                 activity={selectedActivity.raw}
                 onComplete={(result) => handleActivityComplete(selectedActivity.id, result)}

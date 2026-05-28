@@ -1,7 +1,7 @@
 /**
  * Generates Kapitel 4 activities aligned with COERLL k_04.pdf
  * Run: node scripts/build-chapter4-json.mjs
- * Then merge output into src/data/activites.json (or use merge script).
+ * Merge into activites.json: node scripts/merge-activities.mjs --from src/data/chapter04.generated.json --chapters 4
  */
 import fs from 'fs';
 import path from 'path';
@@ -42,7 +42,7 @@ const writing = (partial) => ({
 });
 
 const multiSpeaker = (partial) => ({
-  type: 'multi_speaker_writing',
+  type: 'writing',
   icon: 'videoclips',
   chapter: 4,
   prerequisites: [],
@@ -806,7 +806,11 @@ const activities = [
     duration: '25 min',
     intro:
       'A. Watch Peter Süß beim Bezahlen (QR 4.32) and put the statements in order; mark PS (Peter Süß) or K (Kellner). B. Read „Das Trinkgeld“ and compare US vs German tipping.',
-    videos: [{ path: 'chapter04/k04_a31_trinkgeld.mp4', label: 'Peter Süß gibt Trinkgeld (QR 4.32)' }],
+    mediaCards: [{
+      id: 'trinkgeld',
+      title: 'Peter Süß gibt Trinkgeld (QR 4.32)',
+      videoPath: 'chapter04/k04_a31_trinkgeld.mp4'
+    }],
     checks: {
       blocks: [
         {

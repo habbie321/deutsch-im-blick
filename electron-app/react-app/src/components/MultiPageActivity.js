@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { Box, Typography, Button } from '@mui/material';
 import { NavigateBefore, NavigateNext } from '@mui/icons-material';
 import ActivityVideoSection from './ActivityVideoSection';
+import { mergePageActivity } from '../utils/normalizeActivity';
 
 const MultiPageActivity = ({ activityData, onComplete, renderPageContent }) => {
   const pages = activityData?.pages || [];
@@ -13,12 +14,8 @@ const MultiPageActivity = ({ activityData, onComplete, renderPageContent }) => {
 
   const mergedPageActivity = useMemo(() => {
     if (!currentPage) return null;
-    return {
-      ...currentPage,
-      chapter: activityData.chapter,
-      mediaCards: currentPage.mediaCards || activityData.mediaCards || []
-    };
-  }, [activityData.chapter, activityData.mediaCards, currentPage]);
+    return mergePageActivity(activityData, currentPage);
+  }, [activityData, currentPage]);
 
   const handlePageComplete = (result) => {
     if (!currentPage?.id || !result?.correct) return;

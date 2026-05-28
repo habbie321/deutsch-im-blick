@@ -12,7 +12,7 @@ MP4s are loaded in Electron via the custom `app://` protocol from this folder (`
   `chapterXX/kXX_aYY.mp4`  
   Examples: Kapitel 1, Aktivität 10 → `chapter01/k01_a10.mp4` · Kapitel 2, Aktivität 16 → `chapter02/k02_a16.mp4`
 
-Create the `chapter01` folder if it does not exist. You can rename your downloads to match these paths, or adjust paths in `react-app/scripts/build-chapter1-json.mjs` and regenerate `activites.json`.
+Create the `chapter01` folder if it does not exist. You can rename your downloads to match these paths, or edit video paths in `react-app/src/data/activites.json` (`mediaCards[].videoPath`).
 
 ## Rights
 

@@ -19,25 +19,11 @@ const SelfCheckReadingActivity = ({ activityData, onComplete }) => {
   const [inputs, setInputs] = useState({});
   const [itemResults, setItemResults] = useState(null);
   const [optionalAck, setOptionalAck] = useState({});
-  const [currentPageIndex, setCurrentPageIndex] = useState(0);
 
-  const { title, intro, readingItems = [], questionSets = [], pdfNote } = activityData;
-  const sets =
-    questionSets.length > 0
-      ? questionSets
-      : [
-          {
-            setId: 1,
-            title: null,
-            questions: readingItems
-          }
-        ];
-  const currentSet = sets[currentPageIndex] || { questions: [] };
-  const currentPageItems = currentSet.questions || [];
-  const allQuestions = sets.flatMap((set) => set.questions || []);
+  const { title, intro, readingItems = [], pdfNote } = activityData;
 
-  const autoItems = allQuestions.filter((it) => it.acceptedAnswers?.length || it.keywords?.length);
-  const ackItems = allQuestions.filter((it) => it.acknowledgeLabel);
+  const autoItems = readingItems.filter((it) => it.acceptedAnswers?.length || it.keywords?.length);
+  const ackItems = readingItems.filter((it) => it.acknowledgeLabel);
   const validateAuto = () => {
     const next = {};
     let allOk = true;
@@ -82,28 +68,23 @@ const SelfCheckReadingActivity = ({ activityData, onComplete }) => {
       )}
 
       <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-        Type your answers for the current page, then move to the next page. Open model answers when you want to compare wording.
+        Type your answers below. Open model answers when you want to compare wording.
       </Typography>
 
-      {currentPageItems.length > 0 && (
+      {readingItems.length > 0 && (
         <Paper elevation={0} sx={{ p: 2, mb: 2, border: 1, borderColor: 'divider' }}>
-          {currentSet.title && (
-            <Typography variant="h6" color="primary" sx={{ mb: 1.5 }}>
-              {currentSet.title}
-            </Typography>
-          )}
-          {currentPageItems.map((item, idx) => {
+          {readingItems.map((item, idx) => {
             const hasAuto = !!(item.acceptedAnswers?.length || item.keywords?.length);
             const checked = itemResults && itemResults[item.id];
             const failed = itemResults && itemResults[item.id] === false;
 
             return (
               <Box
-                key={item.id ?? `${currentPageIndex + 1}-${idx}`}
+                key={item.id ?? idx}
                 sx={{
-                  pb: idx < currentPageItems.length - 1 ? 2 : 0,
-                  mb: idx < currentPageItems.length - 1 ? 2 : 0,
-                  borderBottom: idx < currentPageItems.length - 1 ? 1 : 0,
+                  pb: idx < readingItems.length - 1 ? 2 : 0,
+                  mb: idx < readingItems.length - 1 ? 2 : 0,
+                  borderBottom: idx < readingItems.length - 1 ? 1 : 0,
                   borderColor: 'divider'
                 }}
               >
@@ -153,28 +134,6 @@ const SelfCheckReadingActivity = ({ activityData, onComplete }) => {
             );
           })}
         </Paper>
-      )}
-
-      {sets.length > 1 && (
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-          <Button
-            variant="outlined"
-            disabled={currentPageIndex === 0}
-            onClick={() => setCurrentPageIndex((prev) => Math.max(0, prev - 1))}
-          >
-            Previous page
-          </Button>
-          <Typography variant="body2" color="text.secondary">
-            Page {currentPageIndex + 1} of {sets.length}
-          </Typography>
-          <Button
-            variant="contained"
-            disabled={currentPageIndex === sets.length - 1}
-            onClick={() => setCurrentPageIndex((prev) => Math.min(sets.length - 1, prev + 1))}
-          >
-            Next page
-          </Button>
-        </Box>
       )}
 
       {autoItems.length > 0 && (

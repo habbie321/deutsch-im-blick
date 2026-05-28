@@ -1,12 +1,13 @@
 /**
- * Generates Kapitel 5–10 activities: QR-linked multi_speaker_writing (like Kapitel 4) + writing fallbacks.
+ * Generates Kapitel 5–10 activities: QR-linked writing with speakers (like Kapitel 4) + writing fallbacks.
+ * Patches activites.json via merge-activities (chapters 1–4 and hand-edited rows are preserved).
  * Run from react-app: node scripts/build-chapters-5-10-json.mjs
  */
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { parseActivityTitles } from './parse-activity-titles.mjs';
-import { reorderActivityKeys } from './activity-key-order.mjs';
+import { mergeActivities } from './merge-activities.mjs';
 import { SPEAKER_ROWS } from './chapters-5-10-speakers.mjs';
 import { DEFAULT_VIDEO_QUESTIONS, videoPath } from './chapter-video-path.mjs';
 
@@ -79,7 +80,7 @@ function buildMultiSpeaker(chapter, id, titleSuffix, rows) {
   const base = {
     chapter,
     id,
-    type: 'multi_speaker_writing',
+    type: 'writing',
     icon: 'videoclips',
     title: `Aktivität ${id}. ${titleSuffix}`,
     description: `Video-based listening and writing from the COERLL Deutsch im Blick Kapitel ${chapter} workbook.`,
@@ -170,11 +171,12 @@ for (let chapter = 5; chapter <= 10; chapter++) {
 
 const dataPath = path.join(__dirname, '../src/data/activites.json');
 const raw = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
-const keep = raw.activities.filter((a) => a.chapter < 5);
-const merged = [...keep, ...newActivities].map(reorderActivityKeys);
+const merged = mergeActivities(raw.activities, newActivities, {
+  replaceChapters: [5, 6, 7, 8, 9, 10]
+});
 
-fs.writeFileSync(dataPath, JSON.stringify({ activities: merged }, null, 2));
-console.log('Wrote', newActivities.length, 'activities (chapters 5–10). Total:', merged.length);
+fs.writeFileSync(dataPath, `${JSON.stringify({ activities: merged }, null, 2)}\n`, 'utf8');
+console.log('Merged', newActivities.length, 'activities (chapters 5–10). Total:', merged.length);
 
 const titlesOut = path.join(__dirname, '../src/data/chapters-5-10-titles.json');
 const titlesObj = {};

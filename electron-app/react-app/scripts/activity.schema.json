@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://deutsch-im-blick.local/activity.schema.json",
+  "title": "Deutsch im Blick activity",
+  "description": "Envelope: pages[] for exercises, text for blurbs. Page type lives on pages[].type only.",
+  "type": "object",
+  "required": ["chapter", "id", "title"],
+  "properties": {
+    "chapter": { "type": "number" },
+    "id": { "type": "number" },
+    "icon": { "type": "string" },
+    "title": { "type": "string", "minLength": 1 },
+    "text": { "type": "string" },
+    "description": { "type": "string" },
+    "duration": { "type": "string" },
+    "prerequisites": {
+      "type": "array",
+      "items": { "type": "number" }
+    },
+    "intro": { "type": "string" },
+    "tasks": { "type": "array" },
+    "sections": { "type": "array" },
+    "mediaCards": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/mediaCard" }
+    },
+    "pages": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/page" }
+    },
+    "links": { "type": "array" },
+    "pdfNote": { "type": "string" }
+  },
+  "$defs": {
+    "mediaCard": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "body": { "type": "string" },
+        "videoPath": { "type": "string" },
+        "videoFallbackUrl": { "type": "string" },
+        "imagePath": { "type": "string" },
+        "imageAlt": { "type": "string" },
+        "video": {
+          "type": "object",
+          "properties": {
+            "path": { "type": "string" },
+            "title": { "type": "string" },
+            "fallbackUrl": { "type": "string" }
+          }
+        }
+      }
+    },
+    "page": {
+      "type": "object",
+      "required": ["id", "type"],
+      "properties": {
+        "id": { "type": "string" },
+        "type": {
+          "type": "string",
+          "enum": [
+            "multiple_choice",
+            "matching_activity",
+            "reading_self_check",
+            "workbook",
+            "prompt",
+            "writing",
+            "classification_grid",
+            "cloze"
+          ]
+        },
+        "title": { "type": "string" },
+        "mediaCards": { "type": "array" },
+        "embedded": { "type": "boolean" }
+      }
+    },
+    "workbookBlock": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "sectionTitle",
+            "tf",
+            "mc",
+            "who",
+            "multi",
+            "text",
+            "cloze",
+            "matching",
+            "order"
+          ]
+        },
+        "id": {}
+      }
+    }
+  }
+}

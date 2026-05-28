@@ -1,6 +1,6 @@
 /**
  * COERLL Deutsch im Blick — Kapitel 2 (k_02.pdf)
- * Merge via build-chapter1-json.mjs → activites.json
+ * Source for Kapitel 2 activities in src/data/activites.json (edit JSON directly).
  */
 
 const PDF_K2 = 'https://coerll.utexas.edu/dib/pdfs/k_02.pdf';

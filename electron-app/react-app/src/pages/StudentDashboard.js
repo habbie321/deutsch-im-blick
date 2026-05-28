@@ -2,16 +2,9 @@ import { useLoaderData } from 'react-router-dom';
 import BackButton from '../components/BackButton';
 import SettingsButton from '../components/SettingsButton';
 import ActivityVideoSection from '../components/ActivityVideoSection';
-import MultipleChoiceQuiz from '../components/MultipleChoiceQuiz';
-import MatchingActivity from '../components/MatchingActivity';
-import WorkbookActivity from '../components/WorkbookActivity';
-import SelfCheckReadingActivity from '../components/SelfCheckReadingActivity';
-import WritingActivity from '../components/WritingActivity';
-import ClassificationGridActivity from '../components/ClassificationGridActivity';
-import ClozeActivity from '../components/ClozeActivity';
-import MultiPageActivity from '../components/MultiPageActivity';
-import ActivityBlurb from '../components/ActivityBlurb';
 import activityData from '../data/activites.json';
+import { ActivityContent, showsDashboardVideoSection } from '../utils/renderActivity';
+import { normalizeActivity } from '../utils/normalizeActivity';
 import {
   Accordion,
   AccordionDetails,
@@ -20,7 +13,6 @@ import {
   Button,
   Chip,
   Drawer,
-  Paper,
   Typography,
   useMediaQuery
 } from '@mui/material';
@@ -33,49 +25,6 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 
 const SIDEBAR_BREAKPOINT = '(min-width:960px)';
 const SIDEBAR_WIDTH = 320;
-
-function ActivityContent({ activity, onComplete }) {
-  if (!activity) return null;
-
-  const renderByType = (activityNode, onNodeComplete) => {
-    switch (activityNode.type) {
-      case 'multiple_choice':
-        return <MultipleChoiceQuiz quizData={activityNode} onComplete={onNodeComplete} />;
-      case 'matching_activity':
-      case 'qa_matching':
-        return <MatchingActivity activityData={activityNode} onComplete={onNodeComplete} />;
-      case 'reading_self_check':
-        return <SelfCheckReadingActivity activityData={activityNode} onComplete={onNodeComplete} />;
-      case 'workbook':
-        return <WorkbookActivity activityData={activityNode} onComplete={onNodeComplete} />;
-      case 'writing':
-      case 'multi_speaker_writing':
-        return <WritingActivity activityData={activityNode} onComplete={onNodeComplete} />;
-      case 'classification_grid':
-        return <ClassificationGridActivity activityData={activityNode} onComplete={onNodeComplete} />;
-      case 'cloze':
-        return <ClozeActivity activityData={activityNode} onComplete={onNodeComplete} />;
-      case 'multi_page':
-        return (
-          <MultiPageActivity
-            activityData={activityNode}
-            onComplete={onNodeComplete}
-            renderPageContent={(pageActivity, completePage) => renderByType(pageActivity, completePage)}
-          />
-        );
-      case 'blurb':
-        return <ActivityBlurb title={activityNode.title} text={activityNode.text} />;
-      default:
-        return (
-          <Paper sx={{ p: 2, borderRadius: 2 }}>
-            <Typography color="error">Unknown activity type: {activityNode.type}</Typography>
-          </Paper>
-        );
-    }
-  };
-
-  return renderByType(activity, onComplete);
-}
 
 function DashboardSidebar({
   account,
@@ -307,8 +256,9 @@ const StudentDashboard = () => {
   const chaptersWithActivities = useMemo(() => {
     const out = {};
     activityData.activities.forEach((a) => {
-      if (!out[a.chapter]) out[a.chapter] = [];
-      out[a.chapter].push(a);
+      const normalized = normalizeActivity(a);
+      if (!out[normalized.chapter]) out[normalized.chapter] = [];
+      out[normalized.chapter].push(normalized);
     });
     Object.keys(out).forEach((k) => out[k].sort((a, b) => a.id - b.id));
     return out;
@@ -511,9 +461,7 @@ const StudentDashboard = () => {
                 />
               </Box>
 
-              {selectedActivity.type !== 'classification_grid' &&
-                selectedActivity.type !== 'multi_speaker_writing' &&
-                selectedActivity.type !== 'multi_page' && (
+              {showsDashboardVideoSection(selectedActivity) && (
                 <ActivityVideoSection activity={selectedActivity} />
               )}
 

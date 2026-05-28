@@ -26,8 +26,15 @@ const ClassificationGridActivity = ({ activityData, onComplete }) => {
   const [results, setResults] = useState(null);
   const [done, setDone] = useState(false);
 
-  const { title, intro, videos = [], grid = {}, pdfNote, chapter } = activityData;
+  const { title, intro, mediaCards = [], grid = {}, pdfNote, chapter } = activityData;
   const { categories = [], items = [] } = grid;
+
+  const videos = mediaCards
+    .filter((card) => card.videoPath || card.video?.path)
+    .map((card) => ({
+      path: card.videoPath || card.video.path,
+      label: card.title || card.video?.title || 'Video'
+    }));
 
   const handleCheck = () => {
     const next = {};

@@ -14,7 +14,7 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-/** Mirrors src/utils/activityVideo.js getActivityVideoClips (keeps this script self-contained). */
+/** Resolves convention-based video paths from activity metadata. */
 function getActivityVideoClips(activity) {
   if (!activity || activity.video?.disabled) return [];
   const chapter = activity.chapter ?? 1;
@@ -22,15 +22,20 @@ function getActivityVideoClips(activity) {
     activity.videoFallbackUrl ||
     activity.video?.fallbackUrl ||
     `https://coerll.utexas.edu/dib/toc.php?k=${chapter}`;
-  if (activity.videos?.length) {
-    return activity.videos.map((v) => ({
-      relativePath: v.path,
-      fallbackUrl: v.fallbackUrl || fallbackUrl
-    }));
+
+  if (activity.mediaCards?.length) {
+    return activity.mediaCards
+      .filter((card) => card.videoPath || card.video?.path)
+      .map((card) => ({
+        relativePath: card.videoPath || card.video.path,
+        fallbackUrl: card.videoFallbackUrl || card.video?.fallbackUrl || fallbackUrl
+      }));
   }
+
   if (activity.video?.path) {
     return [{ relativePath: activity.video.path, fallbackUrl: activity.video.fallbackUrl || fallbackUrl }];
   }
+
   if (activity.icon === 'videoclips') {
     const ch = String(chapter).padStart(2, '0');
     const id = String(activity.id).padStart(2, '0');
