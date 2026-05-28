@@ -2231,56 +2231,57 @@
     {
       "chapter": 1,
       "id": 32,
-      "type": "workbook",
+      "type": "multi_page",
       "icon": "readingtask",
       "title": "Aktivität 32. Sprechen Sie Deutsch?",
       "description": "Reading: greetings in Germany, Austria, and Switzerland.",
       "duration": "30 min",
       "prerequisites": [],
-      "intro": "Read the text on regional greetings and Sie vs. du. Complete the “Fragen zum Text” (tables on greetings by country, formal/informal, duzen/siezen, your own language, ask German-speaking friends).",
-      "sections": [
+      "intro": "You already learned different greetings throughout the chapter, but there are many other forms depending on where you are. Read the text below and answer the questions.",
+      "mediaCards": [
         {
-          "heading": "Text (summary)",
-          "paragraphs": [
-            "German is spoken differently in Germany, Austria, and Switzerland. Examples include Moin moin, Grüß Gott, Servus, Grüezi, Guten Tag, Tschüss, Ade, and standard Auf Wiedersehen. Formal situations use Sie; friends and family use du."
+          "id": "sprechen-sie-deutsch",
+          "title": "Sprechen Sie Deutsch?",
+          "body": "In Deutschland, Österreich und der Schweiz sprechen die Menschen zwar alle Deutsch, aber es hört sich teilweise ganz unterschiedlich an.\n\nIn den deutschsprachigen Ländern hört man verschiedene Dialekte. In Norddeutschland zum Beispiel spricht man Plattdütsch und begrüßt sich mit „Moin moin“. Im Süden (zum Beispiel in Bayern oder in Baden-Württemberg) sagen die Menschen „Grüß Gott“, wenn sie andere Leute treffen. In Deutschland spricht man auch Hochdeutsch und benutzt Begrüßungsformeln wie „Guten Morgen“, „Guten Tag“ oder „Guten Abend“. In Österreich hören wir auch „Servus“ und „Grüß dich“. In der Schweiz hört man „Grüezi“ (Grüß Sie). Die hochdeutschen Begrüßungen und die Verabschiedung „Auf Wiedersehen“ versteht man natürlich auch in der Schweiz.\n\nWichtig ist auch, dass man unbekannte oder fremde Leute mit „Sie“ anspricht (siezen). Normalerweise spricht man nur gute Freunde oder Familienmitglieder mit „du“ an (duzen). Freunde begrüßen sich mit „Hallo“, „Hi“ oder in Bayern auch „Servus“. Zur Verabschiedung sagt man unter Freunden „Tschüss“, „Mach's gut“ oder „Ciao“. Speziell in Mittel- und Norddeutschland sagt man „Tschüss“ und im Rheinland „Tschö“. Standarddeutsch für Verabschiedungen ist „Auf Wiedersehen“. In Baden-Württemberg sagt man zur Verabschiedung „Ade“."
+        }
+      ],
+      "pages": [
+        {
+          "id": "fragen-1-2",
+          "type": "reading_self_check",
+          "title": "Fragen zum Text (1–2)",
+          "readingItems": [
+            {
+              "id": 1,
+              "prompt": "1. Write down all the greetings for the three countries: which terms are used for greeting (Begrüßung) and taking leave (Verabschiedung)?",
+              "modelAnswer": "Deutschland — Begrüßung: e.g. Moin moin, Grüß Gott, Guten Morgen/Tag/Abend, Hallo, Hi, Servus. Verabschiedung: e.g. Tschüss, Tschö, Ade, Auf Wiedersehen, Mach's gut, Ciao.\n\nÖsterreich — Begrüßung: e.g. Servus, Grüß dich, Grüß Gott. Verabschiedung: e.g. Tschüss, Auf Wiedersehen, Mach's gut, Ciao.\n\ndie Schweiz — Begrüßung: e.g. Grüezi, Guten Tag. Verabschiedung: e.g. Auf Wiedersehen, Tschüss."
+            },
+            {
+              "id": 2,
+              "prompt": "2. According to the text, which greetings are formal and which are informal?",
+              "modelAnswer": "Formal: e.g. Guten Morgen/Tag/Abend, Grüezi (formal register), addressing strangers with Sie. Informal: Moin moin, Hallo, Hi, Servus among friends; Tschüss, Mach's gut, Ciao among friends."
+            }
+          ]
+        },
+        {
+          "id": "fragen-3-4",
+          "type": "reading_self_check",
+          "title": "Fragen zum Text (3–4)",
+          "readingItems": [
+            {
+              "id": 3,
+              "prompt": "3. How do you understand „duzen“ and „siezen“ based on this text? With whom would you use each? Is there a similar distinction in formality in your own language?",
+              "modelAnswer": "Duzen is using informal du with good friends and family; siezen is using formal Sie with strangers or people you do not know well. Answers about your own language will vary (e.g. tu/vous, tú/usted, first name vs. title).",
+              "keywords": ["du", "sie", "duzen|siezen", "formal|friend|freund|famil|language|sprache"]
+            },
+            {
+              "id": 4,
+              "prompt": "4. Do you have German-speaking family or friends? If yes, what greetings do they use with various people?",
+              "modelAnswer": "Answers will vary based on your interviews."
+            }
           ]
         }
       ],
-      "checks": {
-        "blocks": [
-          {
-            "type": "short",
-            "id": "duzen",
-            "prompt": "According to the text: what does duzen mean, and with whom do Germans typically duzen? (A few English or German words are enough.)",
-            "keywords": [
-              "du",
-              "friend|freund"
-            ],
-            "hint": "Mention informal *du* and people such as friends / *Freunde* (or family)."
-          },
-          {
-            "type": "short",
-            "id": "siezen",
-            "prompt": "What does siezen mean, and with whom is *Sie* typically used?",
-            "keywords": [
-              "sie",
-              "formal"
-            ],
-            "hint": "Mention formal *Sie* and people you do not know / strangers."
-          },
-          {
-            "type": "mc",
-            "id": "gruetzi",
-            "question": "Which country is *Grüezi* most associated with in the text?",
-            "options": [
-              "Germany",
-              "Austria",
-              "Switzerland"
-            ],
-            "correctIndex": 2
-          }
-        ]
-      },
       "links": [
         {
           "label": "Grimm Grammar — haben",
@@ -2290,7 +2291,8 @@
           "label": "Workbook PDF",
           "url": "https://coerll.utexas.edu/dib/pdfs/k_01.pdf"
         }
-      ]
+      ],
+      "pdfNote": "COERLL Kapitel 1 workbook, p. 42."
     },
     {
       "chapter": 1,
