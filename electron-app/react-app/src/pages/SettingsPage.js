@@ -78,6 +78,11 @@ const SettingsPage = () => {
             When off, the assistant panel stays available but chat and answer checking will not call any AI service.
             Provider settings are stored locally on this device (Electron userData).
           </Typography>
+          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1.5 }}>
+            Privacy: student answers are sent to the configured model only when they use Check my answer or chat.
+            The app logs request metadata (provider, activity, duration) in the main process — not message text.
+            Use Local provider to keep all model calls on this computer; disable remote calls when offline.
+          </Typography>
 
           <FormControlLabel
             control={

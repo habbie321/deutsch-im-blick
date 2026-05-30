@@ -53,7 +53,27 @@ export function hasAutomaticKeys(fieldMeta) {
 }
 
 /**
+ * Check answer against JSON keys for exact or keywords mode. Returns null when keys missing.
+ * @returns {boolean|null}
+ */
+export function checkAutomaticAnswerByMode(
+  userRaw,
+  { acceptedAnswers, keywords, mode = 'keywords' } = {}
+) {
+  if (mode === 'exact') {
+    if (!acceptedAnswers?.length) return null;
+    return matchesAnyVariant(userRaw, acceptedAnswers);
+  }
+  if (mode === 'keywords') {
+    if (!keywords?.length) return null;
+    return containsAllKeywords(userRaw, keywords);
+  }
+  return null;
+}
+
+/**
  * Check answer against JSON keys. Returns null when no keys are configured.
+ * Prefers acceptedAnswers, then keywords (legacy combined path).
  * @returns {boolean|null}
  */
 export function checkAutomaticAnswer(userRaw, { acceptedAnswers, keywords } = {}) {

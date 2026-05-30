@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Stepper,
   Step,
@@ -39,11 +39,13 @@ import activityData from '../data/activites.json';
 import { ActivityContent, showsDashboardVideoSection } from '../utils/renderActivity';
 import { normalizeActivity, isBlurb } from '../utils/normalizeActivity';
 import { ActivitySessionProvider } from '../context/ActivitySessionContext';
+import { ChatHistoryProvider } from '../context/ChatHistoryContext';
+import { loadActivityCompletions, markActivityComplete } from '../services/persistence';
 
 const ASSISTANT_BREAKPOINT = '(min-width:1200px)';
 const ASSISTANT_WIDTH = 360;
 
-const ActivitiesStepper = ({ chapterNumber }) => {
+const ActivitiesStepper = ({ chapterNumber, userId }) => {
   const theme = useTheme();
   const isWideAssistant = useMediaQuery(ASSISTANT_BREAKPOINT);
   const [currentPage, setCurrentPage] = useState(0);
@@ -100,8 +102,32 @@ const ActivitiesStepper = ({ chapterNumber }) => {
         ...prev,
         [activityId]: true
       }));
+      const activity = allActivities.find((a) => a.id === activityId);
+      if (userId && activity?.raw) {
+        markActivityComplete(userId, activity.raw.chapter, activityId, result).catch((err) => {
+          console.error('Failed to save activity completion:', err);
+        });
+      }
     }
   }
+
+  useEffect(() => {
+    if (!userId) return;
+
+    loadActivityCompletions(userId)
+      .then((rows) => {
+        const map = {};
+        for (const row of rows || []) {
+          if (Number(row.chapter) === chapter) {
+            map[row.activity_id] = true;
+          }
+        }
+        setCompleted(map);
+      })
+      .catch((err) => {
+        console.error('Failed to load activity completions:', err);
+      });
+  }, [userId, chapter]);
 
   const handleNextActivity = () => {
     setActivityDialogOpen(false);
@@ -328,6 +354,7 @@ const ActivitiesStepper = ({ chapterNumber }) => {
           <ActivitySessionProvider
             key={`${selectedActivity.raw.chapter}-${selectedActivity.raw.id}`}
             activity={selectedActivity.raw}
+            userId={userId}
           >
             <Box
               sx={{

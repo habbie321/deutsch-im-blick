@@ -1,3 +1,6 @@
+import { resolvePageAi } from './aiActivityConfig';
+import { getCurrentPage } from './peerScenario';
+
 /**
  * Compact activity context for AI chat / grading (Phase 1+).
  * @param {{ activity?: object, currentPageId?: string|null, inputs?: Record<string, string>, fields?: Record<string, object> }} params
@@ -18,6 +21,23 @@ export function buildActivityBrief({ activity, currentPageId, inputs = {}, field
   }
   if (currentPageId) {
     lines.push(`Current page: ${currentPageId}`);
+  }
+
+  const page = getCurrentPage(activity, currentPageId);
+  const pageAi = page ? resolvePageAi(activity, page) : activity.ai;
+  const pageTasks = page?.tasks ?? activity.tasks;
+
+  if (pageAi?.peerScenario?.role) {
+    lines.push(`Peer partner role: ${pageAi.peerScenario.role}`);
+  }
+  if (pageTasks?.length) {
+    lines.push('Activity tasks:');
+    pageTasks.forEach((task) => {
+      lines.push(`- ${typeof task === 'string' ? task : task.text || ''}`);
+    });
+  }
+  if (page?.intro && page.intro !== activity.intro) {
+    lines.push(`Page intro: ${page.intro}`);
   }
 
   const fieldEntries = Object.entries(fields);

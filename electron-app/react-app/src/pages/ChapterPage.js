@@ -3,6 +3,7 @@ import { useLoaderData } from 'react-router-dom';
 import VideoPlayer from '../components/VideoPlayer';
 import BackButton from '../components/BackButton';
 import ActivitiesStepper from '../components/ActivitiesStepper';
+import { ChatHistoryProvider } from '../context/ChatHistoryContext';
 import { Backdrop, Box, Button, Container, Paper, Typography } from '@mui/material';
 
 function ChapterPage() {
@@ -71,7 +72,9 @@ function ChapterPage() {
           <BackButton />
         </Paper>
 
-        <ActivitiesStepper chapterNumber={chapterNumber} />
+        <ChatHistoryProvider userId={userId ? Number(userId) : null}>
+          <ActivitiesStepper chapterNumber={chapterNumber} userId={userId ? Number(userId) : null} />
+        </ChatHistoryProvider>
         {/* ... */}
       </Container>
     </Box>

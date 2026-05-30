@@ -15,6 +15,9 @@ import {
 } from '@mui/material';
 import { ExpandMore, ExpandLess, EditNote, KeyboardArrowLeft, KeyboardArrowRight, CheckCircle } from '@mui/icons-material';
 import VideoPlayer from './VideoPlayer';
+import {
+  defaultAiForPageType
+} from '../utils/aiActivityConfig';
 import { useOptionalActivitySession } from '../context/ActivitySessionContext';
 import { gradingOutlineSx } from '../utils/gradingFieldStyle';
 
@@ -37,7 +40,8 @@ const WritingActivity = ({ activityData, onComplete }) => {
     chapter,
     image,
     notaBene,
-    embedded = false
+    embedded = false,
+    ai: pageAi = defaultAiForPageType('writing', activityData)
   } = activityData;
 
   const normalizeTask = (task) => {
@@ -45,12 +49,13 @@ const WritingActivity = ({ activityData, onComplete }) => {
       return {
         text: task.text || '',
         multiline: Boolean(task.multiline),
-        minRows: task.minRows || 6
+        minRows: task.minRows || 6,
+        ai: task.ai
       };
     }
     const text = String(task);
     const multiline = text.includes('\n');
-    return { text, multiline, minRows: multiline ? 6 : 1 };
+    return { text, multiline, minRows: multiline ? 6 : 1, ai: undefined };
   };
 
   const normalizedTasks = useMemo(() => tasks.map(normalizeTask), [tasks]);
@@ -58,7 +63,6 @@ const WritingActivity = ({ activityData, onComplete }) => {
   const isMultiSpeaker = speakers.length > 0;
   const isParagraphMode = !isMultiSpeaker && normalizedTasks.length <= 1;
   const session = useOptionalActivitySession();
-  const registerField = session?.registerField;
   const currentPageId = session?.currentPageId ?? null;
   const sessionGrading = session?.grading;
 
@@ -71,27 +75,49 @@ const WritingActivity = ({ activityData, onComplete }) => {
   );
 
   useEffect(() => {
-    if (!registerField) return;
+    if (!session?.inputs || !session.hydrationToken) return;
 
     if (isMultiSpeaker) {
-      speakers.forEach((speaker) => {
-        speaker.questions.forEach((question, qIdx) => {
-          registerField(writingFieldId(`${speaker.id}_${qIdx}`), {
-            type: 'writing',
-            prompt: question
+      setResponses((prev) => {
+        const next = { ...prev };
+        speakers.forEach((speaker) => {
+          speaker.questions.forEach((_, qIdx) => {
+            const fieldId = writingFieldId(`${speaker.id}_${qIdx}`);
+            if (session.inputs[fieldId] != null) {
+              next[`${speaker.id}_${qIdx}`] = session.inputs[fieldId];
+            }
           });
         });
+        return next;
       });
       return;
     }
 
-    normalizedTasks.forEach((task, idx) => {
-      registerField(writingFieldId(`task_${idx}`), {
-        type: 'writing',
-        prompt: task.text
+    if (isParagraphMode) {
+      const value = session.inputs[writingFieldId('task_0')];
+      if (value != null) {
+        setResponses((prev) => ({ ...prev, 0: value }));
+      }
+      return;
+    }
+
+    setResponses((prev) => {
+      const next = { ...prev };
+      normalizedTasks.forEach((_, idx) => {
+        const value = session.inputs[writingFieldId(`task_${idx}`)];
+        if (value != null) next[idx] = value;
       });
+      return next;
     });
-  }, [registerField, writingFieldId, isMultiSpeaker, speakers, normalizedTasks]);
+  }, [
+    session?.hydrationToken,
+    session?.activityKey,
+    writingFieldId,
+    isMultiSpeaker,
+    isParagraphMode,
+    speakers,
+    normalizedTasks
+  ]);
 
   const syncSessionInput = (fieldKey, value) => {
     if (session) {

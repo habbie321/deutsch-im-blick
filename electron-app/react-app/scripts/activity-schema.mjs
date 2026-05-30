@@ -27,6 +27,10 @@ export const WORKBOOK_BLOCK_TYPES = [
   'order'
 ];
 
+export const AI_GRADING_MODES = ['exact', 'keywords', 'semantic', 'honor', 'none'];
+
+const AI_GRADING_MODE_SET = new Set(AI_GRADING_MODES);
+
 function activityKey(chapter, id) {
   return `${chapter}-${id}`;
 }
@@ -87,6 +91,38 @@ function validateWorkbookBlocks(blocks, path, errors) {
   });
 }
 
+function validateAiBlock(ai, path, errors) {
+  if (ai == null) return;
+  if (typeof ai !== 'object' || Array.isArray(ai)) {
+    push(errors, path, 'must be an object');
+    return;
+  }
+  if (ai.grading != null && !AI_GRADING_MODE_SET.has(ai.grading)) {
+    push(errors, `${path}.grading`, `must be one of: ${AI_GRADING_MODES.join(', ')}`);
+  }
+  if (ai.requirePass != null && typeof ai.requirePass !== 'boolean') {
+    push(errors, `${path}.requirePass`, 'must be a boolean');
+  }
+  if (ai.rubric != null && typeof ai.rubric !== 'string') {
+    push(errors, `${path}.rubric`, 'must be a string');
+  }
+  if (ai.allowHints != null && ai.allowHints !== null && typeof ai.allowHints !== 'number') {
+    push(errors, `${path}.allowHints`, 'must be a number or null');
+  }
+  if (ai.peerScenario != null && ai.peerScenario !== null) {
+    if (typeof ai.peerScenario !== 'object' || Array.isArray(ai.peerScenario)) {
+      push(errors, `${path}.peerScenario`, 'must be an object or null');
+    } else {
+      if (ai.peerScenario.role != null && typeof ai.peerScenario.role !== 'string') {
+        push(errors, `${path}.peerScenario.role`, 'must be a string');
+      }
+      if (ai.peerScenario.opening != null && typeof ai.peerScenario.opening !== 'string') {
+        push(errors, `${path}.peerScenario.opening`, 'must be a string');
+      }
+    }
+  }
+}
+
 function validateReadingItems(items, path, errors) {
   if (!Array.isArray(items) || items.length === 0) {
     push(errors, path, 'needs a non-empty readingItems array');
@@ -96,6 +132,7 @@ function validateReadingItems(items, path, errors) {
     const p = `${path}[${i}]`;
     if (item?.id == null) push(errors, `${p}.id`, 'required');
     if (!isNonEmptyString(item?.prompt)) push(errors, `${p}.prompt`, 'required');
+    if (item?.ai != null) validateAiBlock(item.ai, `${p}.ai`, errors);
   });
 }
 
@@ -129,6 +166,10 @@ function validatePageNode(page, path, errors, envelope = {}) {
 
   if (page.mediaCards) {
     validateMediaCards(page.mediaCards, `${path}.mediaCards`, errors);
+  }
+
+  if (page.ai != null) {
+    validateAiBlock(page.ai, `${path}.ai`, errors);
   }
 
   switch (type) {
@@ -230,6 +271,9 @@ function validateEnvelopeActivity(node, path, errors) {
     }
     if (node.mediaCards) {
       validateMediaCards(node.mediaCards, `${path}.mediaCards`, errors);
+    }
+    if (node.ai != null) {
+      validateAiBlock(node.ai, `${path}.ai`, errors);
     }
     node.pages.forEach((page, i) => {
       validatePageNode(page, `${path}.pages[${i}]`, errors, node);

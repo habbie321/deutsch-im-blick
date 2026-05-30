@@ -6,6 +6,7 @@ import activityData from '../data/activites.json';
 import { ActivityContent, showsDashboardVideoSection } from '../utils/renderActivity';
 import { normalizeActivity } from '../utils/normalizeActivity';
 import { ActivitySessionProvider } from '../context/ActivitySessionContext';
+import { ChatHistoryProvider } from '../context/ChatHistoryContext';
 import AssistantPanel from '../components/AssistantPanel';
 import {
   Accordion,
@@ -25,6 +26,7 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChatIcon from '@mui/icons-material/Chat';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { loadActivityCompletions, markActivityComplete } from '../services/persistence';
 
 const SIDEBAR_BREAKPOINT = '(min-width:960px)';
 const ASSISTANT_BREAKPOINT = '(min-width:1200px)';
@@ -295,8 +297,29 @@ const StudentDashboard = () => {
   const handleComplete = (activity, result) => {
     if (result?.correct) {
       setCompletedActivities((prev) => ({ ...prev, [`${activity.chapter}-${activity.id}`]: true }));
+      if (account?.id) {
+        markActivityComplete(account.id, activity.chapter, activity.id, result).catch((err) => {
+          console.error('Failed to save activity completion:', err);
+        });
+      }
     }
   };
+
+  useEffect(() => {
+    if (!account?.id) return;
+
+    loadActivityCompletions(account.id)
+      .then((rows) => {
+        const map = {};
+        for (const row of rows || []) {
+          map[`${row.chapter}-${row.activity_id}`] = true;
+        }
+        setCompletedActivities(map);
+      })
+      .catch((err) => {
+        console.error('Failed to load activity completions:', err);
+      });
+  }, [account?.id]);
 
   const handleSelectActivity = (activity) => {
     setSelectedRef({ chapter: activity.chapter, id: activity.id });
@@ -350,16 +373,17 @@ const StudentDashboard = () => {
   };
 
   return (
-    <Box
-      sx={{
-        height: '100vh',
-        minHeight: '100vh',
-        overflow: 'hidden',
-        bgcolor: 'background.default',
-        display: 'grid',
-        gridTemplateRows: '1fr'
-      }}
-    >
+    <ChatHistoryProvider userId={account?.id}>
+      <Box
+        sx={{
+          height: '100vh',
+          minHeight: '100vh',
+          overflow: 'hidden',
+          bgcolor: 'background.default',
+          display: 'grid',
+          gridTemplateRows: '1fr'
+        }}
+      >
       <Box
         sx={{
           minHeight: 0,
@@ -453,6 +477,7 @@ const StudentDashboard = () => {
             <ActivitySessionProvider
               key={`${selectedActivity.chapter}-${selectedActivity.id}`}
               activity={selectedActivity}
+              userId={account?.id}
             >
               <Box
                 sx={{
@@ -600,6 +625,7 @@ const StudentDashboard = () => {
         </Drawer>
       )}
     </Box>
+    </ChatHistoryProvider>
   );
 };
 

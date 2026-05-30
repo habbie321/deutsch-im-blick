@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useLayoutEffect, useMemo, useState } from 'react';
 import { Box, Typography, Button } from '@mui/material';
 import { NavigateBefore, NavigateNext } from '@mui/icons-material';
 import ActivityVideoSection from './ActivityVideoSection';
@@ -14,7 +14,7 @@ const MultiPageActivity = ({ activityData, onComplete, renderPageContent }) => {
   const hasPages = pages.length > 0;
   const session = useOptionalActivitySession();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (session && currentPage?.id) {
       session.setCurrentPageId(currentPage.id);
     }

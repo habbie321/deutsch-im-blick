@@ -47,13 +47,24 @@ function mapHttpError(status, bodyText) {
   );
 }
 
-async function fetchWithTimeout(url, options, timeoutMs = REQUEST_TIMEOUT_MS) {
+async function fetchWithTimeout(url, options, timeoutMs = REQUEST_TIMEOUT_MS, externalSignal) {
   const controller = new AbortController();
+  const onExternalAbort = () => controller.abort();
+  if (externalSignal) {
+    if (externalSignal.aborted) {
+      controller.abort();
+    } else {
+      externalSignal.addEventListener('abort', onExternalAbort, { once: true });
+    }
+  }
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
     return await fetch(url, { ...options, signal: controller.signal });
   } catch (err) {
     if (err.name === 'AbortError') {
+      if (externalSignal?.aborted) {
+        throw providerError('Request cancelled.', 'ABORTED');
+      }
       throw providerError('The model took too long to respond. Try again or use a smaller model.', 'TIMEOUT');
     }
     throw providerError(
@@ -63,6 +74,9 @@ async function fetchWithTimeout(url, options, timeoutMs = REQUEST_TIMEOUT_MS) {
     );
   } finally {
     clearTimeout(timer);
+    if (externalSignal) {
+      externalSignal.removeEventListener('abort', onExternalAbort);
+    }
   }
 }
 
@@ -131,36 +145,127 @@ function normalizeGradePayload(parsed) {
   };
 }
 
-async function callOllamaChat(settings, messages, { jsonMode = false } = {}) {
+async function readOllamaStream(res, onChunk) {
+  const reader = res.body?.getReader();
+  if (!reader) {
+    throw providerError('Streaming is not supported by the local model server.', 'PROVIDER_ERROR');
+  }
+
+  const decoder = new TextDecoder();
+  let buffer = '';
+  let full = '';
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+    const lines = buffer.split('\n');
+    buffer = lines.pop() || '';
+
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed) continue;
+      let data;
+      try {
+        data = JSON.parse(trimmed);
+      } catch {
+        continue;
+      }
+      const delta = data.message?.content;
+      if (delta) {
+        full += delta;
+        onChunk?.(delta);
+      }
+    }
+  }
+
+  return full.trim();
+}
+
+async function readOpenAiStream(res, onChunk) {
+  const reader = res.body?.getReader();
+  if (!reader) {
+    throw providerError('Streaming is not supported by the remote model API.', 'PROVIDER_ERROR');
+  }
+
+  const decoder = new TextDecoder();
+  let buffer = '';
+  let full = '';
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+    const lines = buffer.split('\n');
+    buffer = lines.pop() || '';
+
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed.startsWith('data:')) continue;
+      const payload = trimmed.slice(5).trim();
+      if (payload === '[DONE]') continue;
+      let data;
+      try {
+        data = JSON.parse(payload);
+      } catch {
+        continue;
+      }
+      const delta = data.choices?.[0]?.delta?.content;
+      if (delta) {
+        full += delta;
+        onChunk?.(delta);
+      }
+    }
+  }
+
+  return full.trim();
+}
+
+async function callOllamaChat(settings, messages, { jsonMode = false, stream = false, onChunk, signal } = {}) {
   const model = resolveModel(settings, 'local');
   const baseUrl = resolveLocalBaseUrl(settings);
   const body = {
     model,
     messages,
-    stream: false
+    stream
   };
   if (jsonMode) body.format = 'json';
 
-  const res = await fetchWithTimeout(`${baseUrl}/api/chat`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body)
-  });
+  const res = await fetchWithTimeout(
+    `${baseUrl}/api/chat`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    },
+    REQUEST_TIMEOUT_MS,
+    signal
+  );
 
-  const text = await res.text();
-  if (!res.ok) throw mapHttpError(res.status, text);
-
-  let data;
-  try {
-    data = JSON.parse(text);
-  } catch {
-    throw providerError('Invalid response from local model server.', 'PROVIDER_ERROR');
+  if (!res.ok) {
+    const text = await res.text();
+    throw mapHttpError(res.status, text);
   }
 
-  return extractAssistantText(data);
+  if (!stream) {
+    const text = await res.text();
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      throw providerError('Invalid response from local model server.', 'PROVIDER_ERROR');
+    }
+    return extractAssistantText(data);
+  }
+
+  return readOllamaStream(res, onChunk);
 }
 
-async function callOpenAiCompatibleChat(settings, messages, { jsonMode = false } = {}) {
+async function callOpenAiCompatibleChat(
+  settings,
+  messages,
+  { jsonMode = false, stream = false, onChunk, signal } = {}
+) {
   const model = resolveModel(settings, 'remote');
   const baseUrl = resolveRemoteBaseUrl(settings);
   const apiKey = String(settings.apiKey ?? '').trim();
@@ -171,30 +276,42 @@ async function callOpenAiCompatibleChat(settings, messages, { jsonMode = false }
   const body = {
     model,
     messages,
-    temperature: 0.3
+    temperature: 0.3,
+    stream
   };
   if (jsonMode) body.response_format = { type: 'json_object' };
 
-  const res = await fetchWithTimeout(`${baseUrl}/chat/completions`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${apiKey}`
+  const res = await fetchWithTimeout(
+    `${baseUrl}/chat/completions`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey}`
+      },
+      body: JSON.stringify(body)
     },
-    body: JSON.stringify(body)
-  });
+    REQUEST_TIMEOUT_MS,
+    signal
+  );
 
-  const text = await res.text();
-  if (!res.ok) throw mapHttpError(res.status, text);
-
-  let data;
-  try {
-    data = JSON.parse(text);
-  } catch {
-    throw providerError('Invalid response from remote model API.', 'PROVIDER_ERROR');
+  if (!res.ok) {
+    const text = await res.text();
+    throw mapHttpError(res.status, text);
   }
 
-  return extractAssistantText(data);
+  if (!stream) {
+    const text = await res.text();
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      throw providerError('Invalid response from remote model API.', 'PROVIDER_ERROR');
+    }
+    return extractAssistantText(data);
+  }
+
+  return readOpenAiStream(res, onChunk);
 }
 
 async function completeChat(settings, provider, messages, options = {}) {
@@ -207,18 +324,18 @@ async function completeChat(settings, provider, messages, options = {}) {
   throw providerError(`Unknown provider: ${provider}`, 'PROVIDER_ERROR');
 }
 
-async function gradeWithProvider(settings, provider, payload) {
+async function gradeWithProvider(settings, provider, payload, options = {}) {
   const { buildGradeMessages } = require('./ai-prompts');
   const messages = buildGradeMessages(payload);
-  const raw = await completeChat(settings, provider, messages, { jsonMode: true });
+  const raw = await completeChat(settings, provider, messages, { jsonMode: true, ...options });
   const parsed = parseGradeJson(raw);
   return normalizeGradePayload(parsed);
 }
 
-async function chatWithProvider(settings, provider, payload) {
+async function chatWithProvider(settings, provider, payload, options = {}) {
   const { buildChatMessages } = require('./ai-prompts');
   const messages = buildChatMessages(payload);
-  const content = await completeChat(settings, provider, messages, { jsonMode: false });
+  const content = await completeChat(settings, provider, messages, { jsonMode: false, ...options });
   if (!String(content).trim()) {
     throw providerError('The model returned an empty reply.', 'PROVIDER_ERROR');
   }
@@ -232,5 +349,6 @@ module.exports = {
   chatWithProvider,
   resolveModel,
   parseGradeJson,
-  normalizeGradePayload
+  normalizeGradePayload,
+  providerError
 };

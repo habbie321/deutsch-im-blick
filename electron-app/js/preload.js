@@ -25,7 +25,22 @@ contextBridge.exposeInMainWorld('api', {
   getAiSettings: () => ipcRenderer.invoke('ai:get-settings'),
   updateAiSettings: (settings) => ipcRenderer.invoke('ai:update-settings', settings),
   gradeAnswer: (payload) => ipcRenderer.invoke('ai:grade', payload),
-  chat: (payload) => ipcRenderer.invoke('ai:chat', payload)
+  chat: (payload) => ipcRenderer.invoke('ai:chat', payload),
+  chatStream: (payload) => ipcRenderer.invoke('ai:chat-stream', payload),
+  cancelAiRequest: (requestId) => ipcRenderer.invoke('ai:cancel', requestId),
+  onAiStreamChunk: (handler) => {
+    const listener = (_event, data) => handler(data);
+    ipcRenderer.on('ai:stream-chunk', listener);
+    return () => ipcRenderer.removeListener('ai:stream-chunk', listener);
+  },
+  appendChatMessage: (userId, message) => ipcRenderer.invoke('append-chat-message', userId, message),
+  loadChatHistory: (userId, persona) => ipcRenderer.invoke('load-chat-history', userId, persona),
+  saveActivityAttempt: (userId, attempt) => ipcRenderer.invoke('save-activity-attempt', userId, attempt),
+  loadActivityAttempts: (userId, chapter, activityId) =>
+    ipcRenderer.invoke('load-activity-attempts', userId, chapter, activityId),
+  markActivityComplete: (userId, chapter, activityId, summaryJson) =>
+    ipcRenderer.invoke('mark-activity-complete', userId, chapter, activityId, summaryJson),
+  loadActivityCompletions: (userId) => ipcRenderer.invoke('load-activity-completions', userId)
 });
 
 // contextBridge.exposeInMainWorld('versions', {

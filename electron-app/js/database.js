@@ -42,6 +42,47 @@ function initializeDatabase() {
       FOREIGN KEY (user_id) REFERENCES users(id),
       FOREIGN KEY (chapter_id) REFERENCES chapters(id)
     );
+
+    CREATE TABLE IF NOT EXISTS chat_messages (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER NOT NULL,
+      persona TEXT NOT NULL,
+      role TEXT NOT NULL,
+      content TEXT NOT NULL,
+      activity_key TEXT,
+      page_id TEXT,
+      field_id TEXT,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (user_id) REFERENCES users(id)
+    );
+
+    CREATE TABLE IF NOT EXISTS activity_attempts (
+      user_id INTEGER NOT NULL,
+      chapter INTEGER NOT NULL,
+      activity_id INTEGER NOT NULL,
+      page_id TEXT NOT NULL DEFAULT '',
+      field_id TEXT NOT NULL,
+      answer TEXT,
+      grading_json TEXT,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      PRIMARY KEY (user_id, chapter, activity_id, page_id, field_id),
+      FOREIGN KEY (user_id) REFERENCES users(id)
+    );
+
+    CREATE TABLE IF NOT EXISTS activity_completion (
+      user_id INTEGER NOT NULL,
+      chapter INTEGER NOT NULL,
+      activity_id INTEGER NOT NULL,
+      completed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      summary_json TEXT,
+      PRIMARY KEY (user_id, chapter, activity_id),
+      FOREIGN KEY (user_id) REFERENCES users(id)
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_chat_messages_user_persona
+      ON chat_messages(user_id, persona, created_at);
+    CREATE INDEX IF NOT EXISTS idx_activity_attempts_user_activity
+      ON activity_attempts(user_id, chapter, activity_id);
   `);
 }
 
@@ -167,6 +208,83 @@ async function getChapterProgress(userId) {
   `).all(userId);
 }
 
+function appendChatMessage(userId, message = {}) {
+  const stmt = db.prepare(`
+    INSERT INTO chat_messages (user_id, persona, role, content, activity_key, page_id, field_id)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `);
+  const result = stmt.run(
+    userId,
+    message.persona,
+    message.role,
+    message.content,
+    message.activityKey ?? null,
+    message.pageId ?? null,
+    message.fieldId ?? null
+  );
+  const row = db.prepare('SELECT * FROM chat_messages WHERE id = ?').get(result.lastInsertRowid);
+  return row;
+}
+
+function loadChatHistory(userId, persona) {
+  return db.prepare(`
+    SELECT id, user_id, persona, role, content, activity_key, page_id, field_id, created_at
+    FROM chat_messages
+    WHERE user_id = ? AND persona = ?
+    ORDER BY created_at ASC, id ASC
+  `).all(userId, persona);
+}
+
+function saveActivityAttempt(userId, attempt = {}) {
+  const pageId = attempt.pageId ?? '';
+  const stmt = db.prepare(`
+    INSERT INTO activity_attempts (user_id, chapter, activity_id, page_id, field_id, answer, grading_json, updated_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+    ON CONFLICT(user_id, chapter, activity_id, page_id, field_id) DO UPDATE SET
+      answer = excluded.answer,
+      grading_json = COALESCE(excluded.grading_json, activity_attempts.grading_json),
+      updated_at = CURRENT_TIMESTAMP
+  `);
+  stmt.run(
+    userId,
+    attempt.chapter,
+    attempt.activityId,
+    pageId,
+    attempt.fieldId,
+    attempt.answer ?? '',
+    attempt.gradingJson ?? null
+  );
+  return { ok: true };
+}
+
+function loadActivityAttempts(userId, chapter, activityId) {
+  return db.prepare(`
+    SELECT page_id, field_id, answer, grading_json, updated_at
+    FROM activity_attempts
+    WHERE user_id = ? AND chapter = ? AND activity_id = ?
+    ORDER BY updated_at ASC
+  `).all(userId, chapter, activityId);
+}
+
+function markActivityComplete(userId, chapter, activityId, summaryJson = null) {
+  db.prepare(`
+    INSERT INTO activity_completion (user_id, chapter, activity_id, summary_json, completed_at)
+    VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
+    ON CONFLICT(user_id, chapter, activity_id) DO UPDATE SET
+      summary_json = excluded.summary_json,
+      completed_at = CURRENT_TIMESTAMP
+  `).run(userId, chapter, activityId, summaryJson);
+  return { ok: true };
+}
+
+function loadActivityCompletions(userId) {
+  return db.prepare(`
+    SELECT chapter, activity_id, completed_at, summary_json
+    FROM activity_completion
+    WHERE user_id = ?
+  `).all(userId);
+}
+
 // Export the new functions
 module.exports = {
     db,
@@ -175,5 +293,11 @@ module.exports = {
     getAccounts,
     addAccount,
     getChapters,
-    getChapterProgress
+    getChapterProgress,
+    appendChatMessage,
+    loadChatHistory,
+    saveActivityAttempt,
+    loadActivityAttempts,
+    markActivityComplete,
+    loadActivityCompletions
 };

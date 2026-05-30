@@ -3,13 +3,19 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useLayoutEffect,
   useMemo,
+  useRef,
   useState
 } from 'react';
 import { buildActivityBrief } from '../utils/buildActivityBrief';
-import { createEmptyChats, isAiActive, isChatPersona, resolvePersona } from '../utils/aiPersona';
+import { resolvePersona } from '../utils/aiPersona';
 import { useAiSettings } from '../utils/aiSettings';
-import { gradeSessionFields } from '../services/aiGrading';
+import { useChatHistory } from './ChatHistoryContext';
+import { gradeSessionFields, cancelGradeRequest } from '../services/aiGrading';
+import { loadActivityAttempts, saveActivityAttempt } from '../services/persistence';
+import { getPagePeerScenario, hasPeerOpeningForActivity } from '../utils/peerScenario';
+import { collectPageSessionFields } from '../utils/collectPageSessionFields';
 
 const ActivitySessionContext = createContext(null);
 
@@ -18,54 +24,168 @@ function activityKey(activity) {
   return `${activity.chapter}-${activity.id}`;
 }
 
-function appendMessage(thread, message) {
-  return [
-    ...thread,
-    {
-      id: `${Date.now()}-${thread.length}`,
-      at: new Date().toISOString(),
-      role: message.role,
-      content: message.content
-    }
-  ];
-}
-
-export function ActivitySessionProvider({ activity, children }) {
+export function ActivitySessionProvider({ activity, userId, children }) {
   const key = activityKey(activity);
   const { aiEnabled } = useAiSettings();
+  const {
+    chatPersona,
+    setPersona,
+    chat,
+    chatsByPersona,
+    addChatMessage,
+    loaded: chatLoaded
+  } = useChatHistory();
 
   const [currentPageId, setCurrentPageId] = useState(null);
-  const [chatPersona, setChatPersona] = useState('teacher');
   const [inputs, setInputsState] = useState({});
   const [fields, setFields] = useState({});
   const [attempts, setAttempts] = useState([]);
-  const [chatsByPersona, setChatsByPersona] = useState(createEmptyChats);
   const [grading, setGrading] = useState({});
   const [status, setStatus] = useState('idle');
+  const [hydrationToken, setHydrationToken] = useState(0);
+  const [fieldRegistryToken, setFieldRegistryToken] = useState(0);
+  const saveTimersRef = useRef({});
+  const seededPeerRef = useRef(new Set());
+  const peerAutoSwitchRef = useRef(null);
+  const activeRequestRef = useRef(null);
 
   const persona = resolvePersona(aiEnabled, chatPersona);
-  const chat = chatsByPersona[chatPersona] ?? [];
 
-  useEffect(() => {
+  // Reset synchronously before child useEffects register fields (avoids child-then-parent wipe race).
+  useLayoutEffect(() => {
     setCurrentPageId(activity?.pages?.[0]?.id ?? null);
-    setChatPersona('teacher');
-    setInputsState({});
     setFields({});
-    setAttempts([]);
-    setChatsByPersona(createEmptyChats());
     setGrading({});
     setStatus('idle');
+    setInputsState({});
+    peerAutoSwitchRef.current = null;
+    setFieldRegistryToken((t) => t + 1);
+
+    Object.values(saveTimersRef.current).forEach(clearTimeout);
+    saveTimersRef.current = {};
   }, [key, activity]);
 
-  const setPersona = useCallback((next) => {
-    if (next === 'teacher' || next === 'peer') {
-      setChatPersona(next);
+  useEffect(() => {
+    if (!userId || !activity) {
+      setHydrationToken((t) => t + 1);
+      return undefined;
     }
-  }, []);
 
-  const setInput = useCallback((fieldId, value) => {
-    setInputsState((prev) => ({ ...prev, [fieldId]: value }));
-  }, []);
+    let cancelled = false;
+
+    loadActivityAttempts(userId, activity.chapter, activity.id)
+      .then((rows) => {
+        if (cancelled) return;
+        const nextInputs = {};
+        const nextGrading = {};
+        for (const row of rows || []) {
+          nextInputs[row.field_id] = row.answer ?? '';
+          if (row.grading_json) {
+            try {
+              nextGrading[row.field_id] = JSON.parse(row.grading_json);
+            } catch {
+              /* ignore invalid cache */
+            }
+          }
+        }
+        setInputsState(nextInputs);
+        setGrading(nextGrading);
+        setHydrationToken((t) => t + 1);
+      })
+      .catch((err) => {
+        console.error('Failed to load activity attempts:', err);
+        if (!cancelled) setHydrationToken((t) => t + 1);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [key, activity, userId]);
+
+  // Derive gradable fields from activity JSON (runs after layout reset, replaces per-component registration).
+  useEffect(() => {
+    if (!activity) {
+      setFields({});
+      return;
+    }
+    setFields(collectPageSessionFields(activity, currentPageId));
+  }, [activity, currentPageId, fieldRegistryToken]);
+
+  useEffect(() => {
+    if (!chatLoaded || !aiEnabled || !activity || !key) return;
+
+    const scenario = getPagePeerScenario(activity, currentPageId);
+    if (!scenario?.opening) return;
+
+    const switchKey = `${key}:${scenario.pageId ?? currentPageId ?? 'main'}`;
+    if (peerAutoSwitchRef.current !== switchKey) {
+      peerAutoSwitchRef.current = switchKey;
+      setPersona('peer');
+    }
+
+    const peerThread = chatsByPersona.peer ?? [];
+    const seedKey = switchKey;
+
+    if (
+      hasPeerOpeningForActivity(peerThread, key, scenario.pageId) ||
+      seededPeerRef.current.has(seedKey)
+    ) {
+      return;
+    }
+
+    seededPeerRef.current.add(seedKey);
+    addChatMessage(
+      { role: 'assistant', content: scenario.opening },
+      'peer',
+      { activityKey: key, pageId: scenario.pageId ?? currentPageId ?? undefined }
+    ).catch((err) => {
+      console.error('Failed to seed peer opening:', err);
+      seededPeerRef.current.delete(seedKey);
+    });
+  }, [
+    chatLoaded,
+    aiEnabled,
+    activity,
+    key,
+    currentPageId,
+    chatsByPersona.peer,
+    setPersona,
+    addChatMessage
+  ]);
+
+  const persistAttempt = useCallback(
+    (fieldId, answer, gradingJson) => {
+      if (!userId || !activity) return Promise.resolve();
+      return saveActivityAttempt(userId, {
+        chapter: activity.chapter,
+        activityId: activity.id,
+        pageId: currentPageId ?? '',
+        fieldId,
+        answer: answer ?? '',
+        gradingJson: gradingJson ?? null
+      });
+    },
+    [userId, activity, currentPageId]
+  );
+
+  const setInput = useCallback(
+    (fieldId, value) => {
+      setInputsState((prev) => ({ ...prev, [fieldId]: value }));
+
+      if (!userId || !activity) return;
+
+      if (saveTimersRef.current[fieldId]) {
+        clearTimeout(saveTimersRef.current[fieldId]);
+      }
+
+      saveTimersRef.current[fieldId] = setTimeout(() => {
+        persistAttempt(fieldId, value, null).catch((err) => {
+          console.error('Failed to save activity attempt:', err);
+        });
+      }, 400);
+    },
+    [userId, activity, persistAttempt]
+  );
 
   const registerField = useCallback((fieldId, meta = {}) => {
     setFields((prev) => ({
@@ -74,25 +194,14 @@ export function ActivitySessionProvider({ activity, children }) {
     }));
   }, []);
 
-  /** @param {{ role: string, content: string }} message @param {'teacher'|'peer'} [threadPersona] */
-  const addChatMessage = useCallback((message, threadPersona = chatPersona) => {
-    if (!isChatPersona(threadPersona)) return;
-
-    setChatsByPersona((prev) => ({
-      ...prev,
-      [threadPersona]: appendMessage(prev[threadPersona] ?? [], message)
-    }));
-  }, [chatPersona]);
-
   const resetSession = useCallback(() => {
     setCurrentPageId(activity?.pages?.[0]?.id ?? null);
-    setChatPersona('teacher');
     setInputsState({});
     setFields({});
     setAttempts([]);
-    setChatsByPersona(createEmptyChats());
     setGrading({});
     setStatus('idle');
+    setHydrationToken((t) => t + 1);
   }, [activity]);
 
   const getActivityBrief = useCallback(() => {
@@ -100,36 +209,72 @@ export function ActivitySessionProvider({ activity, children }) {
   }, [activity, currentPageId, inputs, fields]);
 
   const checkMyAnswer = useCallback(async () => {
+    setPersona('teacher');
     setStatus('grading');
+    const meta = { activityKey: key, pageId: currentPageId };
+    const requestId = `grade-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+    activeRequestRef.current = requestId;
+
     try {
-      const { byField, summary } = await gradeSessionFields({
+      const { byField, summary, cancelled } = await gradeSessionFields({
         fields,
         inputs,
         activityKey: key,
         pageId: currentPageId,
         persona: 'teacher',
-        aiEnabled
+        aiEnabled,
+        requestId
       });
 
+      if (cancelled) return;
+
       setGrading((prev) => ({ ...prev, ...byField }));
-      addChatMessage({ role: 'system', content: summary }, 'teacher');
+
+      await Promise.all(
+        Object.entries(byField).map(([fieldId, result]) =>
+          persistAttempt(fieldId, inputs[fieldId], JSON.stringify(result))
+        )
+      );
+
+      await addChatMessage({ role: 'system', content: summary }, 'teacher', meta);
     } catch (err) {
-      addChatMessage(
+      await addChatMessage(
         {
           role: 'system',
           content: err?.message || 'Could not check your answer.'
         },
-        'teacher'
+        'teacher',
+        meta
       );
     } finally {
+      activeRequestRef.current = null;
       setStatus('idle');
     }
-  }, [addChatMessage, aiEnabled, fields, inputs, key, currentPageId]);
+  }, [
+    addChatMessage,
+    aiEnabled,
+    fields,
+    inputs,
+    key,
+    currentPageId,
+    persistAttempt,
+    setPersona
+  ]);
+
+  const cancelActiveRequest = useCallback(() => {
+    const requestId = activeRequestRef.current;
+    if (requestId) {
+      cancelGradeRequest(requestId);
+      activeRequestRef.current = null;
+      setStatus('idle');
+    }
+  }, []);
 
   const value = useMemo(
     () => ({
       activity,
       activityKey: key,
+      userId,
       currentPageId,
       setCurrentPageId,
       aiEnabled,
@@ -149,13 +294,17 @@ export function ActivitySessionProvider({ activity, children }) {
       setGrading,
       status,
       setStatus,
+      hydrationToken,
+      fieldRegistryToken,
       resetSession,
       getActivityBrief,
-      checkMyAnswer
+      checkMyAnswer,
+      cancelActiveRequest
     }),
     [
       activity,
       key,
+      userId,
       currentPageId,
       aiEnabled,
       chatPersona,
@@ -171,9 +320,12 @@ export function ActivitySessionProvider({ activity, children }) {
       addChatMessage,
       grading,
       status,
+      hydrationToken,
+      fieldRegistryToken,
       resetSession,
       getActivityBrief,
-      checkMyAnswer
+      checkMyAnswer,
+      cancelActiveRequest
     ]
   );
 

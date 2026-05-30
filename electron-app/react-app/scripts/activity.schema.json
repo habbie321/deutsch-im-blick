@@ -29,9 +29,30 @@
       "items": { "$ref": "#/$defs/page" }
     },
     "links": { "type": "array" },
-    "pdfNote": { "type": "string" }
+    "pdfNote": { "type": "string" },
+    "ai": { "$ref": "#/$defs/aiConfig" }
   },
   "$defs": {
+    "aiConfig": {
+      "type": "object",
+      "properties": {
+        "grading": {
+          "type": "string",
+          "enum": ["exact", "keywords", "semantic", "honor", "none"]
+        },
+        "requirePass": { "type": "boolean" },
+        "rubric": { "type": "string" },
+        "allowHints": { "type": ["number", "null"] },
+        "peerScenario": {
+          "type": ["object", "null"],
+          "properties": {
+            "role": { "type": "string" },
+            "opening": { "type": "string" }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
     "mediaCard": {
       "type": "object",
       "properties": {
@@ -72,7 +93,8 @@
         },
         "title": { "type": "string" },
         "mediaCards": { "type": "array" },
-        "embedded": { "type": "boolean" }
+        "embedded": { "type": "boolean" },
+        "ai": { "$ref": "#/$defs/aiConfig" }
       }
     },
     "workbookBlock": {

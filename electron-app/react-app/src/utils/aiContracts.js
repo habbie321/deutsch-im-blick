@@ -48,6 +48,7 @@
  * @property {Persona} persona
  * @property {string} message
  * @property {string} [activityBrief]
+ * @property {{ role?: string, opening?: string }} [peerScenario]
  * @property {ChatTurn[]} [messages]
  * @property {ChatMessageMeta} [meta]
  */

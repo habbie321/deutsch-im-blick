@@ -1,11 +1,34 @@
-import { checkAutomaticAnswer, hasAutomaticKeys } from '../utils/answerMatch';
+import {
+  checkAutomaticAnswer,
+  checkAutomaticAnswerByMode,
+  hasAutomaticKeys
+} from '../utils/answerMatch';
+import { isGradableAiMode } from '../utils/aiActivityConfig';
 import { formatGradeFeedback, isGradeSuccess } from '../utils/aiContracts';
+
+export function cancelGradeRequest(requestId) {
+  return typeof window !== 'undefined' ? window.api?.cancelAiRequest?.(requestId) : undefined;
+}
 
 function getGradeApi() {
   return typeof window !== 'undefined' ? window.api?.gradeAnswer : null;
 }
 
-function automaticGradeResult({ studentAnswer, acceptedAnswers, keywords, modelAnswer }) {
+function resolveGradingMode(request) {
+  if (request.aiGrading) return request.aiGrading;
+  if (hasAutomaticKeys(request)) {
+    return request.keywords?.length ? 'keywords' : 'exact';
+  }
+  return 'semantic';
+}
+
+function automaticGradeResult({
+  studentAnswer,
+  acceptedAnswers,
+  keywords,
+  modelAnswer,
+  gradingMode = 'keywords'
+}) {
   const answer = String(studentAnswer ?? '').trim();
 
   if (!answer) {
@@ -21,7 +44,29 @@ function automaticGradeResult({ studentAnswer, acceptedAnswers, keywords, modelA
     };
   }
 
-  const pass = checkAutomaticAnswer(answer, { acceptedAnswers, keywords });
+  const pass =
+    gradingMode === 'exact'
+      ? checkAutomaticAnswerByMode(answer, { acceptedAnswers, mode: 'exact' })
+      : gradingMode === 'keywords'
+        ? checkAutomaticAnswerByMode(answer, { keywords, mode: 'keywords' })
+        : checkAutomaticAnswer(answer, { acceptedAnswers, keywords });
+
+  if (pass === null) {
+    const missing =
+      gradingMode === 'exact'
+        ? 'This field is configured for exact matching but has no acceptedAnswers.'
+        : 'This field is configured for keyword matching but has no keywords.';
+    return {
+      ok: true,
+      correct: false,
+      score: 0,
+      feedback: missing,
+      corrections: [],
+      canComplete: false,
+      source: 'automatic',
+      gradingMode: 'automatic'
+    };
+  }
 
   if (pass) {
     return {
@@ -37,7 +82,7 @@ function automaticGradeResult({ studentAnswer, acceptedAnswers, keywords, modelA
   }
 
   let feedback =
-    acceptedAnswers?.length
+    gradingMode === 'exact' && acceptedAnswers?.length
       ? 'Not quite. Compare your answer with the expected form and try again. Ask the teacher in chat if you want help understanding why.'
       : 'Some required words or ideas are missing. Ask the teacher in chat if you want help understanding what to include.';
 
@@ -102,8 +147,18 @@ export async function gradeFieldWithAi(request) {
     studentAnswer: answer,
     rubric: request.rubric,
     modelAnswer: request.modelAnswer,
-    language: request.language || 'de'
+    language: request.language || 'de',
+    requestId: request.requestId
   });
+
+  if (result?.cancelled) {
+    return {
+      ok: false,
+      cancelled: true,
+      code: 'ABORTED',
+      gradingMode: 'ai'
+    };
+  }
 
   if (!result?.ok) {
     return {
@@ -114,25 +169,38 @@ export async function gradeFieldWithAi(request) {
     };
   }
 
-  return { ...result, gradingMode: 'ai' };
+  const canComplete = request.requirePass ? result.correct === true : result.correct !== false;
+
+  return { ...result, canComplete, gradingMode: 'ai' };
 }
 
 /**
- * Check one field: JSON keys first, else AI if enabled, else freeform message.
- * @param {import('../utils/aiContracts').GradeAnswerRequest & { aiEnabled?: boolean }} request
+ * Check one field using configured ai.grading mode.
+ * @param {import('../utils/aiContracts').GradeAnswerRequest & { aiEnabled?: boolean, aiGrading?: string, requirePass?: boolean }} request
  */
 export async function gradeField(request) {
-  const fieldMeta = {
-    acceptedAnswers: request.acceptedAnswers,
-    keywords: request.keywords
-  };
+  const mode = resolveGradingMode(request);
 
-  if (hasAutomaticKeys(fieldMeta)) {
+  if (mode === 'none' || mode === 'honor') {
+    return {
+      ok: true,
+      correct: false,
+      score: 0,
+      feedback: 'This field uses honor-system completion — mark the activity complete when you are finished.',
+      corrections: [],
+      canComplete: !request.requirePass,
+      source: 'none',
+      gradingMode: mode
+    };
+  }
+
+  if (mode === 'exact' || mode === 'keywords') {
     return automaticGradeResult({
       studentAnswer: request.studentAnswer,
       acceptedAnswers: request.acceptedAnswers,
       keywords: request.keywords,
-      modelAnswer: request.modelAnswer
+      modelAnswer: request.modelAnswer,
+      gradingMode: mode
     });
   }
 
@@ -144,7 +212,7 @@ export async function gradeField(request) {
       feedback:
         'This is a freeform answer — automatic checking is not available. Enable AI in Settings to get AI feedback, or ask the teacher in chat for help.',
       corrections: [],
-      canComplete: false,
+      canComplete: !request.requirePass,
       source: 'none',
       gradingMode: 'freeform'
     };
@@ -155,7 +223,7 @@ export async function gradeField(request) {
 
 /**
  * @param {{
- *   fields: Record<string, { prompt?: string, rubric?: string, modelAnswer?: string, acceptedAnswers?: string[], keywords?: string[] }>,
+ *   fields: Record<string, { prompt?: string, rubric?: string, modelAnswer?: string, acceptedAnswers?: string[], keywords?: string[], aiGrading?: string, requirePass?: boolean }>,
  *   inputs: Record<string, string>,
  *   activityKey?: string,
  *   pageId?: string,
@@ -169,15 +237,21 @@ export async function gradeSessionFields({
   activityKey,
   pageId,
   persona = 'teacher',
-  aiEnabled = false
+  aiEnabled = false,
+  requestId
 }) {
   const fieldIds = Object.keys(fields);
-  const targets = fieldIds.filter((id) => String(inputs[id] ?? '').trim());
+  const targets = fieldIds.filter((id) => {
+    const meta = fields[id] || {};
+    const mode = resolveGradingMode(meta);
+    if (!isGradableAiMode(mode)) return false;
+    return String(inputs[id] ?? '').trim();
+  });
 
   if (targets.length === 0) {
     return {
       byField: {},
-      summary: 'Write an answer in at least one field before checking.',
+      summary: 'Write an answer in at least one gradable field before checking.',
       allCorrect: false
     };
   }
@@ -198,8 +272,20 @@ export async function gradeSessionFields({
       modelAnswer: meta.modelAnswer,
       acceptedAnswers: meta.acceptedAnswers,
       keywords: meta.keywords,
-      aiEnabled
+      aiGrading: meta.aiGrading,
+      requirePass: meta.requirePass,
+      aiEnabled,
+      requestId
     });
+
+    if (result?.cancelled) {
+      return {
+        byField,
+        summary: 'Answer check cancelled.',
+        allCorrect: false,
+        cancelled: true
+      };
+    }
 
     byField[fieldId] = result;
 

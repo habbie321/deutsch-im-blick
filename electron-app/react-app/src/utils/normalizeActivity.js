@@ -3,6 +3,8 @@
  * Top-level `type` is not used — infer from `pages` vs `text`.
  */
 
+import { resolvePageAi } from './aiActivityConfig';
+
 export const ENVELOPE_KEYS = new Set([
   'chapter',
   'id',
@@ -17,7 +19,8 @@ export const ENVELOPE_KEYS = new Set([
   'links',
   'pdfNote',
   'mediaCards',
-  'pages'
+  'pages',
+  'ai'
 ]);
 
 export const PAGE_TYPES = new Set([
@@ -135,6 +138,7 @@ export function mergePageActivity(activityData, page) {
     intro: page.intro ?? activityData.intro,
     links: page.links ?? activityData.links,
     pdfNote: page.pdfNote ?? activityData.pdfNote,
-    mediaCards: page.mediaCards?.length ? page.mediaCards : activityData.mediaCards || []
+    mediaCards: page.mediaCards?.length ? page.mediaCards : activityData.mediaCards || [],
+    ai: resolvePageAi(activityData, page)
   };
 }
