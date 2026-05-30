@@ -1,7 +1,8 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Box,
   Button,
+  CircularProgress,
   Divider,
   IconButton,
   TextField,
@@ -13,44 +14,102 @@ import CloseIcon from '@mui/icons-material/Close';
 import SendIcon from '@mui/icons-material/Send';
 import { useActivitySession } from '../context/ActivitySessionContext';
 import { isAiActive, PERSONA_LABELS } from '../utils/aiPersona';
-
-const STUB_REPLY =
-  'AI assistant is not connected yet. Configure your API in Settings (coming in Phase 2). I can see your current activity context once connected.';
+import { isChatSuccess, sendChatMessage } from '../services/aiChat';
 
 const AI_DISABLED_HINT =
   'AI assistant is turned off in Settings. Enable it there to use chat and answer checking.';
 
+const EMPTY_DRAFTS = { teacher: '', peer: '' };
+
 /**
- * Right-side chat panel for teacher / peer assistance (Phase 1 stub).
+ * Right-side chat panel for teacher / peer assistance.
  * Persona `off` is settings-driven only — not a panel toggle.
+ * Teacher and peer maintain separate chat threads.
  */
 export function AssistantPanel({ onClose }) {
   const {
     activity,
+    activityKey,
     aiEnabled,
+    currentPageId,
     chatPersona,
     persona,
     setPersona,
     chat,
+    chatsByPersona,
     addChatMessage,
     checkMyAnswer,
-    fields
+    getActivityBrief,
+    fields,
+    status
   } = useActivitySession();
 
-  const [draft, setDraft] = useState('');
+  const [drafts, setDrafts] = useState(EMPTY_DRAFTS);
+  const [sending, setSending] = useState(false);
   const listRef = useRef(null);
   const aiActive = isAiActive(persona);
+  const draft = drafts[chatPersona] ?? '';
+  const busy = sending || status === 'grading';
+  const checkAvailable = Object.keys(fields).length > 0;
 
-  const handleSend = () => {
+  useEffect(() => {
+    setDrafts(EMPTY_DRAFTS);
+  }, [activity?.chapter, activity?.id]);
+
+  useEffect(() => {
+    const el = listRef.current;
+    if (el) {
+      el.scrollTop = el.scrollHeight;
+    }
+  }, [chat, chatPersona, busy]);
+
+  const setDraft = (value) => {
+    setDrafts((prev) => ({ ...prev, [chatPersona]: value }));
+  };
+
+  const handleSend = async () => {
     const text = draft.trim();
-    if (!text || !aiActive) return;
+    if (!text || !aiActive || busy) return;
 
-    addChatMessage({ role: 'user', content: text });
+    const threadPersona = chatPersona;
+    const priorThread = chatsByPersona[threadPersona] ?? [];
+    addChatMessage({ role: 'user', content: text }, threadPersona);
     setDraft('');
+    setSending(true);
 
-    window.setTimeout(() => {
-      addChatMessage({ role: 'assistant', content: STUB_REPLY });
-    }, 300);
+    try {
+      const result = await sendChatMessage({
+        persona: threadPersona,
+        message: text,
+        activityBrief: getActivityBrief(),
+        messages: [...priorThread, { role: 'user', content: text }]
+          .slice(-12)
+          .map((msg) => ({
+            role: msg.role,
+            content: msg.content
+          })),
+        meta: {
+          activityKey,
+          pageId: currentPageId
+        }
+      });
+
+      if (isChatSuccess(result)) {
+        addChatMessage({ role: 'assistant', content: result.content }, threadPersona);
+      } else {
+        addChatMessage(
+          { role: 'system', content: result.error || 'Could not send message.' },
+          threadPersona
+        );
+      }
+    } catch (err) {
+      addChatMessage(
+        { role: 'system', content: err?.message || 'Could not send message.' },
+        threadPersona
+      );
+    } finally {
+      setSending(false);
+    }
   };
 
   const handleKeyDown = (event) => {
@@ -83,7 +142,7 @@ export function AssistantPanel({ onClose }) {
       >
         <Box sx={{ flex: 1, minWidth: 0 }}>
           <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
-            Assistant
+            {PERSONA_LABELS[chatPersona]}
           </Typography>
           <Typography variant="caption" color="text.secondary" noWrap>
             {activity?.title || 'No activity selected'}
@@ -103,7 +162,7 @@ export function AssistantPanel({ onClose }) {
           value={chatPersona}
           onChange={(_, value) => value && setPersona(value)}
           fullWidth
-          disabled={!aiEnabled}
+          disabled={!aiActive || busy}
         >
           <ToggleButton value="teacher">{PERSONA_LABELS.teacher}</ToggleButton>
           <ToggleButton value="peer">{PERSONA_LABELS.peer}</ToggleButton>
@@ -131,8 +190,8 @@ export function AssistantPanel({ onClose }) {
         ) : chat.length === 0 ? (
           <Typography variant="body2" color="text.secondary">
             {chatPersona === 'peer'
-              ? 'Peer mode: practice partner conversations here (AI coming in Phase 6).'
-              : 'Ask questions about this activity or use “Check my answer” for feedback.'}
+              ? 'Peer mode: practice partner conversations here.'
+              : 'Ask the teacher for help, or use “Check my answer” (automatic where JSON defines keys, AI for freeform).'}
           </Typography>
         ) : (
           chat.map((msg) => (
@@ -154,7 +213,7 @@ export function AssistantPanel({ onClose }) {
               }}
             >
               <Typography variant="caption" sx={{ display: 'block', opacity: 0.8, mb: 0.25 }}>
-                {msg.role === 'user' ? 'You' : msg.role === 'system' ? 'Note' : PERSONA_LABELS[persona] || 'Assistant'}
+                {msg.role === 'user' ? 'You' : msg.role === 'system' ? 'Note' : PERSONA_LABELS[chatPersona]}
               </Typography>
               <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap' }}>
                 {msg.content}
@@ -162,13 +221,26 @@ export function AssistantPanel({ onClose }) {
             </Box>
           ))
         )}
+        {busy && (
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, py: 0.5 }}>
+            <CircularProgress size={16} />
+            <Typography variant="caption" color="text.secondary">
+              {status === 'grading' ? 'Checking answer…' : 'Thinking…'}
+            </Typography>
+          </Box>
+        )}
       </Box>
 
       <Divider />
 
       <Box sx={{ p: 1.5, display: 'grid', gap: 1 }}>
-        {Object.keys(fields).length > 0 && (
-          <Button variant="outlined" size="small" onClick={checkMyAnswer} disabled={!aiActive}>
+        {chatPersona === 'teacher' && checkAvailable && (
+          <Button
+            variant="outlined"
+            size="small"
+            onClick={checkMyAnswer}
+            disabled={busy}
+          >
             Check my answer
           </Button>
         )}
@@ -181,13 +253,13 @@ export function AssistantPanel({ onClose }) {
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           onKeyDown={handleKeyDown}
-          disabled={!aiActive}
+          disabled={!aiActive || busy}
         />
         <Button
           variant="contained"
-          endIcon={<SendIcon />}
+          endIcon={sending ? <CircularProgress size={16} color="inherit" /> : <SendIcon />}
           onClick={handleSend}
-          disabled={!aiActive || !draft.trim()}
+          disabled={!aiActive || busy || !draft.trim()}
         >
           Send
         </Button>

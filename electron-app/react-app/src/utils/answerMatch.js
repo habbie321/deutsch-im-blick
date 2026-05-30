@@ -46,3 +46,22 @@ export function containsAllKeywords(userRaw, keywords) {
     return alternatives.some((p) => u.includes(p));
   });
 }
+
+/** Field meta includes JSON keys for rule-based checking (no AI). */
+export function hasAutomaticKeys(fieldMeta) {
+  return Boolean(fieldMeta?.acceptedAnswers?.length || fieldMeta?.keywords?.length);
+}
+
+/**
+ * Check answer against JSON keys. Returns null when no keys are configured.
+ * @returns {boolean|null}
+ */
+export function checkAutomaticAnswer(userRaw, { acceptedAnswers, keywords } = {}) {
+  if (acceptedAnswers?.length) {
+    return matchesAnyVariant(userRaw, acceptedAnswers);
+  }
+  if (keywords?.length) {
+    return containsAllKeywords(userRaw, keywords);
+  }
+  return null;
+}

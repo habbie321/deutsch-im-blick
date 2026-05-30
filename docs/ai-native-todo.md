@@ -8,25 +8,76 @@ Step-by-step plan to add an AI teacher/peer assistant with a right-side chat pan
 
 ---
 
-## Progress summary (as of Phase 1 complete)
+## Chat history architecture (decided)
+
+**Model:** Cursor-like — **one continuous timeline per student account**, not per activity. Activity is **live context** injected on each request, not the owner of chat history.
+
+| Layer | Scope | What it holds |
+|-------|--------|----------------|
+| **Chat store** | Account + persona (`teacher` \| `peer`) | Durable message timeline; survives activity changes and app restart |
+| **Activity session** | Current activity only | `inputs`, `fields`, `currentPageId`, grading state — resets or reloads per activity |
+| **Request context** | Ephemeral | `buildActivityBrief()` + recent chat window sent to LLM on each call |
+
+**Message shape (target):**
+```json
+{
+  "id": "...",
+  "role": "user | assistant | system",
+  "content": "...",
+  "at": "ISO8601",
+  "activityKey": "1-11",
+  "pageId": "main",
+  "fieldId": "writing_task_0"
+}
+```
+- `activityKey` / `pageId` / `fieldId` are **optional metadata** (for UI chips, filtering, grading) — not separate inboxes.
+- **Do not clear chat** when the student switches activities; only update injected activity context.
+- **Teacher** and **Peer** remain **two separate global threads** (already in UI); both are account-scoped.
+
+**UI (later):** Optional message chip (“Aktivität 7”); optional filter “current activity only” — not separate chat rooms.
+
+**Not in scope for default:** Per-activity isolated threads (assessment mode could add `scope: 'activity'` later).
+
+**Current gap (Phase 1):** `chatsByPersona` lives inside `ActivitySessionProvider` and resets on activity change. Phase 4 lifts chat to account scope and persists to SQLite.
+
+---
+
+## Grading architecture (decided)
+
+Two separate paths — **automatic never uses AI**; **AI never overrides automatic keys**.
+
+| Path | When | AI required? | Where it runs |
+|------|------|--------------|---------------|
+| **Automatic** | Field has `acceptedAnswers` or `keywords` in JSON | No | Renderer (`answerMatch.js` + check handler) |
+| **AI** | Freeform fields (no automatic keys) | Yes | Main process via IPC (`services/aiGrading.js` → `ai-service.js`) |
+
+- If automatic keys exist → only rule-based check; wrong answers prompt student to **ask teacher in chat** for clarification (no AI grade on that field).
+- If AI is off and field is freeform → “Check my answer” explains AI is needed; chat still off until AI enabled.
+- Providers: `mock` \| `local` \| `remote` (not vendor-specific names).
+
+---
+
+## Progress summary (as of Phase 2 complete)
 
 | Phase | Status |
 |-------|--------|
-| **0** Decisions | Not started |
-| **1** Shell & session | **Done** (manual smoke test optional) |
-| **2** IPC & settings | **Started** — global AI on/off only (localStorage stub) |
+| **0** Decisions | Partial (0.5 chat model decided) |
+| **1** Shell & session | **Done** |
+| **2** IPC & settings | **Done** (mock provider; real LLM in Phase 3) |
 | **3–8** | Not started |
 
-**Shipped in Phase 1:**
-- 3-pane dashboard: chapters \| activity \| assistant (slide in/out like sidebar; drawer on narrow screens)
-- `ActivitySessionProvider` + `AssistantPanel` stub chat
-- `WritingActivity` registers fields and syncs inputs to session
-- `MultiPageActivity` reports `currentPageId` to session
-- `ActivitiesStepper` parity (fullscreen dialog + assistant)
-- Teacher / Peer panel toggle; **`off` persona is Settings-driven only** (not a panel button)
-- Settings: **AI assistant enabled** switch (`aiSettings.js`, localStorage for now)
+**Shipped in Phase 2:**
+- Electron IPC: `ai:grade`, `ai:chat`, `ai:get-settings`, `ai:update-settings`
+- `js/ai-settings-store.js` — settings in userData (`ai-settings.json`); apiKey never sent to renderer
+- `js/ai-service.js` — mock teacher grading + mock chat; guards when AI disabled
+- `src/utils/aiContracts.js`, `src/services/aiGrading.js`, `src/services/aiChat.js`
+- Settings page: provider, model, base URL, API key, cloud toggle
+- **Check my answer** → IPC mock grade; **Send** → IPC mock chat (includes activity brief)
+- Browser-only fallback when not running in Electron
 
-**Next up:** Phase 2 — Electron IPC, provider settings, mock grading through `Check my answer`.
+**Known limitation until Phase 4:** Chat history still resets on activity change (in-memory, activity-scoped provider).
+
+**Next up:** Phase 3 — real Ollama/cloud adapters + SelfCheckReadingActivity grading.
 
 ---
 
@@ -38,6 +89,7 @@ Step-by-step plan to add an AI teacher/peer assistant with a right-side chat pan
   - Peer activities: transcript-based vs final written summary graded
 - [ ] **0.3** Define privacy copy for Settings (what leaves the device)
 - [ ] **0.4** Set cost controls (grade on button only, cache TTL, max chat turns per activity)
+- [x] **0.5** Chat history model: **global per account**, split by persona; activity as injected context + message metadata (see above)
 
 ---
 
@@ -48,11 +100,13 @@ Goal: 3-pane layout, shared activity context, chat UI stub, input lifting for on
 ### 1.1 Activity session context
 
 - [x] Create `src/context/ActivitySessionContext.js`
-  - State: `activity`, `currentPageId`, `chatPersona` (`teacher` | `peer`), `persona` (effective: `chatPersona` or `off` when Settings disables AI), `inputs`, `attempts`, `chat`, `grading`, `status`
-  - Methods: `setInput(fieldId, value)`, `registerField(fieldId, meta)`, `addChatMessage()`, `setPersona()`, `resetSession()`
+  - Activity-scoped: `activity`, `currentPageId`, `inputs`, `fields`, `attempts`, `grading`, `status`
+  - Chat (interim): `chatsByPersona`, `chatPersona`, effective `persona` (`chatPersona` or `off` via Settings)
+  - Methods: `setInput()`, `registerField()`, `addChatMessage()`, `setPersona()`, `resetSession()`
+  - **Phase 4:** move `chatsByPersona` → account-level store; keep activity state here
 - [x] Create `src/utils/buildActivityBrief.js` — compact context string from `normalizeActivity()` + current page + inputs
 - [x] Export `ActivitySessionProvider`, `useActivitySession()`, `useOptionalActivitySession()`
-- [x] Create `src/utils/aiPersona.js` — `CHAT_PERSONAS`, `PERSONA_OFF`, `resolvePersona()`, `isAiActive()`
+- [x] Create `src/utils/aiPersona.js` — `CHAT_PERSONAS`, `PERSONA_OFF`, `resolvePersona()`, `isAiActive()`, `createEmptyChats()`
 
 ### 1.2 Dashboard layout (right chat panel)
 
@@ -60,7 +114,7 @@ Goal: 3-pane layout, shared activity context, chat UI stub, input lifting for on
   - Header: Teacher / Peer toggle (disabled when AI off in Settings)
   - Message list + input + Send
   - Stub response when AI not configured (“Configure API in Settings”)
-  - “Check my answer” button (stub until Phase 2; blocked when AI off in Settings)
+  - “Check my answer” button → IPC mock grade (Phase 2)
   - Slide in/out animation matching chapter sidebar (width transition on wide screens)
 - [x] Update `src/pages/StudentDashboard.js`
   - Wrap selected activity in `ActivitySessionProvider`
@@ -90,53 +144,37 @@ Goal: 3-pane layout, shared activity context, chat UI stub, input lifting for on
 
 ---
 
-## Phase 2 — Electron IPC & settings
+## Phase 2 — Electron IPC & settings ✅
 
 Goal: Secure API boundary, configurable provider, stub handlers that return mock grades.
 
 ### 2.1 Settings storage
 
-- [x] **Partial:** Global AI on/off — `src/utils/aiSettings.js` + `useAiSettings()` hook (localStorage `dib.aiEnabled`; syncs across tabs via custom event)
-- [x] **Partial:** `src/pages/SettingsPage.js` — “AI assistant” enable/disable switch + short description
-- [ ] Migrate AI settings to userData via main process (per-account in Phase 4?)
-- [ ] Full provider fields: `provider`, `apiKey`, `model`, `baseUrl` (Ollama), `enableCloud`
-- [ ] IPC: `get-settings`, `update-settings` (never expose raw key to renderer logs)
+- [x] Global AI on/off + provider settings via `js/ai-settings-store.js` (Electron `userData/ai-settings.json`)
+- [x] `src/utils/aiSettings.js` — `useAiSettings()` loads/saves through IPC; localStorage fallback in browser-only dev
+- [x] `src/pages/SettingsPage.js` — enable switch, provider, model, base URL, API key, cloud toggle
+- [x] IPC: `ai:get-settings`, `ai:update-settings` (apiKey masked as `hasApiKey` in renderer)
 
 ### 2.2 Preload & main handlers
 
-- [ ] Update `js/preload.js`:
-  ```js
-  gradeAnswer: (payload) => ipcRenderer.invoke('ai:grade', payload)
-  chat: (payload) => ipcRenderer.invoke('ai:chat', payload)
-  getAiSettings: () => ipcRenderer.invoke('ai:get-settings')
-  updateAiSettings: (s) => ipcRenderer.invoke('ai:update-settings', s)
-  ```
-- [ ] Create `js/ai-service.js` (main process)
-  - `gradeAnswer(payload)` → structured JSON response
-  - `chat(payload)` → assistant message
-  - Provider adapter interface: `ollama`, `openai`, etc.
-  - Guard: no outbound calls when `aiEnabled === false`
-- [ ] Register handlers in `js/main.js`
+- [x] Update `js/preload.js` — `gradeAnswer`, `chat`, `getAiSettings`, `updateAiSettings`
+- [x] Create `js/ai-service.js` — mock `gradeAnswer` + `chat`; provider switch (`mock` default)
+- [x] Create `js/register-ai-handlers.js`; register in `js/main.js`
+- [x] Guard: no outbound calls when `aiEnabled === false`
 
 ### 2.3 Grading response contract
 
-- [ ] Define shared types/constants in `src/utils/aiContracts.js`:
-  - Grade request/response shape (`correct`, `score`, `feedback`, `corrections`, `canComplete`)
-  - Chat request/response shape
-- [ ] Implement mock adapter for dev (returns canned feedback)
+- [x] `src/utils/aiContracts.js` — grade/chat request/response shapes, `AI_PROVIDERS`, helpers
+- [x] Mock adapter in `js/ai-service.js`
 
 ### 2.4 Client grading service
 
-- [ ] Create `src/services/aiGrading.js`
-  - `gradeField({ fieldId, prompt, answer, rubric, modelAnswer, acceptedAnswers })`
-  - Try `answerMatch.js` first when keys exist; skip LLM on exact pass
-  - Call `window.api.gradeAnswer` for semantic path
-  - Respect `isAiActive(persona)` before any call
-  - Update session `grading[fieldId]`
-- [ ] Wire `ActivitySessionContext.checkMyAnswer` → `aiGrading.gradeField`
-- [ ] Wire `AssistantPanel` Send → `window.api.chat` (mock)
+- [x] `src/services/aiGrading.js` — `gradeField`, `gradeSessionFields`; exact match via `answerMatch` first
+- [x] `src/services/aiChat.js` — `sendChatMessage`
+- [x] `ActivitySessionContext.checkMyAnswer` → `gradeSessionFields` → teacher thread
+- [x] `AssistantPanel` Send → `sendChatMessage` via IPC; loading states
 
-**Phase 2 done when:** Settings save/load works (including provider); “Check my answer” returns mock feedback through full IPC path.
+**Phase 2 done when:** Settings save/load works; “Check my answer” returns mock feedback through full IPC path. ✅
 
 ---
 
@@ -169,41 +207,67 @@ Goal: Semantic correction for freeform writing and reading self-check.
 - [ ] Replace or augment `answerMatch` path with semantic grading when `ai.grading === 'semantic'` or no keywords
 - [ ] Keep keyword/exact path as fast pre-check
 
-### 3.5 AssistantPanel chat (teacher)
+### 3.5 AssistantPanel chat (teacher & peer)
 
-- [ ] Send chat via `window.api.chat` with `buildActivityBrief()` context
-- [ ] Append assistant messages to session; persist (Phase 4)
+- [ ] Send chat via `window.api.chat` with:
+  - Global thread for active `chatPersona`
+  - `buildActivityBrief()` for **current** activity (even if student asks about a past one, model can use full thread)
+  - Stamp outgoing messages with `activityKey` / `pageId` when available
+- [ ] Append assistant replies to the same persona thread; persist (Phase 4)
 
-**Phase 3 done when:** Writing + reading self-check activities get real AI correction; chat answers activity-aware questions.
+**Phase 3 done when:** Writing + reading self-check activities get real AI correction; chat is activity-aware via context injection, not separate per-activity histories.
 
 ---
 
-## Phase 4 — Persistence
+## Phase 4 — Persistence & global chat
 
-Goal: Survive refresh; enable review and cheaper re-grades.
+Goal: Survive refresh; global chat per account; activity-scoped answers/grading where needed.
 
-### 4.1 SQLite schema
+### 4.1 Split session vs chat store
+
+- [ ] Create `src/context/ChatHistoryContext.js` (or lift into account-level provider on dashboard)
+  - Keyed by `user_id` + `persona` (`teacher` | `peer`) — **not** by activity
+  - Load on account login / dashboard mount; survives activity navigation
+- [ ] Refactor `ActivitySessionProvider`: activity fields only; consume chat from account store
+- [ ] `StudentDashboard`: wrap with chat provider at account level (above activity selection)
+
+### 4.2 SQLite schema
 
 - [ ] Extend `js/database.js`:
   ```sql
-  activity_attempts (id, user_id, chapter, activity_id, page_id, field_id, answer, grading_json, created_at)
-  chat_sessions (id, user_id, chapter, activity_id, persona, messages_json, updated_at)
-  activity_completion (user_id, chapter, activity_id, completed_at, summary_json)
-  ```
-- [ ] IPC: `save-attempt`, `load-session`, `save-chat`, `mark-activity-complete`
-- [ ] Grade cache: optional column or derive from `activity_attempts`
+  -- Global chat timeline (append-only messages)
+  chat_messages (
+    id, user_id, persona, role, content,
+    activity_key, page_id, field_id,  -- nullable metadata
+    created_at
+  )
 
-### 4.2 Wire StudentDashboard progress
+  -- Activity-scoped student work (not chat)
+  activity_attempts (
+    id, user_id, chapter, activity_id, page_id, field_id,
+    answer, grading_json, created_at
+  )
+
+  activity_completion (
+    user_id, chapter, activity_id, completed_at, summary_json
+  )
+  ```
+- [ ] IPC: `append-chat-message`, `load-chat-history`, `save-attempt`, `load-attempts`, `mark-activity-complete`
+- [ ] Grade cache: derive from `activity_attempts` or optional cache table
+- [ ] Index: `(user_id, persona, created_at)` for chat; `(user_id, activity_key)` for optional filter
+
+### 4.3 Wire StudentDashboard progress
 
 - [ ] Replace in-memory-only `completedActivities` with load on mount + save on complete
-- [ ] Restore chat history when reopening same activity
 
-### 4.3 Session hydration
+### 4.4 Hydration rules
 
-- [ ] On activity select: load prior attempts + chat into `ActivitySessionProvider`
-- [ ] Pre-fill inputs from last attempt
+- [ ] **Chat:** load full persona thread(s) once per account session; append on send/grade
+- [ ] **Activity inputs:** on activity select, load latest `activity_attempts` for that `activity_key` only; pre-fill fields
+- [ ] Switching activities: chat **unchanged**; activity brief updates for next AI call
+- [ ] Optional UI: activity chip on messages; filter toggle “This activity only”
 
-**Phase 4 done when:** Close app, reopen, same student sees prior answers and chat.
+**Phase 4 done when:** Close app, reopen — same student sees continuous teacher/peer chat across activities, plus restored field answers per activity.
 
 ---
 
@@ -313,12 +377,30 @@ Goal: Freeform blocks inside workbook; consistent grading everywhere it matters.
 - [x] No API configured: stub chat reply, no crash
 - [x] Persona `off` only via Settings (no redundant Off button in panel)
 
-### Full flow (after Phase 2+)
+- [x] Teacher vs peer: separate threads; switching persona does not mix messages
+- [ ] Switch activity and back: chat **still lost** until Phase 4 (expected)
+
+### Phase 2 (verify in Electron app)
+
+- [ ] Settings: provider/model persist after reload
+- [ ] Settings: AI off → chat and check return disabled error
+- [ ] Writing activity: type answer → Check my answer → mock teacher feedback in thread
+- [ ] Send chat message → mock reply mentions activity context
+- [ ] Switch Teacher/Peer → separate threads; each gets mock replies
+
+### Full flow (after Phase 3+)
 
 - [ ] Settings: save API key, invalid key shows error
 - [ ] Writing activity: check answer → feedback → complete activity → persists
 - [ ] Reading self-check: keyword item passes without LLM; freeform item uses LLM
 - [ ] Peer mode: opening message, multi-turn chat, in-character replies
+
+### After Phase 4 (global chat)
+
+- [ ] Chat persists when switching activities and returning
+- [ ] Chat persists across app restart (same account)
+- [ ] Message from Aktivität 7 shows activity metadata; thread continues on Aktivität 12
+- [ ] Field answers restore per activity; chat stays global
 
 ---
 
@@ -326,32 +408,38 @@ Goal: Freeform blocks inside workbook; consistent grading everywhere it matters.
 
 | File | Phase | Status |
 |------|-------|--------|
-| `src/context/ActivitySessionContext.js` | 1 | ✅ |
+| `src/context/ActivitySessionContext.js` | 1, 4 | ✅ activity scope; chat moves in 4 |
+| `src/context/ChatHistoryContext.js` | 4 | — account-global chat |
 | `src/components/AssistantPanel.js` | 1 | ✅ |
 | `src/utils/buildActivityBrief.js` | 1 | ✅ |
 | `src/utils/aiPersona.js` | 1–2 | ✅ |
-| `src/utils/aiSettings.js` | 2 | ✅ partial (on/off only) |
+| `src/utils/aiSettings.js` | 2 | ✅ |
 | `src/pages/StudentDashboard.js` | 1 | ✅ |
-| `src/pages/SettingsPage.js` | 2 | ✅ partial |
+| `src/pages/SettingsPage.js` | 2 | ✅ |
 | `src/components/WritingActivity.js` | 1, 3 | ✅ session wired |
 | `src/components/MultiPageActivity.js` | 1 | ✅ |
 | `src/components/ActivitiesStepper.js` | 1 | ✅ |
-| `src/utils/aiContracts.js` | 2 | — |
-| `src/services/aiGrading.js` | 2 | — |
-| `js/ai-service.js` | 2 | — |
+| `src/utils/aiContracts.js` | 2 | ✅ |
+| `src/utils/answerMatch.js` | 2 | ✅ (+ automatic key checks) |
+| `src/services/aiGrading.js` | 2 | ✅ (AI IPC + check routing) |
+| `src/services/aiChat.js` | 2 | ✅ |
+| `js/ai-settings-store.js` | 2 | ✅ |
+| `js/ai-service.js` | 2 | ✅ |
+| `js/register-ai-handlers.js` | 2 | ✅ |
+| `js/preload.js`, `js/main.js` | 2 | ✅ |
+| `js/database.js` | 4 | — |
 | `js/ai-prompts.js` | 3 | — |
-| `js/preload.js`, `js/main.js`, `js/database.js` | 2–4 | — |
 | `src/components/SelfCheckReadingActivity.js` | 3 | — |
 | `src/components/WorkbookActivity.js` | 7 | — |
 | `scripts/activity.schema.json`, `activity-schema.mjs` | 5 | — |
 
 ---
 
-## Suggested next PR (Phase 2 mock)
+## Suggested next PR (Phase 3)
 
-1. Phase 2.2–2.4: IPC + `ai-service.js` mock adapter + `aiContracts.js` + `aiGrading.js`
-2. Wire `checkMyAnswer` and chat Send through IPC (respect `aiEnabled` / `persona`)
-3. Expand Settings: provider + model fields (store in Electron userData)
-4. One pilot writing activity with `ai.rubric` (Phase 5.3 partial, optional)
+1. `js/ai-prompts.js` + Ollama adapter (or one cloud provider)
+2. Wire real LLM into `gradeAnswer` / `chat` when provider ≠ `mock`
+3. `SelfCheckReadingActivity` session fields + semantic grading
+4. Optional: pilot activity with `ai.rubric` (Phase 5.3 partial)
 
-Phase 1 is merged; no further Phase 1 PR needed unless doing the optional manual smoke test.
+**Phase 4 PR (after 3):** Lift chat to `ChatHistoryContext` + SQLite `chat_messages`; stop resetting chat on activity change.

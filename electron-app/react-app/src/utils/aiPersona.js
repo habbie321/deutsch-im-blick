@@ -1,3 +1,8 @@
+/** @returns {{ teacher: [], peer: [] }} */
+export function createEmptyChats() {
+  return { teacher: [], peer: [] };
+}
+
 /** User-selectable assistant modes in the chat panel. */
 export const CHAT_PERSONAS = ['teacher', 'peer'];
 

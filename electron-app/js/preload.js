@@ -21,7 +21,11 @@ contextBridge.exposeInMainWorld('api', {
   getAccounts: () => ipcRenderer.invoke('get-accounts'),
   addAccount: (account) => ipcRenderer.invoke('add-account', account),
   getChapters: () => ipcRenderer.invoke('get-chapters'),
-  getChapterProgress: (userId) => ipcRenderer.invoke('get-chapter-progress', userId)
+  getChapterProgress: (userId) => ipcRenderer.invoke('get-chapter-progress', userId),
+  getAiSettings: () => ipcRenderer.invoke('ai:get-settings'),
+  updateAiSettings: (settings) => ipcRenderer.invoke('ai:update-settings', settings),
+  gradeAnswer: (payload) => ipcRenderer.invoke('ai:grade', payload),
+  chat: (payload) => ipcRenderer.invoke('ai:chat', payload)
 });
 
 // contextBridge.exposeInMainWorld('versions', {

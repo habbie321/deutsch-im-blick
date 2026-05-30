@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Box,
   Typography,
@@ -57,19 +57,24 @@ const WritingActivity = ({ activityData, onComplete }) => {
   const isMultiSpeaker = speakers.length > 0;
   const isParagraphMode = !isMultiSpeaker && normalizedTasks.length <= 1;
   const session = useOptionalActivitySession();
+  const registerField = session?.registerField;
+  const currentPageId = session?.currentPageId ?? null;
 
-  const writingFieldId = (suffix) => {
-    const pagePart = session?.currentPageId ? `${session.currentPageId}_` : '';
-    return `writing_${pagePart}${suffix}`;
-  };
+  const writingFieldId = useCallback(
+    (suffix) => {
+      const pagePart = currentPageId ? `${currentPageId}_` : '';
+      return `writing_${pagePart}${suffix}`;
+    },
+    [currentPageId]
+  );
 
   useEffect(() => {
-    if (!session) return;
+    if (!registerField) return;
 
     if (isMultiSpeaker) {
       speakers.forEach((speaker) => {
         speaker.questions.forEach((question, qIdx) => {
-          session.registerField(writingFieldId(`${speaker.id}_${qIdx}`), {
+          registerField(writingFieldId(`${speaker.id}_${qIdx}`), {
             type: 'writing',
             prompt: question
           });
@@ -79,12 +84,12 @@ const WritingActivity = ({ activityData, onComplete }) => {
     }
 
     normalizedTasks.forEach((task, idx) => {
-      session.registerField(writingFieldId(`task_${idx}`), {
+      registerField(writingFieldId(`task_${idx}`), {
         type: 'writing',
         prompt: task.text
       });
     });
-  }, [session, session?.currentPageId, isMultiSpeaker, speakers, normalizedTasks]);
+  }, [registerField, writingFieldId, isMultiSpeaker, speakers, normalizedTasks]);
 
   const syncSessionInput = (fieldKey, value) => {
     if (session) {

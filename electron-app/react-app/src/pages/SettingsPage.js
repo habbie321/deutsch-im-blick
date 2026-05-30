@@ -1,22 +1,56 @@
-import { Box, Chip, Container, FormControlLabel, Paper, Switch, Typography } from '@mui/material';
+import { Box, Chip, Container, FormControl, FormControlLabel, InputLabel, MenuItem, Paper, Select, Switch, TextField, Typography } from '@mui/material';
 import TuneIcon from '@mui/icons-material/Tune';
 import PaletteIcon from '@mui/icons-material/Palette';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import SchoolIcon from '@mui/icons-material/School';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
 import { useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import BackButton from '../components/BackButton';
+import { AI_PROVIDERS } from '../utils/aiContracts';
 import { useAiSettings } from '../utils/aiSettings';
 
 const SettingsPage = () => {
   const { id } = useParams();
-  const { aiEnabled, setAiEnabled } = useAiSettings();
+  const { aiEnabled, provider, model, baseUrl, enableRemote, hasApiKey, loaded, setAiEnabled, updateSettings } =
+    useAiSettings();
+
+  const [apiKeyDraft, setApiKeyDraft] = useState('');
+  const [modelDraft, setModelDraft] = useState('');
+  const [baseUrlDraft, setBaseUrlDraft] = useState('');
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    setApiKeyDraft('');
+  }, [hasApiKey, loaded]);
+
+  useEffect(() => {
+    if (loaded) {
+      setModelDraft(model);
+      setBaseUrlDraft(baseUrl);
+    }
+  }, [loaded, model, baseUrl]);
 
   const placeholderItems = [
     { icon: <PaletteIcon fontSize="small" />, title: 'Theme & appearance', desc: 'Light/dark mode, font sizing, and layout density.' },
     { icon: <VolumeUpIcon fontSize="small" />, title: 'Media preferences', desc: 'Video autoplay, captions, and playback behavior.' },
     { icon: <SchoolIcon fontSize="small" />, title: 'Learning defaults', desc: 'Preferred chapter, reminders, and progress behaviors.' }
   ];
+
+  const saveProviderSettings = async (patch) => {
+    setSaving(true);
+    try {
+      await updateSettings(patch);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleApiKeyBlur = async () => {
+    if (!apiKeyDraft.trim()) return;
+    await saveProviderSettings({ apiKey: apiKeyDraft.trim() });
+    setApiKeyDraft('');
+  };
 
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: 'background.default', py: 3 }}>
@@ -42,16 +76,87 @@ const SettingsPage = () => {
           </Box>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
             When off, the assistant panel stays available but chat and answer checking will not call any AI service.
+            Provider settings are stored locally on this device (Electron userData).
           </Typography>
+
           <FormControlLabel
             control={
               <Switch
                 checked={aiEnabled}
                 onChange={(e) => setAiEnabled(e.target.checked)}
+                disabled={!loaded || saving}
               />
             }
             label={aiEnabled ? 'AI assistant enabled' : 'AI assistant disabled'}
+            sx={{ display: 'block', mb: 2 }}
           />
+
+          <Box sx={{ display: 'grid', gap: 2 }}>
+            <FormControl fullWidth size="small" disabled={!loaded || saving}>
+              <InputLabel id="ai-provider-label">Provider</InputLabel>
+              <Select
+                labelId="ai-provider-label"
+                label="Provider"
+                value={provider}
+                onChange={(e) => saveProviderSettings({ provider: e.target.value })}
+              >
+                {AI_PROVIDERS.map((item) => (
+                  <MenuItem key={item.id} value={item.id}>
+                    {item.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            <TextField
+              label="Model"
+              size="small"
+              value={modelDraft}
+              onChange={(e) => setModelDraft(e.target.value)}
+              onBlur={() => {
+                if (modelDraft !== model) saveProviderSettings({ model: modelDraft });
+              }}
+              disabled={!loaded || saving}
+              placeholder={provider === 'mock' ? 'mock (default)' : 'Model name for your provider'}
+              helperText="Phase 3 will use this with local or remote providers."
+            />
+
+            <TextField
+              label="Base URL"
+              size="small"
+              value={baseUrlDraft}
+              onChange={(e) => setBaseUrlDraft(e.target.value)}
+              onBlur={() => {
+                if (baseUrlDraft !== baseUrl) saveProviderSettings({ baseUrl: baseUrlDraft });
+              }}
+              disabled={!loaded || saving || provider === 'mock'}
+              placeholder="http://localhost:11434"
+              helperText="Endpoint for your local model server (when using Local provider)."
+            />
+
+            <TextField
+              label="API key"
+              size="small"
+              type="password"
+              value={apiKeyDraft}
+              onChange={(e) => setApiKeyDraft(e.target.value)}
+              onBlur={handleApiKeyBlur}
+              disabled={!loaded || saving || provider !== 'remote'}
+              placeholder={hasApiKey ? '•••••• (saved — type to replace)' : 'Required for remote provider'}
+              helperText="Never logged in the renderer. Stored only in the main process."
+            />
+
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={enableRemote}
+                  onChange={(e) => saveProviderSettings({ enableRemote: e.target.checked })}
+                  disabled={!loaded || saving || provider !== 'remote'}
+                />
+              }
+              label="Allow remote model calls"
+            />
+          </Box>
         </Paper>
 
         <Box sx={{ display: 'grid', gap: 1.5 }}>

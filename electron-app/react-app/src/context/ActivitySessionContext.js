@@ -7,14 +7,27 @@ import React, {
   useState
 } from 'react';
 import { buildActivityBrief } from '../utils/buildActivityBrief';
-import { isAiActive, resolvePersona } from '../utils/aiPersona';
+import { createEmptyChats, isAiActive, isChatPersona, resolvePersona } from '../utils/aiPersona';
 import { useAiSettings } from '../utils/aiSettings';
+import { gradeSessionFields } from '../services/aiGrading';
 
 const ActivitySessionContext = createContext(null);
 
 function activityKey(activity) {
   if (!activity) return null;
   return `${activity.chapter}-${activity.id}`;
+}
+
+function appendMessage(thread, message) {
+  return [
+    ...thread,
+    {
+      id: `${Date.now()}-${thread.length}`,
+      at: new Date().toISOString(),
+      role: message.role,
+      content: message.content
+    }
+  ];
 }
 
 export function ActivitySessionProvider({ activity, children }) {
@@ -26,11 +39,12 @@ export function ActivitySessionProvider({ activity, children }) {
   const [inputs, setInputsState] = useState({});
   const [fields, setFields] = useState({});
   const [attempts, setAttempts] = useState([]);
-  const [chat, setChat] = useState([]);
+  const [chatsByPersona, setChatsByPersona] = useState(createEmptyChats);
   const [grading, setGrading] = useState({});
   const [status, setStatus] = useState('idle');
 
   const persona = resolvePersona(aiEnabled, chatPersona);
+  const chat = chatsByPersona[chatPersona] ?? [];
 
   useEffect(() => {
     setCurrentPageId(activity?.pages?.[0]?.id ?? null);
@@ -38,7 +52,7 @@ export function ActivitySessionProvider({ activity, children }) {
     setInputsState({});
     setFields({});
     setAttempts([]);
-    setChat([]);
+    setChatsByPersona(createEmptyChats());
     setGrading({});
     setStatus('idle');
   }, [key, activity]);
@@ -60,17 +74,15 @@ export function ActivitySessionProvider({ activity, children }) {
     }));
   }, []);
 
-  const addChatMessage = useCallback((message) => {
-    setChat((prev) => [
+  /** @param {{ role: string, content: string }} message @param {'teacher'|'peer'} [threadPersona] */
+  const addChatMessage = useCallback((message, threadPersona = chatPersona) => {
+    if (!isChatPersona(threadPersona)) return;
+
+    setChatsByPersona((prev) => ({
       ...prev,
-      {
-        id: `${Date.now()}-${prev.length}`,
-        at: new Date().toISOString(),
-        role: message.role,
-        content: message.content
-      }
-    ]);
-  }, []);
+      [threadPersona]: appendMessage(prev[threadPersona] ?? [], message)
+    }));
+  }, [chatPersona]);
 
   const resetSession = useCallback(() => {
     setCurrentPageId(activity?.pages?.[0]?.id ?? null);
@@ -78,7 +90,7 @@ export function ActivitySessionProvider({ activity, children }) {
     setInputsState({});
     setFields({});
     setAttempts([]);
-    setChat([]);
+    setChatsByPersona(createEmptyChats());
     setGrading({});
     setStatus('idle');
   }, [activity]);
@@ -87,16 +99,32 @@ export function ActivitySessionProvider({ activity, children }) {
     return buildActivityBrief({ activity, currentPageId, inputs, fields });
   }, [activity, currentPageId, inputs, fields]);
 
-  const checkMyAnswer = useCallback(() => {
-    if (!isAiActive(persona)) return;
+  const checkMyAnswer = useCallback(async () => {
+    setStatus('grading');
+    try {
+      const { byField, summary } = await gradeSessionFields({
+        fields,
+        inputs,
+        activityKey: key,
+        pageId: currentPageId,
+        persona: 'teacher',
+        aiEnabled
+      });
 
-    setStatus('idle');
-    addChatMessage({
-      role: 'system',
-      content:
-        'AI answer checking is not configured yet. Add your API settings in Phase 2 to enable teacher feedback.'
-    });
-  }, [addChatMessage, persona]);
+      setGrading((prev) => ({ ...prev, ...byField }));
+      addChatMessage({ role: 'system', content: summary }, 'teacher');
+    } catch (err) {
+      addChatMessage(
+        {
+          role: 'system',
+          content: err?.message || 'Could not check your answer.'
+        },
+        'teacher'
+      );
+    } finally {
+      setStatus('idle');
+    }
+  }, [addChatMessage, aiEnabled, fields, inputs, key, currentPageId]);
 
   const value = useMemo(
     () => ({
@@ -115,6 +143,7 @@ export function ActivitySessionProvider({ activity, children }) {
       attempts,
       setAttempts,
       chat,
+      chatsByPersona,
       addChatMessage,
       grading,
       setGrading,
@@ -138,6 +167,7 @@ export function ActivitySessionProvider({ activity, children }) {
       registerField,
       attempts,
       chat,
+      chatsByPersona,
       addChatMessage,
       grading,
       status,

@@ -11,6 +11,7 @@ const fs = require('fs');
 const accountsPath = path.join(__dirname, '../data/accounts.json');
 const { initializeDatabase } = require('./database');
 const { getUserProgress, updateUserProgress, getOrCreateChapter, getAccount, getAccounts, addAccount, getChapters, getChapterProgress } = require('./database');
+const { registerAiHandlers } = require('./register-ai-handlers');
 
 const createWindow = () => { // loads webpage into new BrowserWindow
     const win = new BrowserWindow({
@@ -150,6 +151,7 @@ app.whenReady().then(async () => { // calls function after ready event is fired
     });
 
     initializeDatabase();
+    registerAiHandlers();
 
     // http server to run react
     exec(`npx http-server "${buildPath}" -p ${port} --cors`, (error) => {
