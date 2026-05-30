@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Box,
   Typography,
@@ -15,6 +15,7 @@ import {
 } from '@mui/material';
 import { ExpandMore, ExpandLess, EditNote, KeyboardArrowLeft, KeyboardArrowRight, CheckCircle } from '@mui/icons-material';
 import VideoPlayer from './VideoPlayer';
+import { useOptionalActivitySession } from '../context/ActivitySessionContext';
 
 /**
  * WritingActivity
@@ -51,10 +52,45 @@ const WritingActivity = ({ activityData, onComplete }) => {
     return { text, multiline, minRows: multiline ? 6 : 1 };
   };
 
-  const normalizedTasks = tasks.map(normalizeTask);
+  const normalizedTasks = useMemo(() => tasks.map(normalizeTask), [tasks]);
 
   const isMultiSpeaker = speakers.length > 0;
   const isParagraphMode = !isMultiSpeaker && normalizedTasks.length <= 1;
+  const session = useOptionalActivitySession();
+
+  const writingFieldId = (suffix) => {
+    const pagePart = session?.currentPageId ? `${session.currentPageId}_` : '';
+    return `writing_${pagePart}${suffix}`;
+  };
+
+  useEffect(() => {
+    if (!session) return;
+
+    if (isMultiSpeaker) {
+      speakers.forEach((speaker) => {
+        speaker.questions.forEach((question, qIdx) => {
+          session.registerField(writingFieldId(`${speaker.id}_${qIdx}`), {
+            type: 'writing',
+            prompt: question
+          });
+        });
+      });
+      return;
+    }
+
+    normalizedTasks.forEach((task, idx) => {
+      session.registerField(writingFieldId(`task_${idx}`), {
+        type: 'writing',
+        prompt: task.text
+      });
+    });
+  }, [session, session?.currentPageId, isMultiSpeaker, speakers, normalizedTasks]);
+
+  const syncSessionInput = (fieldKey, value) => {
+    if (session) {
+      session.setInput(writingFieldId(fieldKey), value);
+    }
+  };
 
   // State
   const [showExample, setShowExample] = useState(false);
@@ -243,7 +279,11 @@ const WritingActivity = ({ activityData, onComplete }) => {
                   rows={isLongTask ? 4 : 1}
                   placeholder="Antworten Sie hier..."
                   value={responses[`${currentSpeaker.id}_${idx}`] || ''}
-                  onChange={(e) => setResponses(prev => ({ ...prev, [`${currentSpeaker.id}_${idx}`]: e.target.value }))}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setResponses((prev) => ({ ...prev, [`${currentSpeaker.id}_${idx}`]: value }));
+                    syncSessionInput(`${currentSpeaker.id}_${idx}`, value);
+                  }}
                   disabled={done}
                   sx={{ bgcolor: 'background.paper' }}
                 />
@@ -267,7 +307,11 @@ const WritingActivity = ({ activityData, onComplete }) => {
                 rows={task.multiline ? task.minRows : 1}
                 placeholder="Ihre Antwort..."
                 value={responses[idx] || ''}
-                onChange={(e) => setResponses(prev => ({ ...prev, [idx]: e.target.value }))}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setResponses((prev) => ({ ...prev, [idx]: value }));
+                  syncSessionInput(`task_${idx}`, value);
+                }}
                 disabled={done}
                 sx={{ bgcolor: 'background.paper' }}
               />
@@ -282,7 +326,11 @@ const WritingActivity = ({ activityData, onComplete }) => {
           variant="outlined"
           placeholder="Schreiben Sie hier..."
           value={responses[0] || ''}
-          onChange={(e) => setResponses(prev => ({ ...prev, 0: e.target.value }))}
+          onChange={(e) => {
+            const value = e.target.value;
+            setResponses((prev) => ({ ...prev, 0: value }));
+            syncSessionInput('task_0', value);
+          }}
           disabled={done}
           sx={{ mb: 4, bgcolor: 'background.paper', borderRadius: 1 }}
         />

@@ -5,6 +5,8 @@ import ActivityVideoSection from '../components/ActivityVideoSection';
 import activityData from '../data/activites.json';
 import { ActivityContent, showsDashboardVideoSection } from '../utils/renderActivity';
 import { normalizeActivity } from '../utils/normalizeActivity';
+import { ActivitySessionProvider } from '../context/ActivitySessionContext';
+import AssistantPanel from '../components/AssistantPanel';
 import {
   Accordion,
   AccordionDetails,
@@ -21,10 +23,13 @@ import LockIcon from '@mui/icons-material/Lock';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import MenuIcon from '@mui/icons-material/Menu';
+import ChatIcon from '@mui/icons-material/Chat';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 const SIDEBAR_BREAKPOINT = '(min-width:960px)';
+const ASSISTANT_BREAKPOINT = '(min-width:1200px)';
 const SIDEBAR_WIDTH = 320;
+const ASSISTANT_WIDTH = 360;
 
 function DashboardSidebar({
   account,
@@ -245,6 +250,7 @@ function DashboardSidebar({
 
 const StudentDashboard = () => {
   const isWideSidebar = useMediaQuery(SIDEBAR_BREAKPOINT);
+  const isWideAssistant = useMediaQuery(ASSISTANT_BREAKPOINT);
 
   const { account, chapters } = useLoaderData();
   const initialChapter = Number(chapters?.[0]?.chapter_number || 1);
@@ -252,6 +258,8 @@ const StudentDashboard = () => {
   const [completedActivities, setCompletedActivities] = useState({});
   const [sidebarVisible, setSidebarVisible] = useState(true);
   const [sidebarDrawerOpen, setSidebarDrawerOpen] = useState(false);
+  const [assistantVisible, setAssistantVisible] = useState(true);
+  const [assistantDrawerOpen, setAssistantDrawerOpen] = useState(false);
 
   const chaptersWithActivities = useMemo(() => {
     const out = {};
@@ -305,14 +313,29 @@ const StudentDashboard = () => {
     }
   };
 
+  const handleAssistantClick = () => {
+    if (isWideAssistant) {
+      setAssistantVisible((visible) => !visible);
+    } else {
+      setAssistantDrawerOpen((open) => !open);
+    }
+  };
+
   useEffect(() => {
     if (isWideSidebar) {
       setSidebarDrawerOpen(false);
     }
   }, [isWideSidebar]);
 
+  useEffect(() => {
+    if (isWideAssistant) {
+      setAssistantDrawerOpen(false);
+    }
+  }, [isWideAssistant]);
+
   const showInlineSidebar = isWideSidebar && sidebarVisible;
   const showNavInToolbar = !isWideSidebar || !sidebarVisible;
+  const assistantPanelOpen = isWideAssistant ? assistantVisible : assistantDrawerOpen;
 
   const sidebarProps = {
     account,
@@ -379,36 +402,19 @@ const StudentDashboard = () => {
             flex: 1,
             minWidth: 0,
             minHeight: 0,
-            overflowY: 'auto',
-            p: { xs: 1.5, md: 2 },
-            bgcolor: '#fcfcfd',
-            scrollbarWidth: 'thin',
-            scrollbarColor: (theme) => `${theme.palette.grey[500]} #fcfcfd`,
-            '&::-webkit-scrollbar': {
-              width: 10
-            },
-            '&::-webkit-scrollbar-track': {
-              backgroundColor: '#fcfcfd',
-              borderLeft: isWideSidebar && sidebarVisible ? '1px solid' : 'none',
-              borderColor: 'divider'
-            },
-            '&::-webkit-scrollbar-thumb': {
-              backgroundColor: 'grey.500',
-              borderRadius: 8,
-              border: '2px solid',
-              borderColor: '#fcfcfd'
-            },
-            '&::-webkit-scrollbar-thumb:hover': {
-              backgroundColor: 'grey.600'
-            }
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden',
+            bgcolor: '#fcfcfd'
           }}
         >
           <Box
             sx={{
+              flexShrink: 0,
               display: 'flex',
               alignItems: 'center',
               gap: 1,
-              mb: 1.5,
+              p: { xs: 1.5, md: 2 },
               pb: 1,
               borderBottom: '1px solid',
               borderColor: 'divider'
@@ -423,6 +429,17 @@ const StudentDashboard = () => {
             >
               {showInlineSidebar ? 'Hide chapters' : 'Chapters'}
             </Button>
+            {selectedActivity && (
+              <Button
+                variant="outlined"
+                size="small"
+                startIcon={<ChatIcon />}
+                onClick={handleAssistantClick}
+                sx={{ flexShrink: 0 }}
+              >
+                {assistantPanelOpen ? 'Hide assistant' : 'Assistant'}
+              </Button>
+            )}
             {showNavInToolbar && (
               <>
                 <Box sx={{ flex: 1 }} />
@@ -433,42 +450,135 @@ const StudentDashboard = () => {
           </Box>
 
           {selectedActivity ? (
-            <Box>
+            <ActivitySessionProvider
+              key={`${selectedActivity.chapter}-${selectedActivity.id}`}
+              activity={selectedActivity}
+            >
               <Box
                 sx={{
+                  flex: 1,
+                  minHeight: 0,
                   display: 'flex',
-                  alignItems: 'center',
-                  gap: 1,
-                  mb: 1.5,
-                  flexWrap: 'wrap'
+                  overflow: 'hidden'
                 }}
               >
-                <Typography
-                  variant="h6"
+                <Box
                   sx={{
-                    fontWeight: 700,
+                    flex: 1,
                     minWidth: 0,
-                    flex: '1 1 auto'
+                    minHeight: 0,
+                    overflowY: 'auto',
+                    p: { xs: 1.5, md: 2 },
+                    scrollbarWidth: 'thin',
+                    scrollbarColor: (theme) => `${theme.palette.grey[500]} #fcfcfd`,
+                    '&::-webkit-scrollbar': {
+                      width: 10
+                    },
+                    '&::-webkit-scrollbar-track': {
+                      backgroundColor: '#fcfcfd',
+                      borderColor: 'divider'
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                      backgroundColor: 'grey.500',
+                      borderRadius: 8,
+                      border: '2px solid',
+                      borderColor: '#fcfcfd'
+                    },
+                    '&::-webkit-scrollbar-thumb:hover': {
+                      backgroundColor: 'grey.600'
+                    }
                   }}
                 >
-                  {selectedActivity.title}
-                </Typography>
-                <Chip
-                  size="small"
-                  label={selectedActivity.duration || 'varies'}
-                  variant="outlined"
-                  sx={{ flexShrink: 0 }}
-                />
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 1,
+                      mb: 1.5,
+                      flexWrap: 'wrap'
+                    }}
+                  >
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        fontWeight: 700,
+                        minWidth: 0,
+                        flex: '1 1 auto'
+                      }}
+                    >
+                      {selectedActivity.title}
+                    </Typography>
+                    <Chip
+                      size="small"
+                      label={selectedActivity.duration || 'varies'}
+                      variant="outlined"
+                      sx={{ flexShrink: 0 }}
+                    />
+                  </Box>
+
+                  {showsDashboardVideoSection(selectedActivity) && (
+                    <ActivityVideoSection activity={selectedActivity} />
+                  )}
+
+                  <ActivityContent
+                    activity={selectedActivity}
+                    onComplete={(result) => handleComplete(selectedActivity, result)}
+                  />
+                </Box>
+
+                {isWideAssistant && (
+                  <Box
+                    sx={(theme) => ({
+                      width: assistantVisible ? ASSISTANT_WIDTH : 0,
+                      flexShrink: 0,
+                      minHeight: 0,
+                      overflow: 'hidden',
+                      borderLeft: assistantVisible ? '1px solid' : '0px solid transparent',
+                      borderColor: 'divider',
+                      transition: theme.transitions.create(['width', 'border-width'], {
+                        easing: theme.transitions.easing.sharp,
+                        duration: assistantVisible
+                          ? theme.transitions.duration.enteringScreen
+                          : theme.transitions.duration.leavingScreen
+                      })
+                    })}
+                  >
+                    <Box
+                      sx={{
+                        width: ASSISTANT_WIDTH,
+                        height: '100%',
+                        minHeight: 0,
+                        pointerEvents: assistantVisible ? 'auto' : 'none'
+                      }}
+                    >
+                      <AssistantPanel />
+                    </Box>
+                  </Box>
+                )}
               </Box>
 
-              {showsDashboardVideoSection(selectedActivity) && (
-                <ActivityVideoSection activity={selectedActivity} />
+              {!isWideAssistant && (
+                <Drawer
+                  anchor="right"
+                  open={assistantDrawerOpen}
+                  onClose={() => setAssistantDrawerOpen(false)}
+                  variant="temporary"
+                  ModalProps={{ keepMounted: true }}
+                  sx={{
+                    '& .MuiDrawer-paper': {
+                      width: ASSISTANT_WIDTH,
+                      boxSizing: 'border-box'
+                    }
+                  }}
+                >
+                  <AssistantPanel onClose={() => setAssistantDrawerOpen(false)} />
+                </Drawer>
               )}
-
-              <ActivityContent activity={selectedActivity} onComplete={(result) => handleComplete(selectedActivity, result)} />
-            </Box>
+            </ActivitySessionProvider>
           ) : (
-            <Typography color="text.secondary">Select a chapter and activity to begin.</Typography>
+            <Box sx={{ p: { xs: 1.5, md: 2 } }}>
+              <Typography color="text.secondary">Select a chapter and activity to begin.</Typography>
+            </Box>
           )}
         </Box>
       </Box>

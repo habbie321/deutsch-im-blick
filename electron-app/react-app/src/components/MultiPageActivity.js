@@ -1,8 +1,9 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Box, Typography, Button } from '@mui/material';
 import { NavigateBefore, NavigateNext } from '@mui/icons-material';
 import ActivityVideoSection from './ActivityVideoSection';
 import { mergePageActivity } from '../utils/normalizeActivity';
+import { useOptionalActivitySession } from '../context/ActivitySessionContext';
 
 const MultiPageActivity = ({ activityData, onComplete, renderPageContent }) => {
   const pages = activityData?.pages || [];
@@ -11,6 +12,13 @@ const MultiPageActivity = ({ activityData, onComplete, renderPageContent }) => {
 
   const currentPage = pages[currentPageIndex];
   const hasPages = pages.length > 0;
+  const session = useOptionalActivitySession();
+
+  useEffect(() => {
+    if (session && currentPage?.id) {
+      session.setCurrentPageId(currentPage.id);
+    }
+  }, [session, currentPage?.id]);
 
   const mergedPageActivity = useMemo(() => {
     if (!currentPage) return null;

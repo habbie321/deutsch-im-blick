@@ -16,7 +16,9 @@ import {
   Dialog,
   AppBar,
   Toolbar,
-  LinearProgress
+  LinearProgress,
+  Drawer,
+  useMediaQuery
 } from '@mui/material';
 import {
   CheckCircle,
@@ -26,22 +28,31 @@ import {
   PlayArrow,
   Schedule,
   Close,
-  ArrowForward
+  ArrowForward,
+  Chat
 } from '@mui/icons-material';
 
 import ActivityVideoSection from './ActivityVideoSection';
 import ActivityBlurb from './ActivityBlurb';
+import AssistantPanel from './AssistantPanel';
 import activityData from '../data/activites.json';
 import { ActivityContent, showsDashboardVideoSection } from '../utils/renderActivity';
 import { normalizeActivity, isBlurb } from '../utils/normalizeActivity';
+import { ActivitySessionProvider } from '../context/ActivitySessionContext';
+
+const ASSISTANT_BREAKPOINT = '(min-width:1200px)';
+const ASSISTANT_WIDTH = 360;
 
 const ActivitiesStepper = ({ chapterNumber }) => {
   const theme = useTheme();
+  const isWideAssistant = useMediaQuery(ASSISTANT_BREAKPOINT);
   const [currentPage, setCurrentPage] = useState(0);
   const [completed, setCompleted] = useState({});
   const [selectedActivity, setSelectedActivity] = useState(null);
   const [activityDialogOpen, setActivityDialogOpen] = useState(false);
   const [activityResult, setActivityResult] = useState(null);
+  const [assistantVisible, setAssistantVisible] = useState(true);
+  const [assistantDrawerOpen, setAssistantDrawerOpen] = useState(false);
 
   const activitiesPerPage = 6;
 
@@ -78,6 +89,7 @@ const ActivitiesStepper = ({ chapterNumber }) => {
     if (isLocked(activity)) return;
     setSelectedActivity(activity);
     setActivityResult(null);
+    setAssistantDrawerOpen(false);
     setActivityDialogOpen(true);
   };
 
@@ -286,55 +298,137 @@ const ActivitiesStepper = ({ chapterNumber }) => {
             <Typography variant="h6" sx={{ flexGrow: 1 }}>
               {selectedActivity?.title}
             </Typography>
+            <Button
+              size="small"
+              startIcon={<Chat />}
+              onClick={() => {
+                if (isWideAssistant) {
+                  setAssistantVisible((visible) => !visible);
+                } else {
+                  setAssistantDrawerOpen((open) => !open);
+                }
+              }}
+              sx={{ mr: 1 }}
+            >
+              {isWideAssistant
+                ? assistantVisible
+                  ? 'Hide assistant'
+                  : 'Assistant'
+                : assistantDrawerOpen
+                  ? 'Hide assistant'
+                  : 'Assistant'}
+            </Button>
             <IconButton edge="end" color="inherit" onClick={() => setActivityDialogOpen(false)} aria-label="close">
               <Close />
             </IconButton>
           </Toolbar>
         </AppBar>
 
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            height: 'calc(100% - 64px)',
-            p: { xs: 2, md: 3 },
-            maxWidth: 900,
-            mx: 'auto',
-            width: '100%',
-            overflow: 'auto'
-          }}
-        >
-          {selectedActivity && (
-            <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-              {showsDashboardVideoSection(selectedActivity.raw) && (
-                <ActivityVideoSection activity={selectedActivity.raw} />
-              )}
-              <ActivityContent
-                activity={selectedActivity.raw}
-                onComplete={(result) => handleActivityComplete(selectedActivity.id, result)}
-              />
-            </Box>
-          )}
-
-          {activityResult?.correct && (
-            <Box sx={{ mt: 3, textAlign: 'center' }}>
-              <Button
-                variant="contained"
-                size="large"
-                endIcon={<ArrowForward />}
-                onClick={handleNextActivity}
+        {selectedActivity && (
+          <ActivitySessionProvider
+            key={`${selectedActivity.raw.chapter}-${selectedActivity.raw.id}`}
+            activity={selectedActivity.raw}
+          >
+            <Box
+              sx={{
+                display: 'flex',
+                height: 'calc(100% - 68px)',
+                minHeight: 0,
+                overflow: 'hidden'
+              }}
+            >
+              <Box
                 sx={{
-                  borderRadius: 3,
-                  px: 4,
-                  py: 1.5,
-                  fontSize: '1.1rem'
+                  flex: 1,
+                  minWidth: 0,
+                  minHeight: 0,
+                  overflowY: 'auto',
+                  p: { xs: 2, md: 3 },
+                  maxWidth: isWideAssistant ? 'none' : 900,
+                  mx: isWideAssistant ? 0 : 'auto',
+                  width: '100%'
                 }}
               >
-                Next activity
-              </Button>
+                <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+                  {showsDashboardVideoSection(selectedActivity.raw) && (
+                    <ActivityVideoSection activity={selectedActivity.raw} />
+                  )}
+                  <ActivityContent
+                    activity={selectedActivity.raw}
+                    onComplete={(result) => handleActivityComplete(selectedActivity.id, result)}
+                  />
+                </Box>
+
+                {activityResult?.correct && (
+                  <Box sx={{ mt: 3, textAlign: 'center' }}>
+                    <Button
+                      variant="contained"
+                      size="large"
+                      endIcon={<ArrowForward />}
+                      onClick={handleNextActivity}
+                      sx={{
+                        borderRadius: 3,
+                        px: 4,
+                        py: 1.5,
+                        fontSize: '1.1rem'
+                      }}
+                    >
+                      Next activity
+                    </Button>
+                  </Box>
+                )}
+              </Box>
+
+              {isWideAssistant && (
+                <Box
+                  sx={(theme) => ({
+                    width: assistantVisible ? ASSISTANT_WIDTH : 0,
+                    flexShrink: 0,
+                    minHeight: 0,
+                    overflow: 'hidden',
+                    borderLeft: assistantVisible ? '1px solid' : '0px solid transparent',
+                    borderColor: 'divider',
+                    transition: theme.transitions.create(['width', 'border-width'], {
+                      easing: theme.transitions.easing.sharp,
+                      duration: assistantVisible
+                        ? theme.transitions.duration.enteringScreen
+                        : theme.transitions.duration.leavingScreen
+                    })
+                  })}
+                >
+                  <Box
+                    sx={{
+                      width: ASSISTANT_WIDTH,
+                      height: '100%',
+                      minHeight: 0,
+                      pointerEvents: assistantVisible ? 'auto' : 'none'
+                    }}
+                  >
+                    <AssistantPanel />
+                  </Box>
+                </Box>
+              )}
             </Box>
-          )}
-        </Box>
+
+            {!isWideAssistant && (
+              <Drawer
+                anchor="right"
+                open={assistantDrawerOpen}
+                onClose={() => setAssistantDrawerOpen(false)}
+                variant="temporary"
+                ModalProps={{ keepMounted: true }}
+                sx={{
+                  '& .MuiDrawer-paper': {
+                    width: ASSISTANT_WIDTH,
+                    boxSizing: 'border-box'
+                  }
+                }}
+              >
+                <AssistantPanel onClose={() => setAssistantDrawerOpen(false)} />
+              </Drawer>
+            )}
+          </ActivitySessionProvider>
+        )}
       </Dialog>
 
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 4 }}>
