@@ -1,4 +1,5 @@
 const { getAiSettingsForService } = require('./ai-settings-store');
+const { gradeWithProvider, chatWithProvider } = require('./ai-providers');
 
 function assertAiEnabled() {
   const settings = getAiSettingsForService();
@@ -10,6 +11,19 @@ function assertAiEnabled() {
   return settings;
 }
 
+function assertRemoteAllowed(settings) {
+  if (!settings.enableRemote) {
+    const err = new Error('Remote model calls are disabled. Enable them in Settings.');
+    err.code = 'REMOTE_DISABLED';
+    throw err;
+  }
+  if (!String(settings.apiKey ?? '').trim()) {
+    const err = new Error('Remote provider requires an API key in Settings.');
+    err.code = 'MISSING_API_KEY';
+    throw err;
+  }
+}
+
 function mockGradeAnswer(payload = {}) {
   const answer = String(payload.studentAnswer ?? '').trim();
   const prompt = String(payload.prompt ?? '').trim();
@@ -19,7 +33,7 @@ function mockGradeAnswer(payload = {}) {
     return {
       correct: false,
       score: 0,
-      feedback: '[Mock AI] Write an answer first, then check again.',
+      feedback: '[Mock] Write an answer first, then check again.',
       corrections: [],
       canComplete: false,
       source: 'mock'
@@ -30,8 +44,8 @@ function mockGradeAnswer(payload = {}) {
     correct: hasContent,
     score: hasContent ? 0.78 : 0.25,
     feedback: hasContent
-      ? `[Mock AI] Thanks for your answer${prompt ? ` to “${prompt.slice(0, 60)}${prompt.length > 60 ? '…' : ''}”` : ''}. This is mock AI feedback — Phase 3 will use a real model via your local or remote provider.`
-      : '[Mock AI] Your answer is very short. Try adding a complete sentence in German.',
+      ? `[Mock] Thanks for your answer${prompt ? ` to “${prompt.slice(0, 60)}${prompt.length > 60 ? '…' : ''}”` : ''}. Switch to Local or Remote provider in Settings for real AI feedback.`
+      : '[Mock] Your answer is very short. Try adding a complete sentence.',
     corrections: hasContent
       ? []
       : [{ original: answer, suggested: '(Expand into a full sentence.)' }],
@@ -50,47 +64,56 @@ function mockChat(payload = {}) {
     : '';
 
   return {
-    content: `[${label}] You said: “${userMessage.slice(0, 240)}${userMessage.length > 240 ? '…' : ''}”\n\nThis is a mock reply through Electron IPC. Connect a local or remote provider in Settings in Phase 3.${briefPreview}`,
+    content: `[${label}] You said: “${userMessage.slice(0, 240)}${userMessage.length > 240 ? '…' : ''}”\n\nThis is a mock reply. Choose Local or Remote provider in Settings for a real assistant.${briefPreview}`,
     source: 'mock'
   };
 }
 
-function providerNotReady(provider) {
-  throw Object.assign(
-    new Error(`Provider “${provider}” is not implemented yet (Phase 3).`),
-    { code: 'PROVIDER_NOT_READY' }
-  );
+async function runWithProvider(settings, fn) {
+  const provider = settings.provider || 'mock';
+
+  if (provider === 'mock') {
+    return null;
+  }
+  if (provider === 'remote') {
+    assertRemoteAllowed(settings);
+  }
+  if (provider !== 'local' && provider !== 'remote') {
+    return null;
+  }
+
+  return fn(provider);
 }
 
 /** AI semantic grading only — automatic/rule-based grading runs in the renderer. */
 async function gradeAnswer(payload) {
-  assertAiEnabled();
-  const settings = getAiSettingsForService();
+  const settings = assertAiEnabled();
 
-  switch (settings.provider) {
-    case 'mock':
-      return mockGradeAnswer(payload);
-    case 'local':
-    case 'remote':
-      return providerNotReady(settings.provider);
-    default:
-      return mockGradeAnswer(payload);
+  const mockResult = mockGradeAnswer(payload);
+  const real = await runWithProvider(settings, (provider) =>
+    gradeWithProvider(settings, provider, payload)
+  );
+
+  if (real) {
+    return { ...real, source: settings.provider };
   }
+
+  return mockResult;
 }
 
 async function chat(payload) {
-  assertAiEnabled();
-  const settings = getAiSettingsForService();
+  const settings = assertAiEnabled();
 
-  switch (settings.provider) {
-    case 'mock':
-      return mockChat(payload);
-    case 'local':
-    case 'remote':
-      return providerNotReady(settings.provider);
-    default:
-      return mockChat(payload);
+  const mockResult = mockChat(payload);
+  const real = await runWithProvider(settings, (provider) =>
+    chatWithProvider(settings, provider, payload)
+  );
+
+  if (real) {
+    return { ...real, source: settings.provider };
   }
+
+  return mockResult;
 }
 
 module.exports = {

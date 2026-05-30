@@ -83,6 +83,7 @@ export function AssistantPanel({ onClose }) {
         message: text,
         activityBrief: getActivityBrief(),
         messages: [...priorThread, { role: 'user', content: text }]
+          .filter((msg) => msg.role === 'user' || msg.role === 'assistant')
           .slice(-12)
           .map((msg) => ({
             role: msg.role,

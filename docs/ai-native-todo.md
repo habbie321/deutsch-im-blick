@@ -2,7 +2,7 @@
 
 Step-by-step plan to add an AI teacher/peer assistant with a right-side chat panel and semantic grading for freeform answers.
 
-**Prerequisites:** Current activity system (envelope + `pages[]`, `renderActivity.jsx`, Electron IPC, SQLite).
+**Prerequisites:** Current activity system (envelope + `pages[]`, `renderActivity.js`, Electron IPC, SQLite).
 
 **Principle:** Additive changes only. Existing activities keep working without `ai` metadata until migrated.
 
@@ -57,14 +57,23 @@ Two separate paths — **automatic never uses AI**; **AI never overrides automat
 
 ---
 
-## Progress summary (as of Phase 2 complete)
+## Progress summary (as of Phase 3 complete)
 
 | Phase | Status |
 |-------|--------|
 | **0** Decisions | Partial (0.5 chat model decided) |
 | **1** Shell & session | **Done** |
-| **2** IPC & settings | **Done** (mock provider; real LLM in Phase 3) |
-| **3–8** | Not started |
+| **2** IPC & settings | **Done** |
+| **3** Real LLM grading | **Done** (Ollama local + OpenAI-compatible remote) |
+| **4–8** | Not started |
+
+**Shipped in Phase 3:**
+- `js/ai-prompts.js` — teacher/peer system prompts + JSON grade schema
+- `js/ai-providers.js` — Ollama (`/api/chat`) + OpenAI-compatible remote adapters
+- Real `gradeAnswer` / `chat` when provider is `local` or `remote` (mock unchanged)
+- `SelfCheckReadingActivity` — session fields, semantic AI check, inline borders
+- `WritingActivity` — inline grading borders from session
+- AssistantPanel — excludes system messages from LLM thread payload
 
 **Shipped in Phase 2:**
 - Electron IPC: `ai:grade`, `ai:chat`, `ai:get-settings`, `ai:update-settings`
@@ -77,7 +86,7 @@ Two separate paths — **automatic never uses AI**; **AI never overrides automat
 
 **Known limitation until Phase 4:** Chat history still resets on activity change (in-memory, activity-scoped provider).
 
-**Next up:** Phase 3 — real Ollama/cloud adapters + SelfCheckReadingActivity grading.
+**Next up:** Phase 4 — global chat persistence (`ChatHistoryContext` + SQLite).
 
 ---
 
@@ -124,7 +133,7 @@ Goal: 3-pane layout, shared activity context, chat UI stub, input lifting for on
 
 ### 1.3 Wire session to activity router
 
-- [x] Components consume session via `useOptionalActivitySession()` hook (no prop drilling through `renderActivity.jsx`)
+- [x] Components consume session via `useOptionalActivitySession()` hook (no prop drilling through `renderActivity.js`)
 - [x] Update `src/components/MultiPageActivity.js`
   - Report `currentPageId` to session on page change
 
@@ -178,44 +187,42 @@ Goal: Secure API boundary, configurable provider, stub handlers that return mock
 
 ---
 
-## Phase 3 — Teacher grading (real LLM)
+## Phase 3 — Teacher grading (real LLM) ✅
 
 Goal: Semantic correction for freeform writing and reading self-check.
 
 ### 3.1 Prompt templates
 
-- [ ] Create `js/ai-prompts.js`
+- [x] Create `js/ai-prompts.js`
   - Teacher system prompt (German instructor, concise, encouraging)
   - Grade user prompt template (prompt + student answer + rubric + model answer)
   - Require JSON output schema from model
 
 ### 3.2 Implement provider adapter(s)
 
-- [ ] Ollama adapter (local dev)
-- [ ] Cloud adapter (production) — pick one to start
-- [ ] Error handling: timeout, rate limit, invalid JSON → user-visible message in chat panel
+- [x] Ollama adapter (local dev) — `js/ai-providers.js`
+- [x] OpenAI-compatible cloud adapter (remote)
+- [x] Error handling: timeout, rate limit, invalid JSON → user-visible message in chat panel
 
 ### 3.3 Connect WritingActivity to grading
 
-- [ ] “Check my answer” / per-field check → `aiGrading.gradeField`
-- [ ] Show feedback inline (field border) and in AssistantPanel
-- [ ] Completion: respect `ai.requirePass` when present, else current honor-system
+- [x] “Check my answer” / per-field check → `aiGrading.gradeField`
+- [x] Show feedback inline (field border) and in AssistantPanel
+- [ ] Completion: respect `ai.requirePass` when present, else current honor-system (Phase 5 JSON)
 
 ### 3.4 Connect SelfCheckReadingActivity
 
-- [ ] Register each `readingItems[].id` as session field
-- [ ] Replace or augment `answerMatch` path with semantic grading when `ai.grading === 'semantic'` or no keywords
-- [ ] Keep keyword/exact path as fast pre-check
+- [x] Register each `readingItems[].id` as session field
+- [x] Semantic grading when no keywords (via shared `gradeField` path)
+- [x] Keep keyword/exact path as fast pre-check (automatic, no AI)
 
 ### 3.5 AssistantPanel chat (teacher & peer)
 
-- [ ] Send chat via `window.api.chat` with:
-  - Global thread for active `chatPersona`
-  - `buildActivityBrief()` for **current** activity (even if student asks about a past one, model can use full thread)
-  - Stamp outgoing messages with `activityKey` / `pageId` when available
+- [x] Send chat via `window.api.chat` with activity brief + thread context
+- [x] Filter system messages from IPC payload (grading notes stay in UI only)
 - [ ] Append assistant replies to the same persona thread; persist (Phase 4)
 
-**Phase 3 done when:** Writing + reading self-check activities get real AI correction; chat is activity-aware via context injection, not separate per-activity histories.
+**Phase 3 done when:** Writing + reading self-check activities get real AI correction; chat is activity-aware via context injection, not separate per-activity histories. ✅
 
 ---
 
@@ -428,18 +435,18 @@ Goal: Freeform blocks inside workbook; consistent grading everywhere it matters.
 | `js/register-ai-handlers.js` | 2 | ✅ |
 | `js/preload.js`, `js/main.js` | 2 | ✅ |
 | `js/database.js` | 4 | — |
-| `js/ai-prompts.js` | 3 | — |
-| `src/components/SelfCheckReadingActivity.js` | 3 | — |
+| `js/ai-prompts.js` | 3 | ✅ |
+| `js/ai-providers.js` | 3 | ✅ |
+| `src/components/SelfCheckReadingActivity.js` | 3 | ✅ |
 | `src/components/WorkbookActivity.js` | 7 | — |
 | `scripts/activity.schema.json`, `activity-schema.mjs` | 5 | — |
 
 ---
 
-## Suggested next PR (Phase 3)
+## Suggested next PR (Phase 4)
 
-1. `js/ai-prompts.js` + Ollama adapter (or one cloud provider)
-2. Wire real LLM into `gradeAnswer` / `chat` when provider ≠ `mock`
-3. `SelfCheckReadingActivity` session fields + semantic grading
-4. Optional: pilot activity with `ai.rubric` (Phase 5.3 partial)
+1. `ChatHistoryContext` + SQLite `chat_messages`
+2. Stop resetting chat on activity change
+3. Hydrate activity inputs from `activity_attempts`
 
-**Phase 4 PR (after 3):** Lift chat to `ChatHistoryContext` + SQLite `chat_messages`; stop resetting chat on activity change.
+**Phase 5 PR (after 4):** JSON `ai` schema + validator; `ai.requirePass` completion policy.

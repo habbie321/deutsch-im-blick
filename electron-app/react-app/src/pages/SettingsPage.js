@@ -117,8 +117,14 @@ const SettingsPage = () => {
                 if (modelDraft !== model) saveProviderSettings({ model: modelDraft });
               }}
               disabled={!loaded || saving}
-              placeholder={provider === 'mock' ? 'mock (default)' : 'Model name for your provider'}
-              helperText="Phase 3 will use this with local or remote providers."
+              placeholder={provider === 'mock' ? 'mock (default)' : provider === 'local' ? 'e.g. llama3.2' : 'e.g. gpt-4o-mini'}
+              helperText={
+                provider === 'mock'
+                  ? 'Mock provider uses heuristics only.'
+                  : provider === 'local'
+                    ? 'Ollama model name (pull with: ollama pull llama3.2).'
+                    : 'OpenAI-compatible model name for your remote API.'
+              }
             />
 
             <TextField
@@ -131,7 +137,7 @@ const SettingsPage = () => {
               }}
               disabled={!loaded || saving || provider === 'mock'}
               placeholder="http://localhost:11434"
-              helperText="Endpoint for your local model server (when using Local provider)."
+              helperText="Ollama server URL (default http://localhost:11434)."
             />
 
             <TextField

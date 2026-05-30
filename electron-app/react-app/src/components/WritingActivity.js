@@ -16,6 +16,7 @@ import {
 import { ExpandMore, ExpandLess, EditNote, KeyboardArrowLeft, KeyboardArrowRight, CheckCircle } from '@mui/icons-material';
 import VideoPlayer from './VideoPlayer';
 import { useOptionalActivitySession } from '../context/ActivitySessionContext';
+import { gradingOutlineSx } from '../utils/gradingFieldStyle';
 
 /**
  * WritingActivity
@@ -59,6 +60,7 @@ const WritingActivity = ({ activityData, onComplete }) => {
   const session = useOptionalActivitySession();
   const registerField = session?.registerField;
   const currentPageId = session?.currentPageId ?? null;
+  const sessionGrading = session?.grading;
 
   const writingFieldId = useCallback(
     (suffix) => {
@@ -290,7 +292,7 @@ const WritingActivity = ({ activityData, onComplete }) => {
                     syncSessionInput(`${currentSpeaker.id}_${idx}`, value);
                   }}
                   disabled={done}
-                  sx={{ bgcolor: 'background.paper' }}
+                  sx={{ bgcolor: 'background.paper', ...gradingOutlineSx(sessionGrading, writingFieldId(`${currentSpeaker.id}_${idx}`)) }}
                 />
               </Box>
             );
@@ -318,7 +320,7 @@ const WritingActivity = ({ activityData, onComplete }) => {
                   syncSessionInput(`task_${idx}`, value);
                 }}
                 disabled={done}
-                sx={{ bgcolor: 'background.paper' }}
+                sx={{ bgcolor: 'background.paper', ...gradingOutlineSx(sessionGrading, writingFieldId(`task_${idx}`)) }}
               />
             </Box>
           ))}
@@ -337,7 +339,7 @@ const WritingActivity = ({ activityData, onComplete }) => {
             syncSessionInput('task_0', value);
           }}
           disabled={done}
-          sx={{ mb: 4, bgcolor: 'background.paper', borderRadius: 1 }}
+          sx={{ mb: 4, bgcolor: 'background.paper', borderRadius: 1, ...gradingOutlineSx(sessionGrading, writingFieldId('task_0')) }}
         />
       )}
 

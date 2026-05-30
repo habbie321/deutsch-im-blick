@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Box,
   Typography,
@@ -11,7 +11,9 @@ import {
   TextField
 } from '@mui/material';
 import { ExpandMore, ExpandLess } from '@mui/icons-material';
-import { matchesAnyVariant, containsAllKeywords } from '../utils/answerMatch';
+import { matchesAnyVariant, containsAllKeywords, hasAutomaticKeys } from '../utils/answerMatch';
+import { useOptionalActivitySession } from '../context/ActivitySessionContext';
+import { gradingOutlineSx } from '../utils/gradingFieldStyle';
 
 const SelfCheckReadingActivity = ({ activityData, onComplete }) => {
   const [answersOpen, setAnswersOpen] = useState(false);
@@ -19,12 +21,47 @@ const SelfCheckReadingActivity = ({ activityData, onComplete }) => {
   const [inputs, setInputs] = useState({});
   const [itemResults, setItemResults] = useState(null);
   const [optionalAck, setOptionalAck] = useState({});
+  const [checking, setChecking] = useState(false);
+
+  const session = useOptionalActivitySession();
+  const registerField = session?.registerField;
+  const setSessionInput = session?.setInput;
+  const currentPageId = session?.currentPageId ?? null;
+  const aiEnabled = session?.aiEnabled ?? false;
+  const grading = session?.grading ?? {};
 
   const { title, intro, readingItems = [], pdfNote } = activityData;
 
-  const autoItems = readingItems.filter((it) => it.acceptedAnswers?.length || it.keywords?.length);
+  const fieldIdForItem = useCallback(
+    (itemId) => {
+      const pagePart = currentPageId ? `${currentPageId}_` : '';
+      return `reading_${pagePart}${itemId}`;
+    },
+    [currentPageId]
+  );
+
+  useEffect(() => {
+    if (!registerField) return;
+
+    readingItems.forEach((item) => {
+      registerField(fieldIdForItem(item.id), {
+        type: 'reading',
+        prompt: item.prompt,
+        modelAnswer: item.modelAnswer,
+        acceptedAnswers: item.acceptedAnswers,
+        keywords: item.keywords
+      });
+    });
+  }, [registerField, fieldIdForItem, readingItems]);
+
+  const scoredItems = readingItems.filter((it) => !it.acknowledgeLabel);
+  const autoItems = scoredItems.filter((it) => hasAutomaticKeys(it));
+  const semanticItems = scoredItems.filter((it) => !hasAutomaticKeys(it));
   const ackItems = readingItems.filter((it) => it.acknowledgeLabel);
-  const validateAuto = () => {
+
+  const fieldGradedCorrect = (item) => grading[fieldIdForItem(item.id)]?.correct === true;
+
+  const validateAutoLocal = () => {
     const next = {};
     let allOk = true;
     autoItems.forEach((it) => {
@@ -42,11 +79,31 @@ const SelfCheckReadingActivity = ({ activityData, onComplete }) => {
     return allOk;
   };
 
+  const handleCheck = async () => {
+    if (session?.checkMyAnswer) {
+      setChecking(true);
+      try {
+        await session.checkMyAnswer();
+      } finally {
+        setChecking(false);
+      }
+      return;
+    }
+    validateAutoLocal();
+  };
+
   const acksComplete = ackItems.every((it) => optionalAck[it.id]);
 
-  const canComplete =
-    (autoItems.length === 0 || (itemResults && autoItems.every((it) => itemResults[it.id]))) &&
-    (ackItems.length === 0 || acksComplete);
+  const autoOk =
+    autoItems.length === 0 ||
+    (session ? autoItems.every(fieldGradedCorrect) : itemResults && autoItems.every((it) => itemResults[it.id]));
+
+  const semanticOk =
+    semanticItems.length === 0 ||
+    !aiEnabled ||
+    (session && semanticItems.every(fieldGradedCorrect));
+
+  const canComplete = autoOk && semanticOk && acksComplete;
 
   const handleComplete = () => {
     if (!canComplete) return;
@@ -55,6 +112,8 @@ const SelfCheckReadingActivity = ({ activityData, onComplete }) => {
       onComplete({ correct: true });
     }
   };
+
+  const showCheckButton = scoredItems.length > 0;
 
   return (
     <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', maxWidth: 720, mx: 'auto', width: '100%' }}>
@@ -68,15 +127,19 @@ const SelfCheckReadingActivity = ({ activityData, onComplete }) => {
       )}
 
       <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-        Type your answers below. Open model answers when you want to compare wording.
+        Type your answers below. Use Check my answers or the assistant panel; open model answers when you want to compare wording.
       </Typography>
 
       {readingItems.length > 0 && (
         <Paper elevation={0} sx={{ p: 2, mb: 2, border: 1, borderColor: 'divider' }}>
           {readingItems.map((item, idx) => {
-            const hasAuto = !!(item.acceptedAnswers?.length || item.keywords?.length);
-            const checked = itemResults && itemResults[item.id];
-            const failed = itemResults && itemResults[item.id] === false;
+            const fieldId = fieldIdForItem(item.id);
+            const hasAuto = hasAutomaticKeys(item);
+            const grade = grading[fieldId];
+            const checked = session ? grade?.correct === true : itemResults && itemResults[item.id];
+            const failed = session
+              ? grade?.ok && grade?.correct === false
+              : itemResults && itemResults[item.id] === false;
 
             return (
               <Box
@@ -99,15 +162,24 @@ const SelfCheckReadingActivity = ({ activityData, onComplete }) => {
                   sx={{
                     mt: 1,
                     mb: 1,
-                    '& .MuiOutlinedInput-notchedOutline': hasAuto && failed
-                      ? { borderColor: 'error.main' }
-                      : hasAuto && checked
-                        ? { borderColor: 'success.main' }
-                        : undefined
+                    ...(session
+                      ? gradingOutlineSx(grading, fieldId)
+                      : {
+                          '& .MuiOutlinedInput-notchedOutline':
+                            hasAuto && failed
+                              ? { borderColor: 'error.main' }
+                              : hasAuto && checked
+                                ? { borderColor: 'success.main' }
+                                : undefined
+                        })
                   }}
                   value={inputs[item.id] ?? ''}
                   onChange={(e) => {
-                    setInputs((prev) => ({ ...prev, [item.id]: e.target.value }));
+                    const value = e.target.value;
+                    setInputs((prev) => ({ ...prev, [item.id]: value }));
+                    if (setSessionInput) {
+                      setSessionInput(fieldId, value);
+                    }
                     setItemResults(null);
                   }}
                   placeholder="Your answer"
@@ -136,9 +208,14 @@ const SelfCheckReadingActivity = ({ activityData, onComplete }) => {
         </Paper>
       )}
 
-      {autoItems.length > 0 && (
-        <Button variant="outlined" onClick={validateAuto} sx={{ alignSelf: 'flex-start', mb: 2 }}>
-          Check my answers
+      {showCheckButton && (
+        <Button
+          variant="outlined"
+          onClick={handleCheck}
+          disabled={checking || session?.status === 'grading'}
+          sx={{ alignSelf: 'flex-start', mb: 2 }}
+        >
+          {checking || session?.status === 'grading' ? 'Checking…' : 'Check my answers'}
         </Button>
       )}
 
@@ -175,7 +252,8 @@ const SelfCheckReadingActivity = ({ activityData, onComplete }) => {
 
       {!done && (
         <Typography variant="caption" color="text.secondary" sx={{ textAlign: 'center', mt: 1, display: 'block' }}>
-          {autoItems.length > 0 && (!itemResults || !autoItems.every((it) => itemResults[it.id])) && 'Use Check my answers until all scored items are correct. '}
+          {scoredItems.length > 0 && !canComplete && 'Check answers until scored items pass. '}
+          {semanticItems.length > 0 && !aiEnabled && 'Enable AI in Settings for semantic answer checking on open-ended items. '}
           {ackItems.length > 0 && !acksComplete && 'Complete all required acknowledgements. '}
         </Typography>
       )}
